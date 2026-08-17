@@ -1,3 +1,5 @@
+import { projects } from "./projects";
+
 /**
  * Career-wide aggregates that can't be derived from the 3 seeded case
  * studies alone (the case studies are all dashboards; the real body of work
@@ -5,6 +7,14 @@
  * placeholders — swap for real numbers directly in this file.
  */
 export const isAnalyticsAggregatePlaceholder = true;
+
+/** Derived directly from the seeded case studies — no invented numbers. */
+export const totalPagesDesigned = projects.reduce((sum, p) => sum + p.scale.pages, 0);
+export const cumulativeValueImpact = projects.reduce(
+  (sum, p) => sum + (p.valueImpact?.amount ?? 0),
+  0,
+);
+export const pagesByProject = projects.map((p) => ({ project: p.name, pages: p.scale.pages }));
 
 export const projectTypeBreakdown = [
   { type: "Dashboards", count: 14 },
