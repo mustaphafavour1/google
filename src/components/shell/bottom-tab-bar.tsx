@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 import { mobileTabs, isNavItemActive } from "./nav-config";
 import { MoreSheet } from "./more-sheet";
 import { cn } from "@/lib/utils";
+import type { SiteSettings } from "@/lib/types";
 
-export function BottomTabBar() {
+export function BottomTabBar({ contact }: { contact: SiteSettings["contact"] }) {
   const pathname = usePathname();
 
   return (
@@ -30,7 +31,7 @@ export function BottomTabBar() {
           </Link>
         );
       })}
-      <MoreSheet />
+      <MoreSheet contact={contact} />
     </nav>
   );
 }

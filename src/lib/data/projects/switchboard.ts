@@ -78,10 +78,10 @@ export const switchboard: Project = {
       caption: "Illustrative traffic split used to design the comparison and routing views",
       chartType: "pie",
       data: [
-        { id: "Provider A", label: "Provider A", value: 42 },
-        { id: "Provider B", label: "Provider B", value: 27 },
-        { id: "Provider C", label: "Provider C", value: 18 },
-        { id: "Provider D", label: "Provider D", value: 13 },
+        { label: "Provider A", value: 42 },
+        { label: "Provider B", value: 27 },
+        { label: "Provider C", value: 18 },
+        { label: "Provider D", value: 13 },
       ],
     },
     {

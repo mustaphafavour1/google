@@ -4,16 +4,17 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { primaryNav, isNavItemActive } from "./nav-config";
-import { Logo } from "./logo";
+import { Logo, initials } from "./logo";
 import { cn } from "@/lib/utils";
+import type { SiteSettings } from "@/lib/types";
 
-export function Sidebar() {
+export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
   const pathname = usePathname();
 
   return (
     <aside className="sticky top-0 hidden h-screen w-(--sidebar-w) shrink-0 flex-col border-r border-hairline bg-surface lg:flex">
       <div className="flex h-(--header-h) shrink-0 items-center border-b border-hairline px-4">
-        <Logo />
+        <Logo name={profile.name} title={profile.title} />
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
@@ -45,12 +46,12 @@ export function Sidebar() {
         <div className="stat-card !p-3">
           <div className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[11px] font-semibold text-primary-tint-text">
-              FM
+              {initials(profile.name)}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[12.5px] font-semibold text-ink-em">Favour Mustapha</p>
+              <p className="truncate text-[12.5px] font-semibold text-ink-em">{profile.name}</p>
               <p className="flex items-center gap-1 truncate text-[11px] text-ink-muted">
-                <MapPin size={10} className="shrink-0" /> Lagos, Nigeria
+                <MapPin size={10} className="shrink-0" /> {profile.location}
               </p>
             </div>
           </div>

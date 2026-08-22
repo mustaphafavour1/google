@@ -60,15 +60,18 @@ export type ImageGalleryBlock = {
   images: { src?: string; caption?: string; aspect?: "wide" | "square" | "tall" }[];
 };
 
+export type ChartDataPoint = {
+  label: string;
+  value: number;
+};
+
 export type ChartBlock = {
   _type: "chart";
   _key: string;
   heading?: string;
   caption?: string;
   chartType: "bar" | "line" | "pie";
-  data: Record<string, unknown>[];
-  keys?: string[];
-  indexBy?: string;
+  data: ChartDataPoint[];
 };
 
 export type QuoteBlock = {
@@ -144,4 +147,60 @@ export type ProcessTrack = {
   discipline: ProcessDiscipline;
   summary: string;
   phases: ProcessPhase[];
+};
+
+// ---- Site settings (singleton) -----------------------------------------------
+
+export type SiteMetric = {
+  key: string;
+  label: string;
+  value: string;
+  isPlaceholder: boolean;
+};
+
+export type AboutSection = {
+  heading: string;
+  paragraphs: string[];
+};
+
+export type SocialLink = {
+  label: string;
+  href: string;
+};
+
+export type SiteSettings = {
+  profile: {
+    name: string;
+    firstName: string;
+    title: string;
+    location: string;
+    tagline: string;
+    founderNote: string;
+  };
+  siteMetrics: SiteMetric[];
+  about: {
+    design: AboutSection;
+    general: AboutSection;
+  };
+  contact: {
+    email: string;
+    resumeUrl?: string;
+    website: SocialLink;
+    socials: SocialLink[];
+  };
+  analyticsAggregate: {
+    projectTypeBreakdown: { type: string; count: number }[];
+    projectsOverTime: { year: string; count: number }[];
+  };
+};
+
+// ---- Job application variant --------------------------------------------------
+
+export type JobApplicationVariant = {
+  _id: string;
+  companyName: string;
+  slug: string;
+  roleTitle?: string;
+  introNote?: string;
+  selectedProjects: Project[];
 };

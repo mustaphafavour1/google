@@ -1,0 +1,82 @@
+import { defineField, defineType } from "sanity";
+
+export const project = defineType({
+  name: "project",
+  title: "Project",
+  type: "document",
+  groups: [
+    { name: "content", title: "Content", default: true },
+    { name: "meta", title: "Meta & scale" },
+    { name: "blocks", title: "Page blocks" },
+  ],
+  fields: [
+    defineField({ name: "name", type: "string", group: "content", validation: (r) => r.required() }),
+    defineField({
+      name: "slug",
+      type: "slug",
+      group: "content",
+      options: { source: "name" },
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "oneLiner",
+      type: "text",
+      rows: 2,
+      group: "content",
+      validation: (r) => r.required(),
+    }),
+    defineField({ name: "coverImage", type: "image", group: "content", options: { hotspot: true } }),
+    defineField({
+      name: "blocks",
+      title: "Page blocks",
+      type: "array",
+      group: "blocks",
+      of: [
+        { type: "hero" },
+        { type: "metricsRow" },
+        { type: "richText" },
+        { type: "sideBySideCards" },
+        { type: "imageGallery" },
+        { type: "chart" },
+        { type: "quote" },
+        { type: "processTimeline" },
+      ],
+    }),
+    defineField({ name: "industry", type: "string", group: "meta", validation: (r) => r.required() }),
+    defineField({
+      name: "tags",
+      type: "array",
+      group: "meta",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+    }),
+    defineField({
+      name: "projectType",
+      title: "Project type",
+      type: "string",
+      group: "meta",
+      options: {
+        list: ["Dashboard", "App", "Website", "Branding", "Campaign"].map((v) => ({
+          title: v,
+          value: v,
+        })),
+      },
+      validation: (r) => r.required(),
+    }),
+    defineField({ name: "year", type: "number", group: "meta", validation: (r) => r.required() }),
+    defineField({ name: "role", type: "string", group: "meta", validation: (r) => r.required() }),
+    defineField({
+      name: "techStack",
+      type: "array",
+      group: "meta",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+    }),
+    defineField({ name: "scale", type: "projectScale", group: "meta" }),
+    defineField({ name: "valueImpact", type: "valueImpact", group: "meta" }),
+    defineField({ name: "accent", type: "projectAccent", group: "meta" }),
+  ],
+  preview: {
+    select: { title: "name", subtitle: "industry", media: "coverImage" },
+  },
+});

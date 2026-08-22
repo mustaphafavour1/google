@@ -8,6 +8,14 @@ import { getNivoPalette, getNivoTheme } from "@/lib/nivo-theme";
 import type { ChartBlock as ChartBlockT } from "@/lib/types";
 import type { Project } from "@/lib/types";
 
+function contrastText(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? "#241d19" : "#ffffff";
+}
+
 export function ChartBlock({ block, project }: { block: ChartBlockT; project: Project }) {
   const { resolvedTheme } = useTheme();
   const dark = resolvedTheme === "dark";
@@ -24,9 +32,9 @@ export function ChartBlock({ block, project }: { block: ChartBlockT; project: Pr
       <div className="h-[280px] rounded-lg border border-hairline p-4">
         {block.chartType === "bar" && (
           <ResponsiveBar
-            data={block.data as never}
-            keys={block.keys ?? ["value"]}
-            indexBy={block.indexBy ?? "index"}
+            data={block.data}
+            keys={["value"]}
+            indexBy="label"
             margin={{ top: 10, right: 10, bottom: 32, left: 36 }}
             padding={0.4}
             borderRadius={4}
@@ -54,11 +62,8 @@ export function ChartBlock({ block, project }: { block: ChartBlockT; project: Pr
           <ResponsiveLine
             data={[
               {
-                id: block.keys?.[0] ?? "value",
-                data: block.data.map((d) => ({
-                  x: d[block.indexBy ?? "index"],
-                  y: d[block.keys?.[0] ?? "value"],
-                })) as never,
+                id: "value",
+                data: block.data.map((d) => ({ x: d.label, y: d.value })),
               },
             ]}
             margin={{ top: 10, right: 16, bottom: 32, left: 36 }}
@@ -96,17 +101,17 @@ export function ChartBlock({ block, project }: { block: ChartBlockT; project: Pr
 
         {block.chartType === "pie" && (
           <ResponsivePie
-            data={block.data as never}
+            data={block.data.map((d) => ({ id: d.label, label: d.label, value: d.value }))}
             margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
             innerRadius={0.6}
             padAngle={1.5}
             cornerRadius={3}
             activeOuterRadiusOffset={4}
-            colors={[primary, secondary, dark ? "#3A4358" : "#CBD5E1", dark ? "#2A3348" : "#E2E8F0"]}
+            colors={[primary, secondary, dark ? "#57514a" : "#cfcabf", dark ? "#7a7267" : "#a59e8f"]}
             borderWidth={0}
             enableArcLinkLabels={false}
             arcLabelsSkipAngle={20}
-            arcLabelsTextColor={dark ? "#0B0F1A" : "#FFFFFF"}
+            arcLabelsTextColor={(d) => contrastText(d.color)}
             arcLabel={(d) => `${d.value}%`}
             theme={nivoTheme}
           />

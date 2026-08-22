@@ -1,9 +1,9 @@
 export function getNivoPalette(dark: boolean) {
   return {
-    axisColor: dark ? "#8993A8" : "#94A3B8",
-    gridColor: dark ? "#202839" : "#F1F5F9",
-    tooltipBg: dark ? "#111727" : "#FFFFFF",
-    tooltipText: dark ? "#E7ECF5" : "#1E293B",
+    axisColor: dark ? "#8f8579" : "#a59e8f",
+    gridColor: dark ? "#2e2620" : "#f2f1ec",
+    tooltipBg: dark ? "#241d19" : "#ffffff",
+    tooltipText: dark ? "#ece6e0" : "#3d3833",
   };
 }
 
@@ -22,7 +22,7 @@ export function getNivoTheme(dark: boolean) {
         border: `1px solid ${gridColor}`,
         background: tooltipBg,
         color: tooltipText,
-        boxShadow: "0 4px 16px rgb(15 23 42 / 0.14)",
+        boxShadow: "0 4px 16px rgb(35 25 15 / 0.14)",
       },
     },
     text: { fontSize: 10, fill: axisColor },

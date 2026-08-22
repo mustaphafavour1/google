@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Download, Mail, Menu, X } from "lucide-react";
 import { moreSheetItems, isNavItemActive } from "./nav-config";
-import { contact } from "@/lib/data/site";
 import { cn } from "@/lib/utils";
+import type { SiteSettings } from "@/lib/types";
 
-export function MoreSheet() {
+export function MoreSheet({ contact }: { contact: SiteSettings["contact"] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -67,14 +67,16 @@ export function MoreSheet() {
           </ul>
 
           <div className="mt-3 grid grid-cols-2 gap-2 border-t border-hairline pt-3">
-            <a
-              href={contact.resumeHref}
-              download
-              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-border text-[13px] font-medium text-ink-strong"
-            >
-              <Download size={14} />
-              Resume
-            </a>
+            {contact.resumeUrl && (
+              <a
+                href={contact.resumeUrl}
+                download
+                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-border text-[13px] font-medium text-ink-strong"
+              >
+                <Download size={14} />
+                Resume
+              </a>
+            )}
             <a
               href={`mailto:${contact.email}`}
               className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white"

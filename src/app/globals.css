@@ -4,46 +4,49 @@
 
 /* ---------------------------------------------------------------------------
  * Design tokens
- * Cool/bluish neutral scale + brand ramps are theme-stable reference values.
+ * Warm neutral scale + brand ramps are theme-stable reference values.
  * Surfaces, borders, and the ink ladder are theme-aware and get redefined
- * under .dark. See Dashboards — Design Taste & Build Scope §5–§7 for the
- * source system; sizes here are scaled up for a public marketing context.
+ * under .dark. Layout/type discipline follows Dashboards — Design Taste &
+ * Build Scope §3/§6–§8; the palette itself is this portfolio's own warm
+ * rose-gold-and-cream identity, deliberately distinct from the cooler
+ * blueprint-blue system the rest of that doc's examples use.
  * ------------------------------------------------------------------------- */
 
 :root {
-  /* Neutral gray scale — cool / bluish, never reddish or brown */
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1e293b;
-  --gray-900: #0f172a;
+  /* Neutral scale — warm, to sit with rose gold + cream rather than fight it */
+  --gray-50: #fafaf7;
+  --gray-100: #f2f1ec;
+  --gray-200: #e5e2da;
+  --gray-300: #cfcabf;
+  --gray-400: #a59e8f;
+  --gray-500: #7a7267;
+  --gray-600: #57514a;
+  --gray-700: #3d3833;
+  --gray-800: #272320;
+  --gray-900: #181513;
 
-  /* Primary — blueprint blue, base 500 #2F6FED */
-  --primary-25: #f4f8ff;
-  --primary-50: #eaf1fe;
-  --primary-100: #d6e4fd;
-  --primary-200: #aec9fb;
-  --primary-300: #86aef8;
-  --primary-400: #5d91f2;
-  --primary-500: #2f6fed;
-  --primary-600: #2358c7;
-  --primary-700: #1d479e;
-  --primary-800: #1b3a7c;
-  --primary-900: #182f5f;
+  /* Primary — rose gold, base 500 #A55C4E (deep enough for AA text/button contrast) */
+  --primary-25: #fdf8f6;
+  --primary-50: #faeeea;
+  --primary-100: #f3dbd3;
+  --primary-200: #e6bcaf;
+  --primary-300: #d19686;
+  --primary-400: #ba7a69;
+  --primary-500: #a55c4e;
+  --primary-600: #8a4b40;
+  --primary-700: #6e3c33;
+  --primary-800: #542d28;
+  --primary-900: #3a1f1b;
 
-  /* Accent — warm amber, rationed to CTAs + one hero moment per page */
-  --accent-50: #fffbeb;
-  --accent-100: #fef3c7;
-  --accent-500: #f59e0b;
-  --accent-600: #d97706;
-  --accent-700: #b45309;
+  /* Highlight palette — for situational text/tag colour, not the brand primary.
+     All 5 verified at ≥4.5:1 against white and the cream background. */
+  --highlight-blue: #3e63dd;
+  --highlight-green: #1f7a42;
+  --highlight-orange: #b35a04;
+  --highlight-purple: #7c3aed;
+  --highlight-teal: #0e7c86;
 
-  /* Semantic — tint bg / mid text / faint border, distinct from primary + accent */
+  /* Semantic — tint bg / mid text / faint border, distinct from primary + highlights */
   --success: #047857;
   --success-tint: #ecfdf5;
   --success-border: #a7f3d0;
@@ -55,7 +58,7 @@
   --danger-border: #fecaca;
 
   /* Theme-aware surfaces (light) */
-  --background: var(--gray-50);
+  --background: #fdfce8;
   --surface: #ffffff;
   --surface-muted: var(--gray-100);
   --border: var(--gray-200);
@@ -63,15 +66,15 @@
   --hairline-soft: var(--gray-50);
   --primary-tint: var(--primary-50);
   --primary-tint-text: var(--primary-700);
-  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04);
+  --shadow-card: 0 1px 2px rgb(35 25 15 / 0.05);
 
-  /* Ink ladder (light) — HSL components, theme-aware text hierarchy */
-  --ink-em: 222 24% 16%;
-  --ink-strong: 218 17% 30%;
-  --ink: 218 12% 42%;
-  --ink-muted: 220 9% 54%;
-  --ink-soft: 220 11% 66%;
-  --ink-faint: 220 14% 80%;
+  /* Ink ladder (light) — HSL components, warm-neutral text hierarchy */
+  --ink-em: 30 15% 14%;
+  --ink-strong: 28 12% 28%;
+  --ink: 26 9% 40%;
+  --ink-muted: 25 7% 52%;
+  --ink-soft: 24 8% 64%;
+  --ink-faint: 24 10% 79%;
 
   /* Layout */
   --header-h: 3.5rem;
@@ -82,22 +85,22 @@
 }
 
 .dark {
-  --background: #0b0f1a;
-  --surface: #111727;
-  --surface-muted: #1a2136;
-  --border: #2a3348;
-  --hairline: #202839;
-  --hairline-soft: #171e2c;
+  --background: #1c1613;
+  --surface: #241d19;
+  --surface-muted: #2e2620;
+  --border: #3d332c;
+  --hairline: #2e2620;
+  --hairline-soft: #241d19;
   --primary-tint: color-mix(in srgb, var(--primary-500) 20%, transparent);
   --primary-tint-text: var(--primary-300);
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35);
 
-  --ink-em: 220 32% 95%;
-  --ink-strong: 218 20% 84%;
-  --ink: 218 14% 68%;
-  --ink-muted: 220 10% 56%;
-  --ink-soft: 220 12% 44%;
-  --ink-faint: 220 14% 32%;
+  --ink-em: 35 24% 95%;
+  --ink-strong: 32 16% 84%;
+  --ink: 30 11% 68%;
+  --ink-muted: 28 8% 55%;
+  --ink-soft: 26 8% 43%;
+  --ink-faint: 26 10% 31%;
 
   --success: #34d399;
   --success-tint: color-mix(in srgb, #10b981 16%, transparent);
@@ -111,8 +114,9 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-instrument-sans);
+  --font-sans: var(--font-parkinsans);
   --font-mono: var(--font-jetbrains-mono);
+  --font-handwriting: var(--font-caveat);
 
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -147,12 +151,16 @@
   --color-primary-tint: var(--primary-tint);
   --color-primary-tint-text: var(--primary-tint-text);
 
-  --color-accent-50: var(--accent-50);
-  --color-accent-100: var(--accent-100);
-  --color-accent-500: var(--accent-500);
-  --color-accent-600: var(--accent-600);
-  --color-accent-700: var(--accent-700);
-  --color-accent: var(--accent-500);
+  --color-highlight-blue: var(--highlight-blue);
+  --color-highlight-blue-tint: color-mix(in srgb, var(--highlight-blue) 12%, var(--surface));
+  --color-highlight-green: var(--highlight-green);
+  --color-highlight-green-tint: color-mix(in srgb, var(--highlight-green) 12%, var(--surface));
+  --color-highlight-orange: var(--highlight-orange);
+  --color-highlight-orange-tint: color-mix(in srgb, var(--highlight-orange) 12%, var(--surface));
+  --color-highlight-purple: var(--highlight-purple);
+  --color-highlight-purple-tint: color-mix(in srgb, var(--highlight-purple) 12%, var(--surface));
+  --color-highlight-teal: var(--highlight-teal);
+  --color-highlight-teal-tint: color-mix(in srgb, var(--highlight-teal) 12%, var(--surface));
 
   --color-success: var(--success);
   --color-success-tint: var(--success-tint);
