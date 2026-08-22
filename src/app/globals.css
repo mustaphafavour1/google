@@ -57,9 +57,11 @@
   --danger-tint: #fef2f2;
   --danger-border: #fecaca;
 
-  /* Theme-aware surfaces (light) */
+  /* Theme-aware surfaces (light) — surface is a lighter tint of the same
+     cream as background, never a plain white, so sidebar/cards/topbar read
+     as one warm family instead of jumping to a cold white. */
   --background: #fdfce8;
-  --surface: #ffffff;
+  --surface: #fffef5;
   --surface-muted: var(--gray-100);
   --border: var(--gray-200);
   --hairline: var(--gray-100);
