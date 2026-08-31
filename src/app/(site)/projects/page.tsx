@@ -1,13 +1,13 @@
 import { PageContainer } from "@/components/shell/page-container";
 import { getProjects } from "@/lib/content";
-import { WorkIndexClient } from "./work-index-client";
+import { ProjectsIndexClient } from "./projects-index-client";
 
-export default async function WorkIndexPage() {
+export default async function ProjectsIndexPage() {
   const projects = await getProjects();
 
   return (
     <PageContainer>
-      <WorkIndexClient projects={projects} />
+      <ProjectsIndexClient projects={projects} />
     </PageContainer>
   );
 }

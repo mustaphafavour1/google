@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { CountUpValue } from "./count-up-value";
 
 export function StatCard({
   label,
@@ -17,7 +18,7 @@ export function StatCard({
     <div className={cn("stat-card", className)}>
       <p className="type-label">{label}</p>
       <p className="type-display mt-1.5">
-        {value}
+        <CountUpValue value={value} />
         {isPlaceholder && <span className="ml-0.5 text-ink-faint">*</span>}
       </p>
       {caption && <p className="type-meta mt-1">{caption}</p>}

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Parkinsans, JetBrains_Mono, Caveat } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/app-shell";
-import { getSiteSettings } from "@/lib/content";
+import { getProjects, getSiteSettings } from "@/lib/content";
 import type { ReactNode } from "react";
 import "../globals.css";
 
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const siteSettings = await getSiteSettings();
+  const [siteSettings, projects] = await Promise.all([getSiteSettings(), getProjects()]);
 
   return (
     <html
@@ -42,7 +43,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     >
       <body className="min-h-full">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <AppShell siteSettings={siteSettings}>{children}</AppShell>
+          <TooltipProvider delayDuration={200}>
+            <AppShell siteSettings={siteSettings} projects={projects}>
+              {children}
+            </AppShell>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -72,14 +72,14 @@ export default async function HomePage() {
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-[19px] font-semibold tracking-tight text-ink-em">
-            Selected work
+            Selected projects
             <DoodleStar className="h-4 w-4 rotate-12 text-highlight-orange" />
           </h2>
           <Link
-            href="/work"
+            href="/projects"
             className="flex items-center gap-1 text-[12.5px] font-medium text-primary-500 hover:text-primary-600"
           >
-            View all work
+            View all projects
             <ArrowUpRight size={13} />
           </Link>
         </div>

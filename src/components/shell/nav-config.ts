@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BarChart3, Briefcase, Home, Layers, Mail, User, Workflow } from "lucide-react";
+import { Archive, Briefcase, Images, LayoutDashboard, Rocket, User } from "lucide-react";
 
 export type NavItem = {
   label: string;
@@ -8,26 +8,24 @@ export type NavItem = {
 };
 
 export const primaryNav: NavItem[] = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "Work", href: "/work", icon: Briefcase },
-  { label: "Process", href: "/process", icon: Workflow },
-  { label: "About", href: "/about", icon: User },
-  { label: "Skills", href: "/skills", icon: Layers },
-  { label: "Analytics", href: "/analytics", icon: BarChart3 },
-  { label: "Contact", href: "/contact", icon: Mail },
+  { label: "Overview", href: "/", icon: LayoutDashboard },
+  { label: "Projects", href: "/projects", icon: Briefcase },
+  { label: "Gallery", href: "/gallery", icon: Images },
+  { label: "Profile", href: "/profile", icon: User },
+  { label: "Playground", href: "/playground", icon: Rocket },
+  { label: "Archive", href: "/archive", icon: Archive },
 ];
 
 export const mobileTabs: NavItem[] = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "Work", href: "/work", icon: Briefcase },
-  { label: "About", href: "/about", icon: User },
-  { label: "Contact", href: "/contact", icon: Mail },
+  { label: "Overview", href: "/", icon: LayoutDashboard },
+  { label: "Projects", href: "/projects", icon: Briefcase },
+  { label: "Gallery", href: "/gallery", icon: Images },
+  { label: "Profile", href: "/profile", icon: User },
 ];
 
 export const moreSheetItems: NavItem[] = [
-  { label: "Process", href: "/process", icon: Workflow },
-  { label: "Skills", href: "/skills", icon: Layers },
-  { label: "Analytics", href: "/analytics", icon: BarChart3 },
+  { label: "Playground", href: "/playground", icon: Rocket },
+  { label: "Archive", href: "/archive", icon: Archive },
 ];
 
 export function isNavItemActive(pathname: string, href: string): boolean {

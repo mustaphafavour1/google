@@ -11,7 +11,10 @@ export function BottomTabBar({ contact }: { contact: SiteSettings["contact"] }) 
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-hairline bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+    <nav
+      aria-label="Primary"
+      className="fixed inset-x-0 bottom-0 z-30 flex border-t border-hairline bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+    >
       {mobileTabs.map((item) => {
         const active = isNavItemActive(pathname, item.href);
         const Icon = item.icon;

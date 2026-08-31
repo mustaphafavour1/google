@@ -87,12 +87,14 @@
 }
 
 .dark {
-  --background: #1c1613;
-  --surface: #241d19;
-  --surface-muted: #2e2620;
-  --border: #3d332c;
-  --hairline: #2e2620;
-  --hairline-soft: #241d19;
+  /* Deep charcoal — same lightness steps as before, saturation cut from
+     ~19% to ~7% so it reads neutral-charcoal rather than coffee-brown. */
+  --background: #191715;
+  --surface: #211e1c;
+  --surface-muted: #2c2826;
+  --border: #3e3a37;
+  --hairline: #2c2826;
+  --hairline-soft: #211e1c;
   --primary-tint: color-mix(in srgb, var(--primary-500) 20%, transparent);
   --primary-tint-text: var(--primary-300);
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35);
@@ -364,4 +366,46 @@ html {
 }
 .sheet-content[data-state="closed"] {
   animation: sheet-slide-down 160ms ease-in;
+}
+
+.tooltip-content[data-state="delayed-open"] {
+  animation: sheet-fade-in 120ms ease-out;
+}
+
+@keyframes palette-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes palette-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+.palette-overlay[data-state="open"] {
+  animation: sheet-fade-in 150ms ease-out;
+}
+.palette-content[data-state="open"] {
+  animation: palette-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.palette-content[data-state="closed"] {
+  animation: palette-out 120ms ease-in;
+}
+
+.popover-content[data-state="open"] {
+  animation: palette-in 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.popover-content[data-state="closed"] {
+  animation: palette-out 100ms ease-in;
 }

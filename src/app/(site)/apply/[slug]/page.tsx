@@ -102,7 +102,7 @@ export default async function JobApplicationVariantPage({
                 {contact.email}
               </a>
             </Button>
-            <Button href="/work">Full portfolio</Button>
+            <Button href="/projects">Full portfolio</Button>
           </div>
         </div>
       </section>

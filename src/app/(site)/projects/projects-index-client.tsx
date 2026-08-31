@@ -10,7 +10,7 @@ import type { Project } from "@/lib/types";
 
 const ALL = "All";
 
-export function WorkIndexClient({ projects }: { projects: Project[] }) {
+export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
   const [industry, setIndustry] = useState(ALL);
   const [tag, setTag] = useState(ALL);
   const [page, setPage] = useState(1);

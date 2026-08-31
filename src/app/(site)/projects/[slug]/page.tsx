@@ -36,11 +36,11 @@ export default async function ProjectDetailPage({
   return (
     <PageContainer>
       <Link
-        href="/work"
+        href="/projects"
         className="mb-6 inline-flex items-center gap-1.5 text-[12.5px] font-medium text-ink-soft transition-colors hover:text-ink-strong"
       >
         <ArrowLeft size={13} />
-        All work
+        All projects
       </Link>
 
       <ProjectBlocks blocks={project.blocks} project={project} />
@@ -51,7 +51,7 @@ export default async function ProjectDetailPage({
             <p className="type-label">Next case study</p>
             <p className="text-[15px] font-semibold text-ink-em">{next.name}</p>
           </div>
-          <Button href={`/work/${next.slug}`} variant="outline">
+          <Button href={`/projects/${next.slug}`} variant="outline">
             Next
             <ArrowRight size={14} />
           </Button>

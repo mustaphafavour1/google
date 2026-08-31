@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 export function ProjectCard({ project }: { project: Project }) {
   return (
     <Link
-      href={`/work/${project.slug}`}
+      href={`/projects/${project.slug}`}
       className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-[0_4px_16px_rgb(15_23_42_/_0.08)]"
     >
       <div
