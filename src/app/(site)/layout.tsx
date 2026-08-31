@@ -3,7 +3,7 @@ import { Parkinsans, JetBrains_Mono, Caveat } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/app-shell";
-import { getProjects, getSiteSettings } from "@/lib/content";
+import { getProjects, getSiteSettings, getBackgroundPatterns } from "@/lib/content";
 import type { ReactNode } from "react";
 import "../globals.css";
 
@@ -33,7 +33,11 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [siteSettings, projects] = await Promise.all([getSiteSettings(), getProjects()]);
+  const [siteSettings, projects, backgroundPatterns] = await Promise.all([
+    getSiteSettings(),
+    getProjects(),
+    getBackgroundPatterns(),
+  ]);
 
   return (
     <html
@@ -44,7 +48,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body className="min-h-full">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <TooltipProvider delayDuration={200}>
-            <AppShell siteSettings={siteSettings} projects={projects}>
+            <AppShell siteSettings={siteSettings} projects={projects} backgroundPatterns={backgroundPatterns}>
               {children}
             </AppShell>
           </TooltipProvider>

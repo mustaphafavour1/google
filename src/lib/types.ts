@@ -247,6 +247,31 @@ export type SiteSettings = {
   };
 };
 
+// ---- Background patterns --------------------------------------------------------
+
+export type BackgroundPatternPageKey =
+  | "overview"
+  | "projects"
+  | "gallery"
+  | "profile"
+  | "playground"
+  | "archive"
+  | "about"
+  | "process"
+  | "skills"
+  | "contact"
+  | "analytics";
+
+export type BackgroundPattern = {
+  _id: string;
+  title: string;
+  svgUrl?: string;
+  enabled: boolean;
+  global: boolean;
+  pages: BackgroundPatternPageKey[];
+  projectSlugs: string[];
+};
+
 // ---- Portfolio archive ---------------------------------------------------------
 
 export type PortfolioArchiveEntry = {

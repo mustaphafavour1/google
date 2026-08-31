@@ -1,27 +1,47 @@
-export function BackgroundPattern() {
+"use client";
+
+import { usePathname } from "next/navigation";
+import type { BackgroundPattern, BackgroundPatternPageKey } from "@/lib/types";
+
+const PAGE_KEY_BY_PATH: Record<string, BackgroundPatternPageKey> = {
+  "/": "overview",
+  "/projects": "projects",
+  "/gallery": "gallery",
+  "/profile": "profile",
+  "/playground": "playground",
+  "/archive": "archive",
+  "/about": "about",
+  "/process": "process",
+  "/skills": "skills",
+  "/contact": "contact",
+  "/analytics": "analytics",
+};
+
+function resolvePattern(patterns: BackgroundPattern[], pathname: string): BackgroundPattern | null {
+  const projectSlug = pathname.match(/^\/projects\/([^/]+)/)?.[1];
+  const specific = projectSlug
+    ? patterns.find((p) => p.projectSlugs.includes(projectSlug))
+    : patterns.find((p) => PAGE_KEY_BY_PATH[pathname] && p.pages.includes(PAGE_KEY_BY_PATH[pathname]));
+  if (specific) return specific;
+
+  return patterns.find((p) => p.global) ?? null;
+}
+
+export function BackgroundPattern({ patterns }: { patterns: BackgroundPattern[] }) {
+  const pathname = usePathname();
+  const pattern = resolvePattern(patterns, pathname);
+
+  if (!pattern?.svgUrl) return null;
+
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 text-ink-faint opacity-[0.05] dark:opacity-[0.08]"
-    >
-      <svg width="100%" height="100%">
-        <pattern
-          id="geo-weave"
-          x="0"
-          y="0"
-          width="72"
-          height="72"
-          patternUnits="userSpaceOnUse"
-        >
-          <path d="M36 6 L66 36 L36 66 L6 36 Z" fill="none" stroke="currentColor" strokeWidth="1" />
-          <path d="M36 24 L48 36 L36 48 L24 36 Z" fill="currentColor" />
-          <path d="M0 0 L14 0 L0 14 Z" fill="currentColor" />
-          <path d="M72 0 L58 0 L72 14 Z" fill="currentColor" />
-          <path d="M0 72 L14 72 L0 58 Z" fill="currentColor" />
-          <path d="M72 72 L58 72 L72 58 Z" fill="currentColor" />
-        </pattern>
-        <rect width="100%" height="100%" fill="url(#geo-weave)" />
-      </svg>
-    </div>
+      className="pointer-events-none fixed inset-0 z-0 opacity-[0.06] dark:opacity-[0.1]"
+      style={{
+        backgroundImage: `url(${pattern.svgUrl})`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "160px 160px",
+      }}
+    />
   );
 }

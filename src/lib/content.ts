@@ -5,6 +5,7 @@ import {
   allProcessTracksQuery,
   allSkillsQuery,
   allPortfolioArchiveQuery,
+  allBackgroundPatternsQuery,
   jobApplicationVariantBySlugQuery,
   projectBySlugQuery,
   siteSettingsQuery,
@@ -15,6 +16,7 @@ import { skills as skillsFallback } from "@/lib/data/skills";
 import { siteSettingsFallback } from "@/lib/data/site";
 import { getJobApplicationBySlug as getJobApplicationBySlugFallback } from "@/lib/data/job-applications";
 import { portfolioArchiveFallback } from "@/lib/data/portfolio-archive";
+import { backgroundPatternsFallback } from "@/lib/data/background-patterns";
 import type {
   JobApplicationVariant,
   Project,
@@ -22,6 +24,7 @@ import type {
   Skill,
   SiteSettings,
   PortfolioArchiveEntry,
+  BackgroundPattern,
 } from "@/lib/types";
 
 const REVALIDATE_SECONDS = 60;
@@ -81,4 +84,9 @@ export async function getJobApplicationVariant(
 export async function getPortfolioArchive(): Promise<PortfolioArchiveEntry[]> {
   const result = await sanityFetch<PortfolioArchiveEntry[]>(allPortfolioArchiveQuery);
   return result && result.length > 0 ? result : portfolioArchiveFallback;
+}
+
+export async function getBackgroundPatterns(): Promise<BackgroundPattern[]> {
+  const result = await sanityFetch<BackgroundPattern[]>(allBackgroundPatternsQuery);
+  return result ?? backgroundPatternsFallback;
 }

@@ -95,6 +95,18 @@ export const allJobApplicationSlugsQuery = /* groq */ `
   *[_type == "jobApplicationVariant"]{ "slug": slug.current }
 `;
 
+export const allBackgroundPatternsQuery = /* groq */ `
+  *[_type == "backgroundPattern" && enabled == true]{
+    _id,
+    title,
+    "svgUrl": svgFile.asset->url,
+    enabled,
+    global,
+    pages,
+    "projectSlugs": projects[]->slug.current
+  }
+`;
+
 export const allPortfolioArchiveQuery = /* groq */ `
   *[_type == "portfolioArchive"] | order(year desc) {
     _id,

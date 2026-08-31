@@ -42,7 +42,7 @@ export function buildChatModes(
   return {
     recruiter: {
       label: "Recruiter",
-      greeting: `Hi, I'm Orbit. Ask me about ${profile.firstName}'s experience, availability, or fit for a role.`,
+      greeting: `Hi, I'm FaveAI. Ask me about ${profile.firstName}'s experience, availability, or fit for a role.`,
       quickQuestions: [
         {
           question: "What's Favour's experience?",
@@ -62,7 +62,7 @@ export function buildChatModes(
         {
           question: "Can I see a resume?",
           answer: contact.resumeUrl
-            ? `Sure — there's a Resume button in the top bar, or grab it directly.`
+            ? `Sure — there's a Download résumé button in the closing section of the homepage, or grab it directly.`
             : `A resume link isn't set up yet — the fastest path is emailing ${contact.email} directly.`,
           keywords: ["resume", "cv"],
         },
@@ -70,7 +70,7 @@ export function buildChatModes(
     },
     designer: {
       label: "Designer",
-      greeting: `Hey, I'm Orbit. Ask me about ${profile.firstName}'s process, tools, or design philosophy.`,
+      greeting: `Hey, I'm FaveAI. Ask me about ${profile.firstName}'s process, tools, or design philosophy.`,
       quickQuestions: [
         {
           question: "What's Favour's design process?",
@@ -98,7 +98,7 @@ export function buildChatModes(
     },
     general: {
       label: "General",
-      greeting: `Hi, I'm Orbit! Ask me anything about ${profile.firstName} or this portfolio.`,
+      greeting: `Hi, I'm FaveAI! Ask me anything about ${profile.firstName} or this portfolio.`,
       quickQuestions: [
         {
           question: "Who is Favour?",

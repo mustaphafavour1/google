@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import type { Project, SiteSettings } from "@/lib/types";
+import type { BackgroundPattern as BackgroundPatternT, Project, SiteSettings } from "@/lib/types";
 import { Sidebar } from "./sidebar";
 import { TopBar } from "./top-bar";
 import { LandingNavbar } from "./landing-navbar";
@@ -17,10 +17,12 @@ import { ChatWidget } from "@/components/chat/chat-widget";
 export function AppShell({
   siteSettings,
   projects,
+  backgroundPatterns,
   children,
 }: {
   siteSettings: SiteSettings;
   projects: Project[];
+  backgroundPatterns: BackgroundPatternT[];
   children: ReactNode;
 }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -35,14 +37,14 @@ export function AppShell({
 
   return (
     <div className="flex min-h-screen">
-      <BackgroundPattern />
+      <BackgroundPattern patterns={backgroundPatterns} />
       <RocketTrailCanvas />
       <Sidebar profile={siteSettings.profile} />
       <div className="flex min-w-0 flex-1 flex-col">
         {isOverview ? (
-          <LandingNavbar resumeUrl={siteSettings.contact.resumeUrl} />
+          <LandingNavbar />
         ) : (
-          <TopBar resumeUrl={siteSettings.contact.resumeUrl} onOpenPalette={() => setPaletteOpen(true)} />
+          <TopBar onOpenPalette={() => setPaletteOpen(true)} />
         )}
         <MobileHeader />
         <main className="flex-1 pb-24 lg:pb-0">{children}</main>

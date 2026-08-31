@@ -8,27 +8,20 @@ export function VisitorMetrics() {
   if (total === 0) return null;
 
   return (
-    <section className="mt-6">
-      <div className="card p-5">
-        <div className="mb-2 flex items-center gap-2 text-ink-soft">
-          <Globe2 size={15} />
-          <p className="type-eyebrow">Anonymous, aggregate visitor metrics</p>
-        </div>
-        <p className="text-[13px] text-ink-muted">
-          {total} unique {total === 1 ? "visitor" : "visitors"} so far, from {countries.length}{" "}
-          {countries.length === 1 ? "location" : "locations"}.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {countries.slice(0, 8).map((c) => (
-            <span
-              key={c.country}
-              className="data-mono rounded-full border border-hairline px-2.5 py-1 text-ink-soft"
-            >
-              {c.country} · {c.count}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div className="mt-8 flex flex-wrap items-center justify-center gap-2 border-t border-hairline pt-6 text-center">
+      <span className="flex items-center gap-1.5 text-[12.5px] text-ink-soft">
+        <Globe2 size={13} />
+        {total} anonymous, aggregate {total === 1 ? "visitor" : "visitors"} so far, from{" "}
+        {countries.length} {countries.length === 1 ? "location" : "locations"}
+      </span>
+      {countries.slice(0, 6).map((c) => (
+        <span
+          key={c.country}
+          className="data-mono rounded-full border border-hairline px-2 py-0.5 text-[11px] text-ink-soft"
+        >
+          {c.country} · {c.count}
+        </span>
+      ))}
+    </div>
   );
 }

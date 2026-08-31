@@ -27,10 +27,7 @@ export function CaseStudyToc({ items }: { items: { id: string; label: string }[]
   if (items.length === 0) return null;
 
   return (
-    <nav
-      aria-label="On this page"
-      className="sticky top-[calc(var(--header-h)+1.5rem)] hidden h-max max-h-[calc(100vh-var(--header-h)-3rem)] w-52 shrink-0 overflow-y-auto xl:block"
-    >
+    <nav aria-label="On this page">
       <p className="type-eyebrow mb-3">On this page</p>
       <ul className="flex flex-col gap-0.5 border-l border-hairline">
         {items.map((item) => (

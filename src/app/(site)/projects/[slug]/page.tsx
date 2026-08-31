@@ -5,8 +5,11 @@ import { PageContainer } from "@/components/shell/page-container";
 import { ProjectBlocks } from "@/components/blocks/block-renderer";
 import { ProcessTabs } from "@/components/process/process-tabs";
 import { Button } from "@/components/ui/button";
-import { getProjectBySlug, getProjects, getProcessTracks } from "@/lib/content";
+import { getProjectBySlug, getProjects, getProcessTracks, getSiteSettings } from "@/lib/content";
+import { buildChatModes } from "@/lib/chatbot-content";
 import { CaseStudyToc } from "./case-study-toc";
+import { CaseStudyMiniMetrics } from "./case-study-mini-metrics";
+import { FaveAiMini } from "./faveai-mini";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import type { ProjectBlock } from "@/lib/types";
 
@@ -56,12 +59,15 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [project, projects, processTracks] = await Promise.all([
+  const [project, projects, processTracks, siteSettings] = await Promise.all([
     getProjectBySlug(slug),
     getProjects(),
     getProcessTracks(),
+    getSiteSettings(),
   ]);
   if (!project) notFound();
+
+  const faveAiConfig = buildChatModes(siteSettings, projects).designer;
 
   const currentIndex = projects.findIndex((p) => p.slug === slug);
   const next = projects[(currentIndex + 1) % projects.length];
@@ -111,7 +117,11 @@ export default async function ProjectDetailPage({
           )}
         </div>
 
-        <CaseStudyToc items={tocItems} />
+        <aside className="sticky top-[calc(var(--header-h)+1.5rem)] hidden h-max max-h-[calc(100vh-var(--header-h)-3rem)] w-52 shrink-0 flex-col gap-6 overflow-y-auto xl:flex">
+          <CaseStudyToc items={tocItems} />
+          <CaseStudyMiniMetrics project={project} />
+          <FaveAiMini config={faveAiConfig} fallbackEmail={siteSettings.contact.email} />
+        </aside>
       </div>
     </PageContainer>
   );

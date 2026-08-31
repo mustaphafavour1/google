@@ -4,26 +4,27 @@
 
 /* ---------------------------------------------------------------------------
  * Design tokens
- * Warm neutral scale + brand ramps are theme-stable reference values.
- * Surfaces, borders, and the ink ladder are theme-aware and get redefined
- * under .dark. Layout/type discipline follows Dashboards — Design Taste &
- * Build Scope §3/§6–§8; the palette itself is this portfolio's own warm
- * rose-gold-and-cream identity, deliberately distinct from the cooler
- * blueprint-blue system the rest of that doc's examples use.
+ * Neutral scale + brand ramps are theme-stable reference values. Surfaces,
+ * borders, and the ink ladder are theme-aware and get redefined under
+ * .dark. Layout/type discipline and the neutral background/surface system
+ * follow Dashboards — Design Taste & Build Scope §3/§6–§8; rose gold is
+ * this portfolio's own accent on top of that, not a tint on the neutrals.
  * ------------------------------------------------------------------------- */
 
 :root {
-  /* Neutral scale — warm, to sit with rose gold + cream rather than fight it */
-  --gray-50: #fafaf7;
-  --gray-100: #f2f1ec;
-  --gray-200: #e5e2da;
-  --gray-300: #cfcabf;
-  --gray-400: #a59e8f;
-  --gray-500: #7a7267;
-  --gray-600: #57514a;
-  --gray-700: #3d3833;
-  --gray-800: #272320;
-  --gray-900: #181513;
+  /* Neutral scale — genuinely neutral (no warm/cool cast), the standard
+     dashboard-doc default. Rose gold stays the accent; it no longer tints
+     the neutrals themselves the way the cream identity did. */
+  --gray-50: #fafafa;
+  --gray-100: #f2f2f2;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
 
   /* Primary — rose gold, base 500 #A55C4E (deep enough for AA text/button contrast) */
   --primary-25: #fdf8f6;
@@ -39,7 +40,7 @@
   --primary-900: #3a1f1b;
 
   /* Highlight palette — for situational text/tag colour, not the brand primary.
-     All 5 verified at ≥4.5:1 against white and the cream background. */
+     All 5 verified at ≥4.5:1 against white and the neutral background. */
   --highlight-blue: #3e63dd;
   --highlight-green: #1f7a42;
   --highlight-orange: #b35a04;
@@ -57,11 +58,10 @@
   --danger-tint: #fef2f2;
   --danger-border: #fecaca;
 
-  /* Theme-aware surfaces (light) — surface is a lighter tint of the same
-     cream as background, never a plain white, so sidebar/cards/topbar read
-     as one warm family instead of jumping to a cold white. */
-  --background: #fdfce8;
-  --surface: #fffef5;
+  /* Theme-aware surfaces (light) — neutral dashboard background with
+     white cards/panels sitting a touch lighter on top of it. */
+  --background: #fafafa;
+  --surface: #ffffff;
   --surface-muted: var(--gray-100);
   --border: var(--gray-200);
   --hairline: var(--gray-100);

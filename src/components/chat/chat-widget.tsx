@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, Orbit, Send, X } from "lucide-react";
+import { Bot, Orbit as OrbitIcon, Send, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
@@ -71,7 +71,7 @@ export function ChatWidget({
             exit={{ opacity: 0, y: 12, scale: 0.97 }}
             transition={{ duration: 0.16, ease: "easeOut" }}
             role="dialog"
-            aria-label="Chat with Orbit"
+            aria-label="Chat with FaveAI"
             onKeyDown={(e) => {
               if (e.key === "Escape") setOpen(false);
             }}
@@ -80,9 +80,9 @@ export function ChatWidget({
             <div className="flex shrink-0 items-center justify-between border-b border-hairline px-4 py-3">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-tint text-primary-tint-text">
-                  <Orbit size={14} />
+                  <OrbitIcon size={14} />
                 </span>
-                <span className="text-[13.5px] font-semibold text-ink-strong">Orbit</span>
+                <span className="text-[13.5px] font-semibold text-ink-strong">FaveAI</span>
               </div>
               <button
                 type="button"
@@ -165,14 +165,14 @@ export function ChatWidget({
               }}
               className="flex shrink-0 items-center gap-2 border-t border-hairline p-2.5"
             >
-              <label htmlFor="orbit-chat-input" className="sr-only">
-                Message Orbit
+              <label htmlFor="faveai-chat-input" className="sr-only">
+                Message FaveAI
               </label>
               <input
-                id="orbit-chat-input"
+                id="faveai-chat-input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask Orbit something…"
+                placeholder="Ask FaveAI something…"
                 className="h-9 flex-1 rounded-md border border-border bg-transparent px-3 text-[12.5px] text-ink-strong placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-primary-300"
               />
               <button
@@ -193,13 +193,13 @@ export function ChatWidget({
       <motion.button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        aria-label={open ? "Close chat with Orbit" : "Chat with Orbit"}
+        aria-label={open ? "Close chat with FaveAI" : "Chat with FaveAI"}
         aria-expanded={open}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.96 }}
         className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_10px_28px_rgb(165_92_78_/_0.4)] transition-colors hover:bg-primary-600"
       >
-        {open ? <X size={18} /> : <Orbit size={20} />}
+        {open ? <X size={18} /> : <OrbitIcon size={20} />}
       </motion.button>
     </div>
   );

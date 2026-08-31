@@ -6,6 +6,7 @@ import { skill } from "./documents/skill";
 import { siteSettings } from "./documents/siteSettings";
 import { jobApplicationVariant } from "./documents/jobApplicationVariant";
 import { portfolioArchive } from "./documents/portfolioArchive";
+import { backgroundPattern } from "./documents/backgroundPattern";
 
 import { heroBlock } from "./objects/blocks/heroBlock";
 import { metricsRowBlock } from "./objects/blocks/metricsRowBlock";
@@ -35,6 +36,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   siteSettings,
   jobApplicationVariant,
   portfolioArchive,
+  backgroundPattern,
   // Page-builder blocks
   heroBlock,
   metricsRowBlock,

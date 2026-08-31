@@ -46,6 +46,17 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
     setCollapsedPreference(!collapsed);
   }
 
+  const toggleButton = (
+    <button
+      type="button"
+      onClick={toggleCollapsed}
+      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong"
+    >
+      {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+    </button>
+  );
+
   return (
     <motion.aside
       initial={false}
@@ -61,6 +72,22 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
         )}
       >
         <Logo name={profile.name} title={profile.title} compact={collapsed} />
+      </div>
+
+      <div
+        className={cn(
+          "flex shrink-0 border-b border-hairline p-2",
+          collapsed ? "justify-center" : "justify-end",
+        )}
+      >
+        {collapsed ? (
+          <Tooltip>
+            <TooltipTrigger asChild>{toggleButton}</TooltipTrigger>
+            <TooltipContent side="right">Expand sidebar</TooltipContent>
+          </Tooltip>
+        ) : (
+          toggleButton
+        )}
       </div>
 
       <nav aria-label="Primary" className="flex-1 overflow-y-auto px-3 py-4">
@@ -137,21 +164,6 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
             </Link>
           </div>
         )}
-      </div>
-
-      <div className="shrink-0 border-t border-hairline p-2">
-        <button
-          type="button"
-          onClick={toggleCollapsed}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={cn(
-            "flex h-8 w-full items-center gap-2 rounded-md text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong",
-            collapsed ? "justify-center" : "px-2.5",
-          )}
-        >
-          {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
-          {!collapsed && <span className="text-[12px] font-medium">Collapse</span>}
-        </button>
       </div>
     </motion.aside>
   );

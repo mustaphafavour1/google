@@ -1,9 +1,9 @@
 export function getNivoPalette(dark: boolean) {
   return {
-    axisColor: dark ? "#8f8579" : "#a59e8f",
-    gridColor: dark ? "#2e2620" : "#f2f1ec",
-    tooltipBg: dark ? "#241d19" : "#fffef5",
-    tooltipText: dark ? "#ece6e0" : "#3d3833",
+    axisColor: dark ? "#8f8579" : "#a3a3a3",
+    gridColor: dark ? "#2e2620" : "#f2f2f2",
+    tooltipBg: dark ? "#241d19" : "#ffffff",
+    tooltipText: dark ? "#ece6e0" : "#404040",
   };
 }
 
