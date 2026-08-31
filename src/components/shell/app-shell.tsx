@@ -9,6 +9,8 @@ import { BottomTabBar } from "./bottom-tab-bar";
 import { CommandPalette } from "./command-palette";
 import { BackgroundPattern } from "./background-pattern";
 import { PrivacyBanner } from "./privacy-banner";
+import { RocketTrailCanvas } from "./rocket-trail-canvas";
+import { ChatWidget } from "@/components/chat/chat-widget";
 
 export function AppShell({
   siteSettings,
@@ -24,6 +26,7 @@ export function AppShell({
   return (
     <div className="flex min-h-screen">
       <BackgroundPattern />
+      <RocketTrailCanvas />
       <Sidebar profile={siteSettings.profile} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar resumeUrl={siteSettings.contact.resumeUrl} onOpenPalette={() => setPaletteOpen(true)} />
@@ -33,6 +36,7 @@ export function AppShell({
       <BottomTabBar contact={siteSettings.contact} />
       <CommandPalette projects={projects} open={paletteOpen} onOpenChange={setPaletteOpen} />
       <PrivacyBanner />
+      <ChatWidget siteSettings={siteSettings} projects={projects} />
     </div>
   );
 }

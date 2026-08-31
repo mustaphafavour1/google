@@ -1,21 +1,33 @@
 import Link from "next/link";
-import { ArrowUpRight, Download, Mail } from "lucide-react";
+import { ArrowUpRight, Mail } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { StatCard } from "@/components/cards/stat-card";
 import { ProjectCard } from "@/components/cards/project-card";
 import { PreviewPanel } from "@/components/cards/preview-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DoodleUnderline } from "@/components/doodles/doodle-underline";
 import { DoodleStar } from "@/components/doodles/doodle-star";
-import { getProjects, getProcessTracks, getSiteSettings, getSkills } from "@/lib/content";
+import { Hero } from "@/components/home/hero";
+import {
+  getProjects,
+  getProcessTracks,
+  getSiteSettings,
+  getSkills,
+  getJobApplicationVariant,
+} from "@/lib/content";
 
-export default async function HomePage() {
-  const [projects, skills, processTracks, siteSettings] = await Promise.all([
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ jd?: string }>;
+}) {
+  const { jd } = await searchParams;
+  const [projects, skills, processTracks, siteSettings, jdVariant] = await Promise.all([
     getProjects(),
     getSkills(),
     getProcessTracks(),
     getSiteSettings(),
+    jd ? getJobApplicationVariant(jd) : Promise.resolve(undefined),
   ]);
   const { profile, siteMetrics, about, contact } = siteSettings;
 
@@ -24,32 +36,7 @@ export default async function HomePage() {
 
   return (
     <PageContainer offset={false}>
-      <section className="pt-1">
-        <p className="type-eyebrow">Welcome</p>
-        <h1 className="type-display mt-2">
-          Hi, I&rsquo;m {profile.firstName} —{" "}
-          <span className="relative inline-block">
-            {profile.title.toLowerCase()}
-            <DoodleUnderline className="absolute -bottom-1.5 left-0 h-2.5 w-full text-primary-300" />
-          </span>
-          .
-        </h1>
-        <p className="type-body mt-3 max-w-xl">{profile.tagline}</p>
-        <div className="mt-5 flex flex-wrap gap-2.5">
-          <Button href="/contact">
-            <Mail size={14} />
-            Get in touch
-          </Button>
-          {contact.resumeUrl && (
-            <Button variant="outline" asChild>
-              <a href={contact.resumeUrl} download>
-                <Download size={14} />
-                Download resume
-              </a>
-            </Button>
-          )}
-        </div>
-      </section>
+      <Hero profile={profile} contact={contact} projects={projects} jdVariant={jdVariant} />
 
       <section className="mt-9">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

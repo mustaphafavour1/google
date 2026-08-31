@@ -34,13 +34,13 @@ function setCollapsedPreference(next: boolean) {
   collapsedListeners.forEach((listener) => listener());
 }
 
+export function useSidebarCollapsed(): boolean {
+  return useSyncExternalStore(subscribeCollapsed, getCollapsedSnapshot, getCollapsedServerSnapshot);
+}
+
 export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
   const pathname = usePathname();
-  const collapsed = useSyncExternalStore(
-    subscribeCollapsed,
-    getCollapsedSnapshot,
-    getCollapsedServerSnapshot,
-  );
+  const collapsed = useSidebarCollapsed();
 
   function toggleCollapsed() {
     setCollapsedPreference(!collapsed);

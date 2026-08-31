@@ -12,6 +12,7 @@ import { projects as projectsFallback, getProjectBySlug as getProjectBySlugFallb
 import { processTracks as processTracksFallback } from "@/lib/data/process";
 import { skills as skillsFallback } from "@/lib/data/skills";
 import { siteSettingsFallback } from "@/lib/data/site";
+import { getJobApplicationBySlug as getJobApplicationBySlugFallback } from "@/lib/data/job-applications";
 import type { JobApplicationVariant, Project, ProcessTrack, Skill, SiteSettings } from "@/lib/types";
 
 const REVALIDATE_SECONDS = 60;
@@ -65,5 +66,5 @@ export async function getJobApplicationVariant(
   const result = await sanityFetch<JobApplicationVariant | null>(jobApplicationVariantBySlugQuery, {
     slug,
   });
-  return result ?? undefined;
+  return result ?? getJobApplicationBySlugFallback(slug);
 }
