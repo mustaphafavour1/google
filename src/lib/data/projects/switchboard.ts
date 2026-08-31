@@ -19,6 +19,7 @@ export const switchboard: Project = {
     estimated: true,
   },
   accent: { primary: "#6366F1", secondary: "#8B5CF6" },
+  processDisciplines: ["UI/UX", "Web Development"],
   blocks: [
     {
       _type: "hero",
@@ -85,6 +86,53 @@ export const switchboard: Project = {
       ],
     },
     {
+      _type: "fullBleedImage",
+      _key: "switchboard-fullbleed",
+      caption: "The Overview dashboard — spend, uptime, and routing health at a glance",
+      aspect: "ultrawide",
+    },
+    {
+      _type: "textGrid",
+      _key: "switchboard-textgrid",
+      heading: "Why the IA holds up under scale",
+      columns: 2,
+      items: [
+        {
+          title: "One console, one mental model",
+          body: "Provider, product, and routing all reference the same underlying entities, so a team never has to reconcile numbers between screens.",
+        },
+        {
+          title: "Built for the on-call path",
+          body: "Uptime and routing health are one click from anywhere in the console — the screens most needed during an incident are the least buried.",
+        },
+        {
+          title: "Spend limits as guardrails",
+          body: "Budget controls attach to routing rules directly, so cost governance is part of the configuration, not a separate audit step.",
+        },
+        {
+          title: "Designed to add a 5th provider",
+          body: "The comparison and routing views were stress-tested against adding new providers without a layout change — this is infrastructure, not a one-off screen.",
+        },
+      ],
+    },
+    {
+      _type: "imageGrid",
+      _key: "switchboard-imagegrid",
+      heading: "Comparison & routing screens",
+      items: [
+        { caption: "Provider Comparison — cost, latency, and capability side-by-side", span: 2 },
+        { caption: "Routing rule builder — visual fallback chains" },
+        { caption: "Spend limits attached to a routing rule" },
+      ],
+    },
+    {
+      _type: "video",
+      _key: "switchboard-video",
+      heading: "Routing rule builder — walkthrough",
+      caption: "A 90-second walkthrough of setting a fallback chain with a spend guardrail.",
+      duration: "1:32",
+    },
+    {
       _type: "imageGallery",
       _key: "switchboard-gallery",
       heading: "Selected screens",
@@ -100,6 +148,14 @@ export const switchboard: Project = {
       quote: "We stopped finding out about a provider outage from our own customers.",
       attribution: "Sample engineering-team feedback",
       role: "Illustrative — for case-study demonstration",
+    },
+    {
+      _type: "pipLinkPreview",
+      _key: "switchboard-pip",
+      title: "Switchboard — interactive prototype",
+      description: "A clickable prototype of the routing rule builder and cost dashboard.",
+      url: "https://headfavour.com/switchboard-prototype",
+      linkLabel: "Open prototype",
     },
   ],
 };

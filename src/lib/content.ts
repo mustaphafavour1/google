@@ -4,6 +4,7 @@ import {
   allProjectsQuery,
   allProcessTracksQuery,
   allSkillsQuery,
+  allPortfolioArchiveQuery,
   jobApplicationVariantBySlugQuery,
   projectBySlugQuery,
   siteSettingsQuery,
@@ -13,7 +14,15 @@ import { processTracks as processTracksFallback } from "@/lib/data/process";
 import { skills as skillsFallback } from "@/lib/data/skills";
 import { siteSettingsFallback } from "@/lib/data/site";
 import { getJobApplicationBySlug as getJobApplicationBySlugFallback } from "@/lib/data/job-applications";
-import type { JobApplicationVariant, Project, ProcessTrack, Skill, SiteSettings } from "@/lib/types";
+import { portfolioArchiveFallback } from "@/lib/data/portfolio-archive";
+import type {
+  JobApplicationVariant,
+  Project,
+  ProcessTrack,
+  Skill,
+  SiteSettings,
+  PortfolioArchiveEntry,
+} from "@/lib/types";
 
 const REVALIDATE_SECONDS = 60;
 
@@ -67,4 +76,9 @@ export async function getJobApplicationVariant(
     slug,
   });
   return result ?? getJobApplicationBySlugFallback(slug);
+}
+
+export async function getPortfolioArchive(): Promise<PortfolioArchiveEntry[]> {
+  const result = await sanityFetch<PortfolioArchiveEntry[]>(allPortfolioArchiveQuery);
+  return result && result.length > 0 ? result : portfolioArchiveFallback;
 }

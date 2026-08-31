@@ -5,6 +5,7 @@ import { processTrack } from "./documents/processTrack";
 import { skill } from "./documents/skill";
 import { siteSettings } from "./documents/siteSettings";
 import { jobApplicationVariant } from "./documents/jobApplicationVariant";
+import { portfolioArchive } from "./documents/portfolioArchive";
 
 import { heroBlock } from "./objects/blocks/heroBlock";
 import { metricsRowBlock } from "./objects/blocks/metricsRowBlock";
@@ -14,6 +15,11 @@ import { imageGalleryBlock } from "./objects/blocks/imageGalleryBlock";
 import { chartBlock } from "./objects/blocks/chartBlock";
 import { quoteBlock } from "./objects/blocks/quoteBlock";
 import { processTimelineBlock } from "./objects/blocks/processTimelineBlock";
+import { fullBleedImageBlock } from "./objects/blocks/fullBleedImageBlock";
+import { imageGridBlock } from "./objects/blocks/imageGridBlock";
+import { videoBlock } from "./objects/blocks/videoBlock";
+import { textGridBlock } from "./objects/blocks/textGridBlock";
+import { pipLinkPreviewBlock } from "./objects/blocks/pipLinkPreviewBlock";
 
 import { projectScale } from "./objects/projectScale";
 import { valueImpact } from "./objects/valueImpact";
@@ -28,6 +34,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   skill,
   siteSettings,
   jobApplicationVariant,
+  portfolioArchive,
   // Page-builder blocks
   heroBlock,
   metricsRowBlock,
@@ -37,6 +44,11 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   chartBlock,
   quoteBlock,
   processTimelineBlock,
+  fullBleedImageBlock,
+  imageGridBlock,
+  videoBlock,
+  textGridBlock,
+  pipLinkPreviewBlock,
   // Shared objects
   projectScale,
   valueImpact,

@@ -13,6 +13,7 @@ export const projectFields = /* groq */ `
   scale,
   valueImpact,
   accent,
+  processDisciplines,
   blocks[]{
     ...,
     _type == "imageGallery" => {
@@ -20,6 +21,18 @@ export const projectFields = /* groq */ `
         "src": image.asset->url,
         caption,
         aspect
+      }
+    },
+    _type == "fullBleedImage" => {
+      "image": image.asset->url,
+      caption,
+      aspect
+    },
+    _type == "imageGrid" => {
+      items[]{
+        "image": image.asset->url,
+        caption,
+        span
       }
     }
   }
@@ -79,4 +92,14 @@ export const jobApplicationVariantBySlugQuery = /* groq */ `
 
 export const allJobApplicationSlugsQuery = /* groq */ `
   *[_type == "jobApplicationVariant"]{ "slug": slug.current }
+`;
+
+export const allPortfolioArchiveQuery = /* groq */ `
+  *[_type == "portfolioArchive"] | order(year desc) {
+    _id,
+    year,
+    url,
+    "image": image.asset->url,
+    description
+  }
 `;

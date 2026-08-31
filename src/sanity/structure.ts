@@ -14,4 +14,5 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("skill").title("Skills"),
       S.divider(),
       S.documentTypeListItem("jobApplicationVariant").title("Job applications"),
+      S.documentTypeListItem("portfolioArchive").title("Portfolio archive"),
     ]);

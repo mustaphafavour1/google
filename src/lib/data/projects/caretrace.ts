@@ -19,6 +19,7 @@ export const caretrace: Project = {
     estimated: true,
   },
   accent: { primary: "#0F9488", secondary: "#EC4899" },
+  processDisciplines: ["UI/UX", "Web Development"],
   blocks: [
     {
       _type: "hero",

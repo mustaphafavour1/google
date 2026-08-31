@@ -89,6 +89,47 @@ export type ProcessTimelineBlock = {
   phases: { label: string; description: string }[];
 };
 
+export type FullBleedImageBlock = {
+  _type: "fullBleedImage";
+  _key: string;
+  image?: string;
+  caption?: string;
+  aspect?: "wide" | "ultrawide" | "tall";
+};
+
+export type ImageGridBlock = {
+  _type: "imageGrid";
+  _key: string;
+  heading?: string;
+  items: { image?: string; caption?: string; span?: 1 | 2 }[];
+};
+
+export type VideoBlock = {
+  _type: "video";
+  _key: string;
+  heading?: string;
+  caption?: string;
+  embedUrl?: string;
+  duration?: string;
+};
+
+export type TextGridBlock = {
+  _type: "textGrid";
+  _key: string;
+  heading?: string;
+  columns?: 2 | 3 | 4;
+  items: { title: string; body: string }[];
+};
+
+export type PipLinkPreviewBlock = {
+  _type: "pipLinkPreview";
+  _key: string;
+  title: string;
+  description?: string;
+  url: string;
+  linkLabel?: string;
+};
+
 export type ProjectBlock =
   | HeroBlock
   | MetricsRowBlock
@@ -97,7 +138,12 @@ export type ProjectBlock =
   | ImageGalleryBlock
   | ChartBlock
   | QuoteBlock
-  | ProcessTimelineBlock;
+  | ProcessTimelineBlock
+  | FullBleedImageBlock
+  | ImageGridBlock
+  | VideoBlock
+  | TextGridBlock
+  | PipLinkPreviewBlock;
 
 // ---- Documents ---------------------------------------------------------------
 
@@ -119,6 +165,7 @@ export type Project = {
     primary: string;
     secondary: string;
   };
+  processDisciplines?: ProcessDiscipline[];
   blocks: ProjectBlock[];
 };
 
@@ -192,6 +239,16 @@ export type SiteSettings = {
     projectTypeBreakdown: { type: string; count: number }[];
     projectsOverTime: { year: string; count: number }[];
   };
+};
+
+// ---- Portfolio archive ---------------------------------------------------------
+
+export type PortfolioArchiveEntry = {
+  _id: string;
+  year: string;
+  url: string;
+  image?: string;
+  description: string;
 };
 
 // ---- Job application variant --------------------------------------------------

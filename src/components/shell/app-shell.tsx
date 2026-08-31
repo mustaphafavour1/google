@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import type { Project, SiteSettings } from "@/lib/types";
 import { Sidebar } from "./sidebar";
 import { TopBar } from "./top-bar";
+import { LandingNavbar } from "./landing-navbar";
 import { MobileHeader } from "./mobile-header";
 import { BottomTabBar } from "./bottom-tab-bar";
 import { CommandPalette } from "./command-palette";
@@ -22,6 +24,8 @@ export function AppShell({
   children: ReactNode;
 }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const pathname = usePathname();
+  const isOverview = pathname === "/";
 
   return (
     <div className="flex min-h-screen">
@@ -29,7 +33,11 @@ export function AppShell({
       <RocketTrailCanvas />
       <Sidebar profile={siteSettings.profile} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar resumeUrl={siteSettings.contact.resumeUrl} onOpenPalette={() => setPaletteOpen(true)} />
+        {isOverview ? (
+          <LandingNavbar resumeUrl={siteSettings.contact.resumeUrl} />
+        ) : (
+          <TopBar resumeUrl={siteSettings.contact.resumeUrl} onOpenPalette={() => setPaletteOpen(true)} />
+        )}
         <MobileHeader />
         <main className="flex-1 pb-24 lg:pb-0">{children}</main>
       </div>

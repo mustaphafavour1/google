@@ -18,6 +18,7 @@ export const corridor: Project = {
     estimated: true,
   },
   accent: { primary: "#5C6B47", secondary: "#C08A6E" },
+  processDisciplines: ["UI/UX", "Web Development"],
   blocks: [
     {
       _type: "hero",

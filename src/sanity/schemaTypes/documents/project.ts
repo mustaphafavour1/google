@@ -40,6 +40,11 @@ export const project = defineType({
         { type: "chart" },
         { type: "quote" },
         { type: "processTimeline" },
+        { type: "fullBleedImage" },
+        { type: "imageGrid" },
+        { type: "video" },
+        { type: "textGrid" },
+        { type: "pipLinkPreview" },
       ],
     }),
     defineField({ name: "industry", type: "string", group: "meta", validation: (r) => r.required() }),
@@ -75,6 +80,20 @@ export const project = defineType({
     defineField({ name: "scale", type: "projectScale", group: "meta" }),
     defineField({ name: "valueImpact", type: "valueImpact", group: "meta" }),
     defineField({ name: "accent", type: "projectAccent", group: "meta" }),
+    defineField({
+      name: "processDisciplines",
+      title: "Relevant process disciplines",
+      type: "array",
+      group: "meta",
+      description: "Which /process tracks to show as horizontal tabs on this case study page.",
+      of: [{ type: "string" }],
+      options: {
+        list: ["UI/UX", "Web Development", "Branding", "Campaigns & Marketing"].map((v) => ({
+          title: v,
+          value: v,
+        })),
+      },
+    }),
   ],
   preview: {
     select: { title: "name", subtitle: "industry", media: "coverImage" },
