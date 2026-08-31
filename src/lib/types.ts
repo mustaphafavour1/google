@@ -215,6 +215,11 @@ export type SocialLink = {
   href: string;
 };
 
+export type Hobby = {
+  label: string;
+  note?: string;
+};
+
 export type SiteSettings = {
   profile: {
     name: string;
@@ -235,6 +240,7 @@ export type SiteSettings = {
     website: SocialLink;
     socials: SocialLink[];
   };
+  hobbies: Hobby[];
   analyticsAggregate: {
     projectTypeBreakdown: { type: string; count: number }[];
     projectsOverTime: { year: string; count: number }[];

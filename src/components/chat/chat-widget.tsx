@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Bot, Orbit, Send, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { soundPreference } from "@/lib/persistent-toggle";
+import { playTone } from "@/lib/ui-sound";
 import { buildChatModes, findBestAnswer, type ChatMode } from "@/lib/chatbot-content";
 import type { Project, SiteSettings } from "@/lib/types";
 
@@ -13,25 +14,7 @@ type Message = { role: "bot" | "user"; text: string };
 const MODES: ChatMode[] = ["general", "recruiter", "designer"];
 
 function playChime() {
-  try {
-    type WindowWithWebkitAudio = Window & { webkitAudioContext?: typeof AudioContext };
-    const Ctx = window.AudioContext ?? (window as WindowWithWebkitAudio).webkitAudioContext;
-    if (!Ctx) return;
-    const ctx = new Ctx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = "sine";
-    osc.frequency.value = 720;
-    gain.gain.setValueAtTime(0.05, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.18);
-    osc.onended = () => ctx.close();
-  } catch {
-    // Sound is a non-essential enhancement — never block the chat on it.
-  }
+  playTone({ frequency: 720, duration: 0.18, gain: 0.05 });
 }
 
 export function ChatWidget({

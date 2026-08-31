@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import type { Project, SiteSettings } from "@/lib/types";
 import { Sidebar } from "./sidebar";
@@ -26,6 +26,12 @@ export function AppShell({
   const [paletteOpen, setPaletteOpen] = useState(false);
   const pathname = usePathname();
   const isOverview = pathname === "/";
+
+  useEffect(() => {
+    fetch("/api/visit", { method: "POST" }).catch(() => {
+      // Anonymous ping only — a failed request has no effect on the visitor.
+    });
+  }, []);
 
   return (
     <div className="flex min-h-screen">

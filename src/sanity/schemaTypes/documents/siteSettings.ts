@@ -8,6 +8,7 @@ export const siteSettings = defineType({
     { name: "profile", title: "Profile", default: true },
     { name: "about", title: "About" },
     { name: "contact", title: "Contact" },
+    { name: "hobbies", title: "Hobbies" },
     { name: "analytics", title: "Analytics aggregates" },
   ],
   fields: [
@@ -71,6 +72,24 @@ export const siteSettings = defineType({
         }),
         defineField({ name: "website", type: "socialLink" }),
         defineField({ name: "socials", type: "array", of: [{ type: "socialLink" }] }),
+      ],
+    }),
+    defineField({
+      name: "hobbies",
+      title: "Hobbies",
+      type: "array",
+      group: "hobbies",
+      description: "Shown on the Profile Hub — a few things outside the design system.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "hobby",
+          fields: [
+            defineField({ name: "label", type: "string", validation: (r) => r.required() }),
+            defineField({ name: "note", type: "string" }),
+          ],
+          preview: { select: { title: "label", subtitle: "note" } },
+        }),
       ],
     }),
     defineField({

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DoodleStar } from "@/components/doodles/doodle-star";
 import { Hero } from "@/components/home/hero";
+import { VisitorMetrics } from "@/components/home/visitor-metrics";
 import {
   getProjects,
   getProcessTracks,
@@ -55,6 +56,8 @@ export default async function HomePage({
           </p>
         )}
       </section>
+
+      <VisitorMetrics />
 
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between">

@@ -7,6 +7,7 @@ import { ProcessTabs } from "@/components/process/process-tabs";
 import { Button } from "@/components/ui/button";
 import { getProjectBySlug, getProjects, getProcessTracks } from "@/lib/content";
 import { CaseStudyToc } from "./case-study-toc";
+import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import type { ProjectBlock } from "@/lib/types";
 
 export async function generateStaticParams() {
@@ -93,6 +94,8 @@ export default async function ProjectDetailPage({
               <ProcessTabs processTracks={relevantTracks} />
             </section>
           )}
+
+          <CaseStudyFooter slug={project.slug} projectName={project.name} />
 
           {next && next.slug !== slug && (
             <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-hairline pt-6">

@@ -75,6 +75,7 @@ export const siteSettingsQuery = /* groq */ `
       website,
       socials
     },
+    hobbies,
     analyticsAggregate
   }
 `;

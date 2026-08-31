@@ -50,6 +50,12 @@ export const siteSettingsFallback: SiteSettings = {
       { label: "X (Twitter)", href: "#" },
     ],
   },
+  hobbies: [
+    { label: "Building small tools", note: "Side projects under FlutterBytes, usually solving my own annoyance." },
+    { label: "Reading sci-fi", note: "Anything that treats systems and infrastructure as characters." },
+    { label: "Basketball", note: "Weekend pickup games — a decent counterweight to a screen-heavy week." },
+    { label: "Tinkering with hardware", note: "A leftover habit from Mechatronics Engineering." },
+  ],
   analyticsAggregate: {
     projectTypeBreakdown: [
       { type: "Dashboards", count: 14 },
