@@ -69,18 +69,10 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
       <div
         className={cn(
           "flex h-(--header-h) shrink-0 items-center border-b border-hairline",
-          collapsed ? "justify-center px-2" : "px-4",
+          collapsed ? "justify-center px-2" : "justify-between px-4",
         )}
       >
-        <Logo name={profile.name} title={profile.title} compact={collapsed} />
-      </div>
-
-      <div
-        className={cn(
-          "flex shrink-0 border-b border-hairline p-2",
-          collapsed ? "justify-center" : "justify-end",
-        )}
-      >
+        {!collapsed && <Logo name={profile.name} title={profile.title} compact={false} />}
         {collapsed ? (
           <Tooltip>
             <TooltipTrigger asChild>{toggleButton}</TooltipTrigger>
