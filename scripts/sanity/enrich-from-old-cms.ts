@@ -332,10 +332,103 @@ async function enrichSiteSettings() {
   await newClient.createOrReplace(doc);
 }
 
+// ---- 4. industries, complexity/recency, cover GIFs -----------------------
+
+const INDUSTRIES = ["Fintech", "HealthTech", "Entertainment", "Engineering", "AI", "Events"];
+
+// Judgment calls made from each project's real title/description/tags — see
+// the six seeded industries above. A project not listed here doesn't fit
+// any of them well (a craft brand, a spa, a personal identity project) and
+// is left with no industry reference rather than forced into a wrong one;
+// assign it by hand in Studio, adding a new industry document if needed.
+const INDUSTRY_BY_SLUG: Record<string, string> = {
+  "flutterbytes-conference-2025": "Events",
+  "revolut-founder-mode": "Fintech",
+  corridor: "Fintech",
+  "favbots-website": "Engineering",
+  "shiplat-dashboard": "Engineering",
+  "didii-ai": "AI",
+  probity: "Engineering",
+  "primeridge-website": "Engineering",
+  "allowance-ai": "AI",
+  "raptures-and-rapkids": "Entertainment",
+  switchboard: "AI",
+  "ample-market": "AI",
+  moniematch: "Fintech",
+};
+
+function industryId(name: string): string {
+  return `industry-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+}
+
+async function enrichIndustriesAndScores() {
+  console.log("\n=== 4. Industries, complexity/recency, cover GIFs ===\n");
+
+  for (const name of INDUSTRIES) {
+    console.log(`${write ? "Writing" : "[dry run] Would write"} industry "${name}" (${industryId(name)})`);
+    if (write) {
+      await newClient.createOrReplace({ _type: "industry", _id: industryId(name), name, slug: { _type: "slug", current: name.toLowerCase() } });
+    }
+  }
+
+  const oldProjects = await oldClient.fetch<
+    { title: string; slug: string; complexity: number | null; recency: number | null; coverGifUrl: string | null }[]
+  >(`*[_type == "project" && isPassworded != true]{
+    title, "slug": slug.current, complexity, recency, "coverGifUrl": coverGif.asset->url
+  }`);
+
+  for (const old of oldProjects) {
+    const id = `project-${old.slug}`;
+    const industryName = INDUSTRY_BY_SLUG[old.slug];
+    const patch: Record<string, unknown> = {};
+    if (old.complexity !== null) patch.complexity = old.complexity;
+    if (old.recency !== null) patch.recency = old.recency;
+    if (industryName) patch.industry = { _type: "reference", _ref: industryId(industryName) };
+
+    console.log(
+      `${write ? "Patching" : "[dry run] Would patch"} ${old.title} (${id}): ` +
+        `industry=${industryName ?? "(none — no good fit)"}  complexity=${old.complexity}  recency=${old.recency}` +
+        (old.coverGifUrl ? "  +coverGif" : ""),
+    );
+
+    if (!write) continue;
+
+    if (old.coverGifUrl) {
+      try {
+        const res = await fetch(old.coverGifUrl);
+        const buffer = Buffer.from(await res.arrayBuffer());
+        const asset = await newClient.assets.upload("image", buffer, { filename: `${id}-cover.gif` });
+        patch.coverGif = { _type: "image", asset: { _type: "reference", _ref: asset._id } };
+      } catch (err) {
+        console.error(`  ⚠ cover GIF upload failed for ${old.title}:`, err);
+      }
+    }
+
+    if (Object.keys(patch).length > 0) {
+      await newClient.patch(id).set(patch).commit();
+    }
+  }
+}
+
+const SECTIONS: Record<string, () => Promise<void>> = {
+  projects: enrichProjects,
+  process: enrichProcessTracks,
+  settings: enrichSiteSettings,
+  industries: enrichIndustriesAndScores,
+};
+
 async function main() {
-  await enrichProjects();
-  await enrichProcessTracks();
-  await enrichSiteSettings();
+  const onlyArg = process.argv.find((a) => a.startsWith("--only="));
+  const only = onlyArg ? onlyArg.replace("--only=", "").split(",") : Object.keys(SECTIONS);
+
+  for (const key of only) {
+    const fn = SECTIONS[key];
+    if (!fn) {
+      console.error(`Unknown section "${key}". Valid: ${Object.keys(SECTIONS).join(", ")}`);
+      process.exit(1);
+    }
+    await fn();
+  }
 
   if (!write) {
     console.log("\nDry run only — nothing written. Re-run with --write once this looks right.");

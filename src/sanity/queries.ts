@@ -3,8 +3,9 @@ export const projectFields = /* groq */ `
   name,
   "slug": slug.current,
   oneLiner,
-  industry,
+  "industry": industry->name,
   "coverImage": coverImage.asset->url,
+  "coverGifUrl": coverGif.asset->url,
   tags,
   projectType,
   year,
@@ -14,6 +15,8 @@ export const projectFields = /* groq */ `
   valueImpact,
   accent,
   processDisciplines,
+  complexity,
+  recency,
   blocks[]{
     ...,
     _type == "imageGallery" => {

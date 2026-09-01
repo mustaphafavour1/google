@@ -12,6 +12,7 @@ export function SelectedWorkShowcase({ projects }: { projects: Project[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = projects[activeIndex];
   if (!active) return null;
+  const coverSrc = active.coverGifUrl ?? active.coverImage;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[260px_1fr] lg:gap-10">
@@ -55,6 +56,11 @@ export function SelectedWorkShowcase({ projects }: { projects: Project[] }) {
                 background: `linear-gradient(135deg, ${active.accent.primary}, ${active.accent.secondary})`,
               }}
             >
+              {coverSrc && (
+                // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+                <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
               <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-7">
                 <span className="type-eyebrow text-white/85">{active.industry}</span>
                 <h3 className="type-display mt-1 text-white">{active.name}</h3>

@@ -154,6 +154,7 @@ export type Project = {
   oneLiner: string;
   industry: string;
   coverImage?: string;
+  coverGifUrl?: string;
   tags: string[];
   projectType: "Dashboard" | "App" | "Website" | "Branding" | "Campaign";
   year: number;
@@ -161,6 +162,8 @@ export type Project = {
   techStack: string[];
   scale: ProjectScale;
   valueImpact?: ValueImpact;
+  complexity?: number;
+  recency?: number;
   accent: {
     primary: string;
     secondary: string;

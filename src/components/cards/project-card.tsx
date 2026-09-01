@@ -4,6 +4,8 @@ import type { Project } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 
 export function ProjectCard({ project }: { project: Project }) {
+  const coverSrc = project.coverGifUrl ?? project.coverImage;
+
   return (
     <Link
       href={`/projects/${project.slug}`}
@@ -15,6 +17,11 @@ export function ProjectCard({ project }: { project: Project }) {
           background: `linear-gradient(135deg, ${project.accent.primary}, ${project.accent.secondary})`,
         }}
       >
+        {coverSrc && (
+          // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+          <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
         <div className="absolute inset-0 flex items-end justify-between p-4">
           <span className="type-eyebrow text-white/85">{project.industry}</span>
           <span className="data-mono rounded-full bg-black/20 px-2 py-0.5 text-white/90">

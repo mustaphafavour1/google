@@ -27,6 +27,13 @@ export const project = defineType({
     }),
     defineField({ name: "coverImage", type: "image", group: "content", options: { hotspot: true } }),
     defineField({
+      name: "coverGif",
+      title: "Cover GIF",
+      type: "image",
+      group: "content",
+      description: "Optional animated cover — shown instead of the static cover image when set.",
+    }),
+    defineField({
       name: "blocks",
       title: "Page blocks",
       type: "array",
@@ -47,7 +54,13 @@ export const project = defineType({
         { type: "pipLinkPreview" },
       ],
     }),
-    defineField({ name: "industry", type: "string", group: "meta", validation: (r) => r.required() }),
+    defineField({
+      name: "industry",
+      type: "reference",
+      to: [{ type: "industry" }],
+      group: "meta",
+      validation: (r) => r.required(),
+    }),
     defineField({
       name: "tags",
       type: "array",
@@ -81,6 +94,18 @@ export const project = defineType({
     defineField({ name: "valueImpact", type: "valueImpact", group: "meta" }),
     defineField({ name: "accent", type: "projectAccent", group: "meta" }),
     defineField({
+      name: "complexity",
+      type: "number",
+      group: "meta",
+      description: "Carried over from the old portfolio — a 0-10 self-rated complexity score.",
+    }),
+    defineField({
+      name: "recency",
+      type: "number",
+      group: "meta",
+      description: "Carried over from the old portfolio — a 0-10 self-rated recency/relevance score.",
+    }),
+    defineField({
       name: "processDisciplines",
       title: "Relevant process disciplines",
       type: "array",
@@ -96,6 +121,7 @@ export const project = defineType({
     }),
   ],
   preview: {
-    select: { title: "name", subtitle: "industry", media: "coverImage" },
+    select: { title: "name", industryName: "industry.name", media: "coverImage" },
+    prepare: ({ title, industryName, media }) => ({ title, subtitle: industryName, media }),
   },
 });
