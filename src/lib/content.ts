@@ -30,6 +30,20 @@ import type {
 const REVALIDATE_SECONDS = 60;
 
 /**
+ * `accent` has no `.required()` rule in the Sanity schema (see
+ * documents/project.ts) — a project authored or migrated without one is
+ * valid content, not a bug. Every accent-consuming component assumes it's
+ * always there, so fill the gap here, at the one boundary all three
+ * project-shaped queries pass through, rather than defensively in every
+ * gradient call site.
+ */
+const DEFAULT_PROJECT_ACCENT = { primary: "#a55c4e", secondary: "#d19686" };
+
+function withAccentFallback(project: Project): Project {
+  return project.accent ? project : { ...project, accent: DEFAULT_PROJECT_ACCENT };
+}
+
+/**
  * Every fetcher below tries live Sanity first (when configured) and falls
  * back to the local seed data in lib/data/ on missing config, an empty
  * result, or any fetch error — so the site keeps rendering correctly before
@@ -49,12 +63,12 @@ async function sanityFetch<T>(query: string, params: Record<string, unknown> = {
 
 export async function getProjects(): Promise<Project[]> {
   const result = await sanityFetch<Project[]>(allProjectsQuery);
-  return result && result.length > 0 ? result : projectsFallback;
+  return result && result.length > 0 ? result.map(withAccentFallback) : projectsFallback;
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | undefined> {
   const result = await sanityFetch<Project | null>(projectBySlugQuery, { slug });
-  return result ?? getProjectBySlugFallback(slug);
+  return result ? withAccentFallback(result) : getProjectBySlugFallback(slug);
 }
 
 export async function getProcessTracks(): Promise<ProcessTrack[]> {
@@ -78,7 +92,9 @@ export async function getJobApplicationVariant(
   const result = await sanityFetch<JobApplicationVariant | null>(jobApplicationVariantBySlugQuery, {
     slug,
   });
-  return result ?? getJobApplicationBySlugFallback(slug);
+  return result
+    ? { ...result, selectedProjects: result.selectedProjects.map(withAccentFallback) }
+    : getJobApplicationBySlugFallback(slug);
 }
 
 export async function getPortfolioArchive(): Promise<PortfolioArchiveEntry[]> {
