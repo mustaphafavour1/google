@@ -9,7 +9,7 @@ import { AboutTabs } from "./about-tabs";
 const quickFacts: { icon: LucideIcon; label: string; value: string }[] = [
   { icon: MapPin, label: "Based in", value: "Lagos, Nigeria" },
   { icon: GraduationCap, label: "Background", value: "Mechatronics Engineering" },
-  { icon: Rocket, label: "Founder", value: "FlutterBytes" },
+  { icon: Rocket, label: "Founder", value: "Stampdx" },
   { icon: Sparkles, label: "Experience", value: "7 years" },
 ];
 

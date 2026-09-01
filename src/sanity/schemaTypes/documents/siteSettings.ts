@@ -26,6 +26,16 @@ export const siteSettings = defineType({
       ],
     }),
     defineField({
+      name: "featuredProjects",
+      title: "Featured projects (landing page)",
+      type: "array",
+      group: "profile",
+      description:
+        "Shown in the Overview page's \"Shipped, Not Just Designed\" section — pick up to 4. Falls back to the 4 most recent projects if left empty.",
+      of: [{ type: "reference", to: [{ type: "project" }] }],
+      validation: (r) => r.max(4).unique(),
+    }),
+    defineField({
       name: "siteMetrics",
       title: "Home metrics row",
       type: "array",

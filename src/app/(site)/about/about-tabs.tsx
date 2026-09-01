@@ -31,13 +31,13 @@ export function AboutTabs({ about }: { about: SiteSettings["about"] }) {
 function AboutSection({ heading, paragraphs }: { heading: string; paragraphs: string[] }) {
   return (
     <div>
-      <h3 className="type-subheading mb-4">{heading}</h3>
-      <div className="flex flex-col rounded-2xl border border-hairline bg-surface-muted px-6 sm:px-8">
+      <h3 className="text-[22px] font-semibold text-ink-em mb-4">{heading}</h3>
+      <div className="flex flex-col">
         {paragraphs.map((paragraph, i) => (
           <p
             key={i}
             className={cn(
-              "type-body max-w-2xl py-6 first:pt-6 last:pb-6",
+              "type-body max-w-2xl py-6 first:pt-0 last:pb-0",
               i > 0 && "border-t border-hairline",
             )}
           >

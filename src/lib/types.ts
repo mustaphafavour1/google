@@ -235,6 +235,7 @@ export type SiteSettings = {
     tagline: string;
     founderNote: string;
   };
+  featuredProjects: Project[];
   siteMetrics: SiteMetric[];
   about: {
     design: AboutSection;

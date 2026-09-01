@@ -28,7 +28,8 @@ export default async function HomePage({
     getSiteSettings(),
     jd ? getJobApplicationVariant(jd) : Promise.resolve(undefined),
   ]);
-  const { profile, siteMetrics, contact } = siteSettings;
+  const { profile, featuredProjects, siteMetrics, contact } = siteSettings;
+  const shippedProjects = featuredProjects.length > 0 ? featuredProjects : projects.slice(0, 4);
 
   return (
     <div>
@@ -55,14 +56,14 @@ export default async function HomePage({
       <LandingSection id="work">
         <SectionHeading
           eyebrow="Proof"
-          title="Shipped, Not Just Designed"
+          title={{ bold: "Shipped,", soft: "Not Just Designed" }}
           subtitle="A few of the products taken from idea to real users, alone, with AI doing a lot of the execution. Picture this same speed and quality applied to what you're building next."
         />
         <p className="type-body -mt-6 mb-8 max-w-2xl text-ink-muted">
           Every project below is either live right now or was, with real people using it. No
           concept-only mockups here.
         </p>
-        <SelectedWorkShowcase projects={projects} />
+        <SelectedWorkShowcase projects={shippedProjects} />
         <div className="mt-8">
           <Button variant="outline" href="/projects">
             View All Projects

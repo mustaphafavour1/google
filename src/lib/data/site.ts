@@ -13,8 +13,9 @@ export const siteSettingsFallback: SiteSettings = {
     location: "Lagos, Nigeria",
     tagline:
       "I design and build dashboards and product systems for fintech, health-tech, and B2B SaaS teams.",
-    founderNote: "Founder, FlutterBytes",
+    founderNote: "Founder, Stampdx",
   },
+  featuredProjects: [],
   siteMetrics: [
     { key: "projects", label: "Projects delivered", value: "60+", isPlaceholder: true },
     { key: "years", label: "Years of experience", value: "7", isPlaceholder: false },
@@ -35,7 +36,7 @@ export const siteSettingsFallback: SiteSettings = {
       paragraphs: [
         "I'm based in Lagos, Nigeria. My background is in Mechatronics Engineering, which is a slightly unconventional route into product design — but it's exactly why I default to thinking in systems, tolerances, and edge cases rather than starting from a blank canvas.",
         "Over the past 7 years I've worked across fintech, B2B SaaS, health-tech, and brand design — moving between dense operational tooling and the visual identity work that sits in front of it.",
-        "I'm also the founder of FlutterBytes, where I take on product design and front-end build work end to end.",
+        "I'm also the founder of Stampdx.",
       ],
     },
   },
@@ -51,7 +52,7 @@ export const siteSettingsFallback: SiteSettings = {
     ],
   },
   hobbies: [
-    { label: "Building small tools", note: "Side projects under FlutterBytes, usually solving my own annoyance." },
+    { label: "Building small tools", note: "Side projects under Stampdx, usually solving my own annoyance." },
     { label: "Reading sci-fi", note: "Anything that treats systems and infrastructure as characters." },
     { label: "Basketball", note: "Weekend pickup games — a decent counterweight to a screen-heavy week." },
     { label: "Tinkering with hardware", note: "A leftover habit from Mechatronics Engineering." },

@@ -89,6 +89,7 @@ export const allSkillsQuery = /* groq */ `
 export const siteSettingsQuery = /* groq */ `
   *[_id == "siteSettings"][0]{
     profile,
+    "featuredProjects": featuredProjects[]->{ ${projectFields} },
     siteMetrics,
     about,
     contact{

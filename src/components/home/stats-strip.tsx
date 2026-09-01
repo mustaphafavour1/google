@@ -22,30 +22,39 @@ export function StatsStrip({ metrics }: { metrics: SiteMetric[] }) {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4">
-        {metrics.map((metric, i) => {
-          const copy = STATUS_COPY[metric.key];
-          return (
-            <motion.div
-              key={metric.key}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ delay: i * 0.08, duration: 0.5 }}
-              className="border-t border-hairline pt-4"
-            >
-              <p className="text-[clamp(2rem,4vw,2.75rem)] font-semibold leading-none tracking-tight text-ink-em">
-                <CountUpValue value={metric.value} />
-                {metric.isPlaceholder && <span className="ml-0.5 text-ink-faint">*</span>}
-              </p>
-              <p className="type-meta mt-2">{copy?.label ?? metric.label}</p>
-              {copy && <p className="type-body mt-1 text-ink-muted">{copy.descriptor}</p>}
-            </motion.div>
-          );
-        })}
+      <div className="overflow-hidden rounded-xl border border-hairline">
+        <div className="flex items-center gap-2 border-b border-hairline bg-surface-muted px-4 py-2.5">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+          </span>
+          <span className="type-meta">Live — reflects the current portfolio</span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4">
+          {metrics.map((metric, i) => {
+            const copy = STATUS_COPY[metric.key];
+            return (
+              <motion.div
+                key={metric.key}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
+                className="border-b border-r border-hairline p-5 [&:nth-child(2n)]:border-r-0 sm:border-b-0 sm:[&:nth-child(2n)]:border-r sm:last:border-r-0"
+              >
+                <p className="text-[clamp(1.75rem,3.5vw,2.5rem)] font-semibold leading-none tracking-tight text-ink-em">
+                  <CountUpValue value={metric.value} />
+                  {metric.isPlaceholder && <span className="ml-0.5 text-ink-faint">*</span>}
+                </p>
+                <p className="type-meta mt-2">{copy?.label ?? metric.label}</p>
+                {copy && <p className="type-body mt-1 text-ink-muted">{copy.descriptor}</p>}
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
       {hasPlaceholder && (
-        <p className="type-meta mt-6">
+        <p className="type-meta mt-4">
           * Placeholder figures — update with real numbers in Site settings.
         </p>
       )}

@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DoodleUnderline } from "@/components/doodles/doodle-underline";
-import { LiveDashboardMock } from "./live-dashboard-mock";
+import { RoleConstellation } from "./role-constellation";
 import type { JobApplicationVariant, SiteSettings } from "@/lib/types";
 
 export function Hero({
@@ -40,20 +39,16 @@ export function Hero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="text-[clamp(2.25rem,4.5vw,3.5rem)] font-semibold leading-[1.06] tracking-tight text-ink-em"
+          className="text-[clamp(2.25rem,4.5vw,3.5rem)] leading-[1.06] tracking-tight"
         >
           {jdVariant ? (
-            <>
+            <span className="font-semibold text-ink-em">
               Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.
-            </>
+            </span>
           ) : (
             <>
-              Senior design output, without waiting on{" "}
-              <span className="relative inline-block">
-                a full team
-                <DoodleUnderline className="absolute -bottom-1.5 left-0 h-3 w-full text-primary-300" />
-              </span>{" "}
-              to get it.
+              <span className="block font-semibold text-ink-em">A design department.</span>
+              <span className="block font-medium text-ink-soft">Of one.</span>
             </>
           )}
         </motion.h1>
@@ -100,14 +95,9 @@ export function Hero({
         </motion.div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="flex justify-center lg:justify-end"
-      >
-        <LiveDashboardMock />
-      </motion.div>
+      <div className="flex justify-center lg:justify-end">
+        <RoleConstellation profile={profile} />
+      </div>
     </div>
   );
 }

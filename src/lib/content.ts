@@ -126,7 +126,8 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   const result = await sanityFetch<SiteSettings | null>(siteSettingsQuery);
-  return result ?? siteSettingsFallback;
+  if (!result) return siteSettingsFallback;
+  return { ...result, featuredProjects: result.featuredProjects.map(withAccentFallback) };
 }
 
 /**

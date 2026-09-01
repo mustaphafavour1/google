@@ -31,22 +31,28 @@ const TRACKS: { discipline: ProcessDiscipline; teaser: string }[] = [
 export function ProcessSection() {
   return (
     <div>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="relative flex flex-col">
+        <div className="absolute bottom-4 left-[9px] top-4 w-px bg-hairline" aria-hidden="true" />
         {TRACKS.map((track, i) => (
           <motion.div
             key={track.discipline}
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -10 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ delay: i * 0.08, duration: 0.5 }}
-            className="rounded-xl border border-hairline bg-surface p-5"
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+            className="relative flex gap-5 py-4 first:pt-0 last:pb-0"
           >
-            <h3 className="text-[14.5px] font-semibold text-ink-em">{track.discipline}</h3>
-            <p className="type-body mt-2 text-ink-muted">{track.teaser}</p>
+            <span className="relative z-10 mt-1 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 border-primary-500 bg-surface">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary-500" />
+            </span>
+            <div>
+              <h3 className="text-[14.5px] font-semibold text-ink-em">{track.discipline}</h3>
+              <p className="type-body mt-1.5 max-w-xl text-ink-muted">{track.teaser}</p>
+            </div>
           </motion.div>
         ))}
       </div>
-      <div className="mt-6">
+      <div className="mt-8">
         <Button variant="outline" href="/process">
           Walk Through the Process
           <ArrowRight size={14} />

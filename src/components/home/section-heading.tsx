@@ -3,6 +3,16 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+/**
+ * The site's one headline mechanism (bold assertive line + softer qualifying
+ * line underneath, applied consistently everywhere a major headline
+ * appears — see the hero's h1 for the same device at a larger size).
+ * A plain string still renders as a single bold line where a title has no
+ * natural two-part split — the mechanism is the weight/tone contrast, not a
+ * forced line break.
+ */
+export type HeadlineTitle = string | { bold: string; soft: string };
+
 export function SectionHeading({
   eyebrow,
   title,
@@ -11,7 +21,7 @@ export function SectionHeading({
   className,
 }: {
   eyebrow: string;
-  title: string;
+  title: HeadlineTitle;
   subtitle?: string;
   align?: "left" | "center";
   className?: string;
@@ -26,7 +36,14 @@ export function SectionHeading({
     >
       <p className="type-eyebrow mb-2.5">{eyebrow}</p>
       <h2 className="text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight text-ink-em">
-        {title}
+        {typeof title === "string" ? (
+          title
+        ) : (
+          <>
+            <span className="block">{title.bold}</span>
+            <span className="block font-medium text-ink-soft">{title.soft}</span>
+          </>
+        )}
       </h2>
       {subtitle && <p className="type-body mt-3 text-ink-muted">{subtitle}</p>}
     </motion.div>
