@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "sanity:introspect": "tsx scripts/sanity/introspect-old-cms.ts",
-    "sanity:migrate": "tsx scripts/sanity/migrate-from-old-cms.ts"
+    "sanity:migrate": "tsx scripts/sanity/migrate-from-old-cms.ts",
+    "sanity:enrich": "tsx scripts/sanity/enrich-from-old-cms.ts"
   },
   "dependencies": {
     "@nivo/bar": "^0.99.0",
