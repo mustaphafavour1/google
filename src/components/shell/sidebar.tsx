@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { MapPin, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { primaryNav, isNavItemActive } from "./nav-config";
 import { Logo, initials } from "./logo";
+import { CollapsedBrandMark } from "./collapsed-brand-mark";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
@@ -90,7 +91,10 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
         )}
       </div>
 
-      <nav aria-label="Primary" className="flex-1 overflow-y-auto px-3 py-4">
+      <nav
+        aria-label="Primary"
+        className={cn("overflow-y-auto px-3 py-4", collapsed ? "shrink-0" : "flex-1")}
+      >
         <ul className="flex flex-col gap-0.5">
           {primaryNav.map((item) => {
             const active = isNavItemActive(pathname, item.href);
@@ -127,6 +131,8 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
           })}
         </ul>
       </nav>
+
+      {collapsed && <CollapsedBrandMark />}
 
       <div className="shrink-0 border-t border-hairline p-3">
         {collapsed ? (

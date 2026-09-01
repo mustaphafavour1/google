@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Download, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import type { SiteSettings } from "@/lib/types";
 
 export function FinalCtaSection({ contact }: { contact: SiteSettings["contact"] }) {
@@ -36,12 +37,10 @@ export function FinalCtaSection({ contact }: { contact: SiteSettings["contact"] 
           Get in touch
         </Button>
         {contact.resumeUrl && (
-          <Button variant="outline" size="lg" asChild>
-            <a href={contact.resumeUrl} download>
-              <Download size={15} />
-              Download résumé
-            </a>
-          </Button>
+          <ResumeGateButton className={buttonVariants({ variant: "outline", size: "lg" })}>
+            <Download size={15} />
+            Download résumé
+          </ResumeGateButton>
         )}
       </div>
     </motion.div>

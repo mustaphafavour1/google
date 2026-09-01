@@ -8,6 +8,7 @@ import {
   allPortfolioArchiveQuery,
   allBackgroundPatternsQuery,
   jobApplicationVariantBySlugQuery,
+  portfolioPasswordQuery,
   projectBySlugQuery,
   siteSettingsQuery,
 } from "@/sanity/queries";
@@ -113,6 +114,17 @@ export async function getSkills(): Promise<Skill[]> {
 export async function getSiteSettings(): Promise<SiteSettings> {
   const result = await sanityFetch<SiteSettings | null>(siteSettingsQuery);
   return result ?? siteSettingsFallback;
+}
+
+/**
+ * Server-only — the résumé download gate (used by /api/resume). Kept out of
+ * getSiteSettings()/SiteSettings entirely so the password never has a path
+ * into a client bundle. Falls back to the seeded default so the gate still
+ * works before Sanity is configured.
+ */
+export async function getPortfolioPassword(): Promise<string> {
+  const result = await sanityFetch<{ portfolioPassword: string | null } | null>(portfolioPasswordQuery);
+  return result?.portfolioPassword ?? "Tolulope";
 }
 
 export async function getJobApplicationVariant(

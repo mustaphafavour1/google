@@ -10,6 +10,7 @@ import { buildChatModes } from "@/lib/chatbot-content";
 import { CaseStudyToc } from "./case-study-toc";
 import { CaseStudyMiniMetrics } from "./case-study-mini-metrics";
 import { FaveAiMini } from "./faveai-mini";
+import { ProjectHeader } from "./project-header";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
 import type { ProjectBlock } from "@/lib/types";
 
@@ -91,6 +92,8 @@ export default async function ProjectDetailPage({
             <ArrowLeft size={13} />
             All projects
           </Link>
+
+          <ProjectHeader project={project} />
 
           <ProjectBlocks blocks={project.blocks} project={project} />
 

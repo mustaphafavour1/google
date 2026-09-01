@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { Download, Mail, Sparkles } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { ProjectCard } from "@/components/cards/project-card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { getJobApplicationVariant, getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata({
@@ -52,12 +53,10 @@ export default async function JobApplicationVariantPage({
             Get in touch
           </Button>
           {contact.resumeUrl && (
-            <Button variant="outline" asChild>
-              <a href={contact.resumeUrl} download>
-                <Download size={14} />
-                Download resume
-              </a>
-            </Button>
+            <ResumeGateButton className={buttonVariants({ variant: "outline" })}>
+              <Download size={14} />
+              Download resume
+            </ResumeGateButton>
           )}
         </div>
       </section>

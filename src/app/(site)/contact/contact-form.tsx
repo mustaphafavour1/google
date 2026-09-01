@@ -5,6 +5,7 @@ import { Download, Mail, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DoodleArrow } from "@/components/doodles/doodle-arrow";
 import { Handwritten } from "@/components/doodles/handwritten";
+import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import type { SiteSettings } from "@/lib/types";
 
 export function ContactForm({ contact }: { contact: SiteSettings["contact"] }) {
@@ -82,14 +83,10 @@ export function ContactForm({ contact }: { contact: SiteSettings["contact"] }) {
               {contact.email}
             </a>
             {contact.resumeUrl && (
-              <a
-                href={contact.resumeUrl}
-                download
-                className="flex items-center gap-1.5 text-[12.5px] font-medium text-ink-strong hover:text-primary-500"
-              >
+              <ResumeGateButton className="flex items-center gap-1.5 text-[12.5px] font-medium text-ink-strong hover:text-primary-500">
                 <Download size={13} />
                 Resume
-              </a>
+              </ResumeGateButton>
             )}
           </div>
 

@@ -1,14 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Briefcase, Filter } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { PageHeader } from "@/components/shell/page-header";
 import { ProjectCard } from "@/components/cards/project-card";
-import { Pagination } from "@/components/ui/pagination";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Project } from "@/lib/types";
 
 const ALL = "All";
+
+const SORTS = {
+  recent: { label: "Most recent", key: "recency" as const },
+  complex: { label: "Most complex", key: "complexity" as const },
+};
+type SortKey = keyof typeof SORTS;
 
 const SPAN_CLASSES: Record<NonNullable<Project["cardSize"]>, string> = {
   small: "",
@@ -20,8 +25,7 @@ const SPAN_CLASSES: Record<NonNullable<Project["cardSize"]>, string> = {
 export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
   const [industry, setIndustry] = useState(ALL);
   const [tag, setTag] = useState(ALL);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [sort, setSort] = useState<SortKey>("recent");
 
   const industries = useMemo(
     () => [ALL, ...Array.from(new Set(projects.map((p) => p.industry)))],
@@ -33,20 +37,18 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
   );
 
   const filtered = useMemo(() => {
-    return projects.filter(
-      (p) =>
-        (industry === ALL || p.industry === industry) &&
-        (tag === ALL || p.tags.includes(tag)),
-    );
-  }, [projects, industry, tag]);
-
-  const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
+    const key = SORTS[sort].key;
+    return projects
+      .filter(
+        (p) =>
+          (industry === ALL || p.industry === industry) &&
+          (tag === ALL || p.tags.includes(tag)),
+      )
+      .sort((a, b) => (b[key] ?? -1) - (a[key] ?? -1));
+  }, [projects, industry, tag, sort]);
 
   function handleFilterChange(setter: (v: string) => void) {
-    return (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setter(e.target.value);
-      setPage(1);
-    };
+    return (e: React.ChangeEvent<HTMLSelectElement>) => setter(e.target.value);
   }
 
   return (
@@ -62,10 +64,6 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
       />
 
       <div className="mb-5 flex flex-wrap items-center gap-3">
-        <span className="flex items-center gap-1.5 text-ink-soft">
-          <Filter size={13} />
-          <span className="type-meta">Filter</span>
-        </span>
         <select
           value={industry}
           onChange={handleFilterChange(setIndustry)}
@@ -88,9 +86,20 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
             </option>
           ))}
         </select>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as SortKey)}
+          className="h-8 rounded-md border border-border bg-surface px-2 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+        >
+          {Object.entries(SORTS).map(([key, { label }]) => (
+            <option key={key} value={key}>
+              {label}
+            </option>
+          ))}
+        </select>
       </div>
 
-      {paged.length === 0 ? (
+      {filtered.length === 0 ? (
         <EmptyState
           icon={Briefcase}
           title="No projects match these filters"
@@ -98,25 +107,13 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
         />
       ) : (
         <div className="grid auto-rows-[160px] grid-cols-2 gap-3 sm:auto-rows-[180px] sm:grid-cols-3 sm:[grid-auto-flow:dense] lg:grid-cols-4">
-          {paged.map((project) => (
+          {filtered.map((project) => (
             <div key={project._id} className={SPAN_CLASSES[project.cardSize ?? "small"]}>
               <ProjectCard project={project} />
             </div>
           ))}
         </div>
       )}
-
-      <div className="mt-6">
-        <Pagination
-          page={page}
-          pageSize={pageSize}
-          total={filtered.length}
-          noun="projects"
-          onPageChange={setPage}
-          onPageSizeChange={setPageSize}
-          pageSizeOptions={[10, 20, 50]}
-        />
-      </div>
     </>
   );
 }

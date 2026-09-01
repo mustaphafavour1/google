@@ -1,6 +1,7 @@
 import { Rocket } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { RocketPuzzle } from "@/components/playground/rocket-puzzle";
+import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { getSiteSettings } from "@/lib/content";
 
 export default async function PlaygroundPage() {
@@ -18,15 +19,15 @@ export default async function PlaygroundPage() {
       </p>
 
       <div className="mt-9 card flex flex-col items-center p-8">
-        <RocketPuzzle resumeUrl={contact.resumeUrl} />
+        <RocketPuzzle hasResume={Boolean(contact.resumeUrl)} />
       </div>
 
       {contact.resumeUrl && (
         <p className="type-meta mt-4 text-center">
           Prefer to skip the puzzle?{" "}
-          <a href={contact.resumeUrl} download className="font-medium text-primary-500 hover:text-primary-600">
+          <ResumeGateButton className="font-medium text-primary-500 hover:text-primary-600">
             Download the resume directly
-          </a>
+          </ResumeGateButton>
           .
         </p>
       )}

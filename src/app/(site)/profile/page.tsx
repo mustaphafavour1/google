@@ -1,6 +1,7 @@
 import { ArrowUpRight, Download, Globe, Mail } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { initials } from "@/components/shell/logo";
+import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { getSiteSettings } from "@/lib/content";
 
 export default async function ProfilePage() {
@@ -65,14 +66,10 @@ export default async function ProfilePage() {
             </p>
           </div>
           {contact.resumeUrl ? (
-            <a
-              href={contact.resumeUrl}
-              download
-              className="mt-5 inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white transition-colors hover:bg-primary-600"
-            >
+            <ResumeGateButton className="mt-5 inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white transition-colors hover:bg-primary-600">
               <Download size={14} />
               Download resume
-            </a>
+            </ResumeGateButton>
           ) : (
             <p className="type-meta mt-5">Not uploaded yet — check back soon.</p>
           )}

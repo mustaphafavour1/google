@@ -7,6 +7,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Download, Mail, Menu, X } from "lucide-react";
 import { moreSheetItems, isNavItemActive } from "./nav-config";
 import { cn } from "@/lib/utils";
+import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import type { SiteSettings } from "@/lib/types";
 
 export function MoreSheet({ contact }: { contact: SiteSettings["contact"] }) {
@@ -68,14 +69,10 @@ export function MoreSheet({ contact }: { contact: SiteSettings["contact"] }) {
 
           <div className="mt-3 grid grid-cols-2 gap-2 border-t border-hairline pt-3">
             {contact.resumeUrl && (
-              <a
-                href={contact.resumeUrl}
-                download
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-border text-[13px] font-medium text-ink-strong"
-              >
+              <ResumeGateButton className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-border text-[13px] font-medium text-ink-strong">
                 <Download size={14} />
                 Resume
-              </a>
+              </ResumeGateButton>
             )}
             <a
               href={`mailto:${contact.email}`}

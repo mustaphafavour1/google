@@ -70,6 +70,13 @@ export const siteSettings = defineType({
           type: "file",
           options: { accept: ".pdf" },
         }),
+        defineField({
+          name: "portfolioPassword",
+          title: "Résumé download password",
+          type: "string",
+          description:
+            "Visitors must enter this to download the résumé. Never shown on the site — only checked server-side.",
+        }),
         defineField({ name: "website", type: "socialLink" }),
         defineField({ name: "socials", type: "array", of: [{ type: "socialLink" }] }),
       ],

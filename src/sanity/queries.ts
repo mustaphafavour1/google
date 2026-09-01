@@ -69,7 +69,7 @@ export const allProjectsAiContextQuery = /* groq */ `
 export const allProjectSlugsQuery = /* groq */ `*[_type == "project"]{ "slug": slug.current }`;
 
 export const allProcessTracksQuery = /* groq */ `
-  *[_type == "processTrack"] | order(discipline asc) {
+  *[_type == "processTrack"] | order((discipline == "Overall") desc, discipline asc) {
     _id,
     discipline,
     summary,
@@ -100,6 +100,16 @@ export const siteSettingsQuery = /* groq */ `
     hobbies,
     analyticsAggregate
   }
+`;
+
+/**
+ * Server-only — the résumé download gate. Deliberately separate from
+ * siteSettingsQuery: the password must never reach a client bundle, so it's
+ * kept out of the query every public page uses and only fetched here, by
+ * the resume-gate API route.
+ */
+export const portfolioPasswordQuery = /* groq */ `
+  *[_id == "siteSettings"][0]{ "portfolioPassword": contact.portfolioPassword }
 `;
 
 export const jobApplicationVariantBySlugQuery = /* groq */ `

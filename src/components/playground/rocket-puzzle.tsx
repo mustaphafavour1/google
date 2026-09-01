@@ -5,6 +5,7 @@ import { motion, useMotionValue, AnimatePresence, useReducedMotion } from "frame
 import { Download, RotateCcw } from "lucide-react";
 import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
+import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { RocketPieceArt, pieceDimensions, type PieceId } from "./rocket-pieces";
 
 const PIECE_ORDER: PieceId[] = ["nose", "body", "fins"];
@@ -64,7 +65,7 @@ function DraggablePiece({
   );
 }
 
-export function RocketPuzzle({ resumeUrl }: { resumeUrl?: string }) {
+export function RocketPuzzle({ hasResume }: { hasResume: boolean }) {
   const reduceMotion = useReducedMotion();
   const soundEnabled = soundPreference.useValue();
   const [snapped, setSnapped] = useState<Record<PieceId, boolean>>({
@@ -154,15 +155,11 @@ export function RocketPuzzle({ resumeUrl }: { resumeUrl?: string }) {
               You assembled the rocket — here&rsquo;s the resume it was guarding.
             </p>
             <div className="flex items-center gap-2.5">
-              {resumeUrl && (
-                <a
-                  href={resumeUrl}
-                  download
-                  className="inline-flex h-10 items-center gap-1.5 rounded-md bg-primary-500 px-4 text-[13px] font-medium text-white transition-colors hover:bg-primary-600"
-                >
+              {hasResume && (
+                <ResumeGateButton className="inline-flex h-10 items-center gap-1.5 rounded-md bg-primary-500 px-4 text-[13px] font-medium text-white transition-colors hover:bg-primary-600">
                   <Download size={14} />
                   Download resume
-                </a>
+                </ResumeGateButton>
               )}
               <button
                 type="button"

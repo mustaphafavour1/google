@@ -9,7 +9,7 @@ export const processTrack = defineType({
       name: "discipline",
       type: "string",
       options: {
-        list: ["UI/UX", "Web Development", "Branding", "Campaigns & Marketing"].map((v) => ({
+        list: ["Overall", "UI/UX", "Web Development", "Branding", "Campaigns & Marketing"].map((v) => ({
           title: v,
           value: v,
         })),

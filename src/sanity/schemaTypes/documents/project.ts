@@ -137,7 +137,7 @@ export const project = defineType({
       description: "Which /process tracks to show as horizontal tabs on this case study page.",
       of: [{ type: "string" }],
       options: {
-        list: ["UI/UX", "Web Development", "Branding", "Campaigns & Marketing"].map((v) => ({
+        list: ["Overall", "UI/UX", "Web Development", "Branding", "Campaigns & Marketing"].map((v) => ({
           title: v,
           value: v,
         })),

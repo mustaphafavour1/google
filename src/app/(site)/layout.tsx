@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Parkinsans, JetBrains_Mono, Caveat } from "next/font/google";
+import { Parkinsans, JetBrains_Mono, Caveat, Rancho } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/app-shell";
@@ -26,6 +26,13 @@ const caveat = Caveat({
   display: "swap",
 });
 
+const rancho = Rancho({
+  variable: "--font-rancho",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Favour Mustapha — Product Designer",
   description:
@@ -43,7 +50,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${parkinsans.variable} ${jetbrainsMono.variable} ${caveat.variable} h-full antialiased`}
+      className={`${parkinsans.variable} ${jetbrainsMono.variable} ${caveat.variable} ${rancho.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>

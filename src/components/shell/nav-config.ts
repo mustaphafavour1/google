@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Archive, Briefcase, Images, LayoutDashboard, Rocket, User } from "lucide-react";
+import { Archive, Briefcase, Images, Info, LayoutDashboard, Rocket, User, Workflow } from "lucide-react";
 
 export type NavItem = {
   label: string;
@@ -10,6 +10,8 @@ export type NavItem = {
 export const primaryNav: NavItem[] = [
   { label: "Overview", href: "/", icon: LayoutDashboard },
   { label: "Projects", href: "/projects", icon: Briefcase },
+  { label: "About", href: "/about", icon: Info },
+  { label: "Process", href: "/process", icon: Workflow },
   { label: "Gallery", href: "/gallery", icon: Images },
   { label: "Profile", href: "/profile", icon: User },
   { label: "Playground", href: "/playground", icon: Rocket },
@@ -24,6 +26,8 @@ export const mobileTabs: NavItem[] = [
 ];
 
 export const moreSheetItems: NavItem[] = [
+  { label: "About", href: "/about", icon: Info },
+  { label: "Process", href: "/process", icon: Workflow },
   { label: "Playground", href: "/playground", icon: Rocket },
   { label: "Archive", href: "/archive", icon: Archive },
 ];

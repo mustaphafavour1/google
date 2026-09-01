@@ -184,6 +184,7 @@ export type Skill = {
 };
 
 export type ProcessDiscipline =
+  | "Overall"
   | "UI/UX"
   | "Web Development"
   | "Branding"

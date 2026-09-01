@@ -121,6 +121,7 @@
   --font-sans: var(--font-parkinsans);
   --font-mono: var(--font-jetbrains-mono);
   --font-handwriting: var(--font-caveat);
+  --font-brand: var(--font-rancho);
 
   --color-background: var(--background);
   --color-surface: var(--surface);
