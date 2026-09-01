@@ -106,6 +106,30 @@ export const project = defineType({
       description: "Carried over from the old portfolio — a 0-10 self-rated recency/relevance score.",
     }),
     defineField({
+      name: "cardSize",
+      title: "Card size (Projects grid)",
+      type: "string",
+      group: "meta",
+      description: "Controls how much room this project's card takes in the /projects mosaic grid.",
+      options: {
+        list: [
+          { title: "Small", value: "small" },
+          { title: "Wide", value: "wide" },
+          { title: "Tall", value: "tall" },
+          { title: "Large", value: "large" },
+        ],
+      },
+      initialValue: "small",
+    }),
+    defineField({
+      name: "aiContext",
+      title: "AI context",
+      type: "text",
+      rows: 6,
+      group: "meta",
+      description: "Reference notes for FaveAI to draw on when answering questions about this project — not shown on the page itself.",
+    }),
+    defineField({
       name: "processDisciplines",
       title: "Relevant process disciplines",
       type: "array",

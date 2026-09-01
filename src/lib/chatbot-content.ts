@@ -14,21 +14,6 @@ export type ChatModeConfig = {
   quickQuestions: QuickQuestion[];
 };
 
-const STOPWORDS = new Set([
-  "a", "an", "the", "is", "are", "was", "were", "be", "been", "do", "does",
-  "did", "what", "when", "where", "who", "how", "why", "can", "could",
-  "would", "should", "i", "you", "your", "me", "my", "of", "for", "to",
-  "in", "on", "at", "and", "or", "with", "about", "favour", "s",
-]);
-
-function normalizeWords(text: string): string[] {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .split(/\s+/)
-    .filter((w) => w.length > 1 && !STOPWORDS.has(w));
-}
-
 export function buildChatModes(
   siteSettings: SiteSettings,
   projects: Project[],
@@ -123,24 +108,4 @@ export function buildChatModes(
       ],
     },
   };
-}
-
-export function findBestAnswer(input: string, quickQuestions: QuickQuestion[]): string | null {
-  const inputWords = new Set(normalizeWords(input));
-  if (inputWords.size === 0) return null;
-
-  let best: { score: number; answer: string } | null = null;
-  for (const qq of quickQuestions) {
-    const candidateWords = new Set([...normalizeWords(qq.question), ...(qq.keywords ?? [])]);
-    let overlap = 0;
-    for (const word of inputWords) {
-      if (candidateWords.has(word)) overlap += 1;
-    }
-    const score = overlap / inputWords.size;
-    if (score > 0 && (!best || score > best.score)) {
-      best = { score, answer: qq.answer };
-    }
-  }
-
-  return best && best.score >= 0.34 ? best.answer : null;
 }

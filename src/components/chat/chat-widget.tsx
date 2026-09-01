@@ -6,7 +6,7 @@ import { Bot, Orbit as OrbitIcon, Send, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
-import { buildChatModes, findBestAnswer, type ChatMode } from "@/lib/chatbot-content";
+import { buildChatModes, type ChatMode } from "@/lib/chatbot-content";
 import type { Project, SiteSettings } from "@/lib/types";
 
 type Message = { role: "bot" | "user"; text: string };
@@ -31,6 +31,7 @@ export function ChatWidget({
     { role: "bot", text: modesConfig.general.greeting },
   ]);
   const [input, setInput] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
   const soundEnabled = soundPreference.useValue();
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -43,22 +44,50 @@ export function ChatWidget({
     setMessages([{ role: "bot", text: modesConfig[next].greeting }]);
   }
 
-  function send(text: string) {
+  async function send(text: string) {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    const answer = findBestAnswer(trimmed, modesConfig[mode].quickQuestions);
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: trimmed },
-      {
-        role: "bot",
-        text:
-          answer ??
-          `I don't have a scripted answer for that yet — try one of the suggestions below, or email ${siteSettings.contact.email} directly.`,
-      },
-    ]);
+    if (!trimmed || isStreaming) return;
+    const history = [...messages, { role: "user" as const, text: trimmed }];
+    setMessages([...history, { role: "bot", text: "" }]);
     setInput("");
+    setIsStreaming(true);
     if (soundEnabled) playChime();
+
+    function setReply(text: string) {
+      setMessages((prev) => {
+        const copy = [...prev];
+        copy[copy.length - 1] = { role: "bot", text };
+        return copy;
+      });
+    }
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode, messages: history }),
+      });
+
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => null);
+        setReply(data?.error ?? `Something went wrong — email ${siteSettings.contact.email} directly.`);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = "";
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        accumulated += decoder.decode(value, { stream: true });
+        setReply(accumulated);
+      }
+    } catch {
+      setReply(`Connection issue — try again, or email ${siteSettings.contact.email} directly.`);
+    } finally {
+      setIsStreaming(false);
+    }
   }
 
   return (
@@ -151,7 +180,8 @@ export function ChatWidget({
                   key={qq.question}
                   type="button"
                   onClick={() => send(qq.question)}
-                  className="rounded-full border border-hairline px-2.5 py-1 text-[11px] text-ink-soft transition-colors hover:border-primary-300 hover:text-primary-500"
+                  disabled={isStreaming}
+                  className="rounded-full border border-hairline px-2.5 py-1 text-[11px] text-ink-soft transition-colors hover:border-primary-300 hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {qq.question}
                 </button>
@@ -173,18 +203,20 @@ export function ChatWidget({
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask FaveAI something…"
-                className="h-9 flex-1 rounded-md border border-border bg-transparent px-3 text-[12.5px] text-ink-strong placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-primary-300"
+                disabled={isStreaming}
+                className="h-9 flex-1 rounded-md border border-border bg-transparent px-3 text-[12.5px] text-ink-strong placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-primary-300 disabled:opacity-60"
               />
               <button
                 type="submit"
                 aria-label="Send message"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-500 text-white transition-colors hover:bg-primary-600"
+                disabled={isStreaming || !input.trim()}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-500 text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Send size={14} />
               </button>
             </form>
             <p className="shrink-0 px-3 pb-2 text-center text-[10px] text-ink-faint">
-              Scripted assistant, not a live AI — for a real conversation, email directly.
+              Answers draw from real site content — double-check anything critical, or email directly.
             </p>
           </motion.div>
         )}

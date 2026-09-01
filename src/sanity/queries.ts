@@ -17,6 +17,7 @@ export const projectFields = /* groq */ `
   processDisciplines,
   complexity,
   recency,
+  cardSize,
   blocks[]{
     ...,
     _type == "imageGallery" => {
@@ -45,6 +46,24 @@ export const allProjectsQuery = /* groq */ `*[_type == "project"] | order(year d
 
 export const projectBySlugQuery = /* groq */ `
   *[_type == "project" && slug.current == $slug][0] { ${projectFields} }
+`;
+
+/**
+ * Server-only — FaveAI's knowledge base. Deliberately separate from
+ * projectFields: aiContext is internal reference material, never meant to
+ * reach a client bundle, so it's kept out of the query every public page
+ * uses and only fetched here, by the chat API route.
+ */
+export const allProjectsAiContextQuery = /* groq */ `
+  *[_type == "project"] | order(year desc) {
+    name,
+    "slug": slug.current,
+    oneLiner,
+    "industry": industry->name,
+    year,
+    tags,
+    aiContext
+  }
 `;
 
 export const allProjectSlugsQuery = /* groq */ `*[_type == "project"]{ "slug": slug.current }`;

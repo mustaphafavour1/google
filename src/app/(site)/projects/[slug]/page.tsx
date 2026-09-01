@@ -120,7 +120,7 @@ export default async function ProjectDetailPage({
         <aside className="sticky top-[calc(var(--header-h)+1.5rem)] hidden h-max max-h-[calc(100vh-var(--header-h)-3rem)] w-52 shrink-0 flex-col gap-6 overflow-y-auto xl:flex">
           <CaseStudyToc items={tocItems} />
           <CaseStudyMiniMetrics project={project} />
-          <FaveAiMini config={faveAiConfig} fallbackEmail={siteSettings.contact.email} />
+          <FaveAiMini mode="designer" config={faveAiConfig} fallbackEmail={siteSettings.contact.email} />
         </aside>
       </div>
     </PageContainer>

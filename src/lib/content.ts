@@ -2,6 +2,7 @@ import { getSanityClient } from "@/sanity/client";
 import { isSanityConfigured } from "@/sanity/env";
 import {
   allProjectsQuery,
+  allProjectsAiContextQuery,
   allProcessTracksQuery,
   allSkillsQuery,
   allPortfolioArchiveQuery,
@@ -69,6 +70,34 @@ export async function getProjects(): Promise<Project[]> {
 export async function getProjectBySlug(slug: string): Promise<Project | undefined> {
   const result = await sanityFetch<Project | null>(projectBySlugQuery, { slug });
   return result ? withAccentFallback(result) : getProjectBySlugFallback(slug);
+}
+
+export type ProjectAiContext = {
+  name: string;
+  slug: string;
+  oneLiner: string;
+  industry: string | null;
+  year: number;
+  tags: string[];
+  aiContext?: string;
+};
+
+/**
+ * FaveAI's knowledge base — server-only (used by the /api/chat route).
+ * Deliberately not merged into getProjects(): aiContext is internal
+ * reference material, and this is the one place it's fetched at all.
+ */
+export async function getProjectsAiContext(): Promise<ProjectAiContext[]> {
+  const result = await sanityFetch<ProjectAiContext[]>(allProjectsAiContextQuery);
+  if (result && result.length > 0) return result;
+  return projectsFallback.map((p) => ({
+    name: p.name,
+    slug: p.slug,
+    oneLiner: p.oneLiner,
+    industry: p.industry,
+    year: p.year,
+    tags: p.tags,
+  }));
 }
 
 export async function getProcessTracks(): Promise<ProcessTrack[]> {

@@ -164,11 +164,13 @@ export type Project = {
   valueImpact?: ValueImpact;
   complexity?: number;
   recency?: number;
+  cardSize?: "small" | "wide" | "tall" | "large";
   accent: {
     primary: string;
     secondary: string;
   };
   processDisciplines?: ProcessDiscipline[];
+  aiContext?: string;
   blocks: ProjectBlock[];
 };
 

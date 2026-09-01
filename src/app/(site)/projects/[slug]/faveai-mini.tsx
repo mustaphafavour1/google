@@ -3,38 +3,71 @@
 import { useEffect, useRef, useState } from "react";
 import { Orbit as OrbitIcon, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { findBestAnswer, type ChatModeConfig } from "@/lib/chatbot-content";
+import type { ChatMode, ChatModeConfig } from "@/lib/chatbot-content";
 
 type Message = { role: "bot" | "user"; text: string };
 
 export function FaveAiMini({
+  mode,
   config,
   fallbackEmail,
 }: {
+  mode: ChatMode;
   config: ChatModeConfig;
   fallbackEmail: string;
 }) {
   const [messages, setMessages] = useState<Message[]>([{ role: "bot", text: config.greeting }]);
   const [input, setInput] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  function send(text: string) {
+  async function send(text: string) {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    const answer = findBestAnswer(trimmed, config.quickQuestions);
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: trimmed },
-      {
-        role: "bot",
-        text: answer ?? `No scripted answer for that yet — email ${fallbackEmail} directly.`,
-      },
-    ]);
+    if (!trimmed || isStreaming) return;
+    const history = [...messages, { role: "user" as const, text: trimmed }];
+    setMessages([...history, { role: "bot", text: "" }]);
     setInput("");
+    setIsStreaming(true);
+
+    function setReply(text: string) {
+      setMessages((prev) => {
+        const copy = [...prev];
+        copy[copy.length - 1] = { role: "bot", text };
+        return copy;
+      });
+    }
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode, messages: history }),
+      });
+
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => null);
+        setReply(data?.error ?? `Something went wrong — email ${fallbackEmail} directly.`);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = "";
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        accumulated += decoder.decode(value, { stream: true });
+        setReply(accumulated);
+      }
+    } catch {
+      setReply(`Connection issue — email ${fallbackEmail} directly.`);
+    } finally {
+      setIsStreaming(false);
+    }
   }
 
   return (
@@ -68,7 +101,8 @@ export function FaveAiMini({
             key={qq.question}
             type="button"
             onClick={() => send(qq.question)}
-            className="rounded-full border border-hairline px-2 py-0.5 text-left text-[10px] text-ink-soft transition-colors hover:border-primary-300 hover:text-primary-500"
+            disabled={isStreaming}
+            className="rounded-full border border-hairline px-2 py-0.5 text-left text-[10px] text-ink-soft transition-colors hover:border-primary-300 hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {qq.question}
           </button>
@@ -90,12 +124,14 @@ export function FaveAiMini({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask…"
-          className="h-7 flex-1 rounded-md border border-border bg-transparent px-2 text-[11px] text-ink-strong placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-primary-300"
+          disabled={isStreaming}
+          className="h-7 flex-1 rounded-md border border-border bg-transparent px-2 text-[11px] text-ink-strong placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-primary-300 disabled:opacity-60"
         />
         <button
           type="submit"
           aria-label="Send message"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary-500 text-white transition-colors hover:bg-primary-600"
+          disabled={isStreaming || !input.trim()}
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary-500 text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Send size={12} />
         </button>

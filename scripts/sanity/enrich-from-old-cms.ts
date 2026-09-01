@@ -410,11 +410,34 @@ async function enrichIndustriesAndScores() {
   }
 }
 
+// ---- 5. aiContext — FaveAI's per-project knowledge base -------------------
+
+async function enrichAiContext() {
+  console.log("\n=== 5. AI context (FaveAI knowledge base) ===\n");
+
+  const oldProjects = await oldClient.fetch<{ title: string; slug: string; aiContext: string | null }[]>(
+    `*[_type == "project" && isPassworded != true]{ title, "slug": slug.current, aiContext }`,
+  );
+
+  for (const old of oldProjects) {
+    if (!old.aiContext) {
+      console.log(`Skipping ${old.title} — no aiContext in the old CMS`);
+      continue;
+    }
+    const id = `project-${old.slug}`;
+    console.log(`${write ? "Patching" : "[dry run] Would patch"} ${old.title} (${id}): ${old.aiContext.length} chars`);
+    if (write) {
+      await newClient.patch(id).set({ aiContext: old.aiContext }).commit();
+    }
+  }
+}
+
 const SECTIONS: Record<string, () => Promise<void>> = {
   projects: enrichProjects,
   process: enrichProcessTracks,
   settings: enrichSiteSettings,
   industries: enrichIndustriesAndScores,
+  aicontext: enrichAiContext,
 };
 
 async function main() {

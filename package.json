@@ -12,6 +12,7 @@
     "sanity:enrich": "tsx scripts/sanity/enrich-from-old-cms.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.122.0",
     "@nivo/bar": "^0.99.0",
     "@nivo/core": "^0.99.0",
     "@nivo/line": "^0.99.0",

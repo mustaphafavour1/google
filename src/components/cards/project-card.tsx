@@ -1,48 +1,41 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export function ProjectCard({ project }: { project: Project }) {
-  const coverSrc = project.coverGifUrl ?? project.coverImage;
+  const staticSrc = project.coverImage;
+  const hoverSrc = project.coverGifUrl;
 
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-[0_4px_16px_rgb(15_23_42_/_0.08)]"
+      className="group relative block h-full w-full overflow-hidden rounded-[8px]"
+      style={{
+        background: `linear-gradient(135deg, ${project.accent.primary}, ${project.accent.secondary})`,
+      }}
     >
-      <div
-        className="relative h-36 w-full shrink-0"
-        style={{
-          background: `linear-gradient(135deg, ${project.accent.primary}, ${project.accent.secondary})`,
-        }}
-      >
-        {coverSrc && (
-          // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
-          <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
-        <div className="absolute inset-0 flex items-end justify-between p-4">
-          <span className="type-eyebrow text-white/85">{project.industry}</span>
-          <span className="data-mono rounded-full bg-black/20 px-2 py-0.5 text-white/90">
-            {project.year}
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="type-subheading">{project.name}</h3>
-        <p className="type-body mt-1.5 line-clamp-2 flex-1 text-ink-muted">{project.oneLiner}</p>
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-1.5">
-            {project.tags.slice(0, 2).map((tag) => (
-              <Badge key={tag}>{tag}</Badge>
-            ))}
-          </div>
-          <span className="flex shrink-0 items-center gap-1 text-[12px] font-medium text-primary-500 transition-all group-hover:gap-1.5">
-            View case study
-            <ArrowUpRight size={13} />
-          </span>
-        </div>
+      {staticSrc && (
+        // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+        <img
+          src={staticSrc}
+          alt=""
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover transition-opacity duration-300",
+            hoverSrc && "group-hover:opacity-0",
+          )}
+        />
+      )}
+      {hoverSrc && (
+        // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+        <img
+          src={hoverSrc}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        />
+      )}
+      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <h3 className="text-[14px] font-semibold leading-tight text-white">{project.name}</h3>
+        <p className="mt-0.5 truncate text-[10px] text-white/85">{project.oneLiner}</p>
       </div>
     </Link>
   );

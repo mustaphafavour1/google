@@ -10,6 +10,13 @@ import type { Project } from "@/lib/types";
 
 const ALL = "All";
 
+const SPAN_CLASSES: Record<NonNullable<Project["cardSize"]>, string> = {
+  small: "",
+  wide: "sm:col-span-2",
+  tall: "sm:row-span-2",
+  large: "sm:col-span-2 sm:row-span-2",
+};
+
 export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
   const [industry, setIndustry] = useState(ALL);
   const [tag, setTag] = useState(ALL);
@@ -90,9 +97,11 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
           description="Try a different industry or tag combination."
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid auto-rows-[160px] grid-cols-2 gap-3 sm:auto-rows-[180px] sm:grid-cols-3 sm:[grid-auto-flow:dense] lg:grid-cols-4">
           {paged.map((project) => (
-            <ProjectCard key={project._id} project={project} />
+            <div key={project._id} className={SPAN_CLASSES[project.cardSize ?? "small"]}>
+              <ProjectCard project={project} />
+            </div>
           ))}
         </div>
       )}
