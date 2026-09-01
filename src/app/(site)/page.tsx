@@ -1,18 +1,18 @@
+import { ArrowRight } from "lucide-react";
 import { Hero } from "@/components/home/hero";
 import { LandingSection } from "@/components/home/landing-section";
 import { SectionHeading } from "@/components/home/section-heading";
 import { StatsStrip } from "@/components/home/stats-strip";
 import { VisitorMetrics } from "@/components/home/visitor-metrics";
-import { PhilosophySection } from "@/components/home/philosophy-section";
-import { CapabilityGrid } from "@/components/home/capability-grid";
 import { SelectedWorkShowcase } from "@/components/home/selected-work-showcase";
+import { AboutPreviewSection } from "@/components/home/about-preview-section";
+import { SkillsPreviewSection } from "@/components/home/skills-preview-section";
 import { ProcessSection } from "@/components/home/process-section";
-import { TestimonialsSection } from "@/components/home/testimonials-section";
-import { BioSection } from "@/components/home/bio-section";
+import { DesignSystemSection } from "@/components/home/design-system-section";
 import { FinalCtaSection } from "@/components/home/final-cta-section";
+import { Button } from "@/components/ui/button";
 import {
   getProjects,
-  getProcessTracks,
   getSiteSettings,
   getJobApplicationVariant,
 } from "@/lib/content";
@@ -23,13 +23,12 @@ export default async function HomePage({
   searchParams: Promise<{ jd?: string }>;
 }) {
   const { jd } = await searchParams;
-  const [projects, processTracks, siteSettings, jdVariant] = await Promise.all([
+  const [projects, siteSettings, jdVariant] = await Promise.all([
     getProjects(),
-    getProcessTracks(),
     getSiteSettings(),
     jd ? getJobApplicationVariant(jd) : Promise.resolve(undefined),
   ]);
-  const { profile, siteMetrics, about, contact, hobbies } = siteSettings;
+  const { profile, siteMetrics, contact } = siteSettings;
 
   return (
     <div>
@@ -38,41 +37,57 @@ export default async function HomePage({
       </LandingSection>
 
       <LandingSection id="stats" background="surface" className="py-14 sm:py-16">
+        <SectionHeading
+          eyebrow="Live numbers"
+          title="System Status"
+          subtitle="Not projections. What you'd actually be getting."
+        />
         <StatsStrip metrics={siteMetrics} />
         <VisitorMetrics />
-      </LandingSection>
-
-      <LandingSection id="philosophy">
-        <PhilosophySection paragraph={about.design.paragraphs[0]} />
-      </LandingSection>
-
-      <LandingSection id="capabilities" background="tint">
-        <SectionHeading eyebrow="What I bring" title="Six disciplines, one system underneath" />
-        <CapabilityGrid />
+        <div className="mt-8">
+          <Button variant="outline" href="/products">
+            See the Products Behind These Numbers
+            <ArrowRight size={14} />
+          </Button>
+        </div>
       </LandingSection>
 
       <LandingSection id="work">
         <SectionHeading
-          eyebrow="Selected work"
-          title="Three real systems, three different industries"
+          eyebrow="Proof"
+          title="Shipped, Not Just Designed"
+          subtitle="A few of the products taken from idea to real users, alone, with AI doing a lot of the execution. Picture this same speed and quality applied to what you're building next."
         />
+        <p className="type-body -mt-6 mb-8 max-w-2xl text-ink-muted">
+          Every project below is either live right now or was, with real people using it. No
+          concept-only mockups here.
+        </p>
         <SelectedWorkShowcase projects={projects} />
-      </LandingSection>
-
-      <LandingSection id="process" background="surface">
-        <SectionHeading
-          eyebrow="How it happens"
-          title="A process built for a 12-page build, not a single screen"
-        />
-        <ProcessSection tracks={processTracks} />
-      </LandingSection>
-
-      <LandingSection id="testimonials">
-        <TestimonialsSection projects={projects} />
+        <div className="mt-8">
+          <Button variant="outline" href="/projects">
+            View All Projects
+            <ArrowRight size={14} />
+          </Button>
+        </div>
       </LandingSection>
 
       <LandingSection id="about" background="tint">
-        <BioSection profile={profile} paragraph={about.general.paragraphs[1]} hobbies={hobbies} />
+        <SectionHeading eyebrow="Why me" title="Why Companies Bring Me In" />
+        <AboutPreviewSection />
+      </LandingSection>
+
+      <LandingSection id="skills">
+        <SectionHeading eyebrow="Fit" title="Where I Can Plug In" />
+        <SkillsPreviewSection />
+      </LandingSection>
+
+      <LandingSection id="process" background="surface">
+        <SectionHeading eyebrow="Working together" title="How We'd Actually Work Together" />
+        <ProcessSection />
+      </LandingSection>
+
+      <LandingSection id="design-system">
+        <DesignSystemSection />
       </LandingSection>
 
       <LandingSection id="contact" background="surface">

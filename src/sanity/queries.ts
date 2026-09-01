@@ -139,6 +139,16 @@ export const allBackgroundPatternsQuery = /* groq */ `
   }
 `;
 
+export const allProductsQuery = /* groq */ `
+  *[_type == "product"] | order(_createdAt asc) {
+    _id,
+    name,
+    "coverImage": coverImage.asset->url,
+    description,
+    link
+  }
+`;
+
 export const allPortfolioArchiveQuery = /* groq */ `
   *[_type == "portfolioArchive"] | order(year desc) {
     _id,

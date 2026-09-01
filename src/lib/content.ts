@@ -5,6 +5,7 @@ import {
   allProjectsAiContextQuery,
   allProcessTracksQuery,
   allSkillsQuery,
+  allProductsQuery,
   allPortfolioArchiveQuery,
   allBackgroundPatternsQuery,
   jobApplicationVariantBySlugQuery,
@@ -24,6 +25,7 @@ import type {
   Project,
   ProcessTrack,
   Skill,
+  Product,
   SiteSettings,
   PortfolioArchiveEntry,
   BackgroundPattern,
@@ -109,6 +111,17 @@ export async function getProcessTracks(): Promise<ProcessTrack[]> {
 export async function getSkills(): Promise<Skill[]> {
   const result = await sanityFetch<Skill[]>(allSkillsQuery);
   return result && result.length > 0 ? result : skillsFallback;
+}
+
+/**
+ * No fallback seed data on purpose — unlike the other content types, there's
+ * no real product list to fall back to yet. An empty result renders an
+ * empty state on /products until real ones are added in Studio, rather than
+ * showing invented placeholder products.
+ */
+export async function getProducts(): Promise<Product[]> {
+  const result = await sanityFetch<Product[]>(allProductsQuery);
+  return result ?? [];
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {

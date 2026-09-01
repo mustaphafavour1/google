@@ -6,11 +6,13 @@ import { cn } from "@/lib/utils";
 export function SectionHeading({
   eyebrow,
   title,
+  subtitle,
   align = "left",
   className,
 }: {
   eyebrow: string;
   title: string;
+  subtitle?: string;
   align?: "left" | "center";
   className?: string;
 }) {
@@ -26,6 +28,7 @@ export function SectionHeading({
       <h2 className="text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight text-ink-em">
         {title}
       </h2>
+      {subtitle && <p className="type-body mt-3 text-ink-muted">{subtitle}</p>}
     </motion.div>
   );
 }

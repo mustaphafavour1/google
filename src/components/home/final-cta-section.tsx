@@ -24,22 +24,22 @@ export function FinalCtaSection({ contact }: { contact: SiteSettings["contact"] 
       </span>
 
       <h2 className="text-[clamp(1.75rem,3.5vw,2.5rem)] font-semibold leading-[1.15] tracking-tight text-ink-em">
-        Let&rsquo;s build something that feels alive.
+        Ready to move at this speed?
       </h2>
       <p className="type-body mt-4 max-w-md text-ink-muted">
-        Open to new product design and front-end build work — fintech, health-tech, B2B SaaS, or
-        anything that needs a real system, not just a set of screens.
+        Let&rsquo;s talk about what senior design, backed by a real AI-native workflow, could do
+        for your team.
       </p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-2.5">
         <Button href="/contact" size="lg">
           <Mail size={15} />
-          Get in touch
+          Get In Touch
         </Button>
         {contact.resumeUrl && (
           <ResumeGateButton className={buttonVariants({ variant: "outline", size: "lg" })}>
             <Download size={15} />
-            Download résumé
+            Download Résumé
           </ResumeGateButton>
         )}
       </div>

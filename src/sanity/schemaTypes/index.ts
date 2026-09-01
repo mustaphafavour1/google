@@ -1,6 +1,7 @@
 import type { SchemaTypeDefinition } from "sanity";
 
 import { project } from "./documents/project";
+import { product } from "./documents/product";
 import { industry } from "./documents/industry";
 import { processTrack } from "./documents/processTrack";
 import { skill } from "./documents/skill";
@@ -32,6 +33,7 @@ import { socialLink } from "./objects/socialLink";
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Documents
   project,
+  product,
   industry,
   processTrack,
   skill,

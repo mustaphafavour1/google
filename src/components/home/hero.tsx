@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DoodleUnderline } from "@/components/doodles/doodle-underline";
 import { LiveDashboardMock } from "./live-dashboard-mock";
@@ -48,12 +48,12 @@ export function Hero({
             </>
           ) : (
             <>
-              I design{" "}
+              Senior design output, without waiting on{" "}
               <span className="relative inline-block">
-                dashboards
+                a full team
                 <DoodleUnderline className="absolute -bottom-1.5 left-0 h-3 w-full text-primary-300" />
               </span>{" "}
-              that feel alive.
+              to get it.
             </>
           )}
         </motion.h1>
@@ -65,8 +65,21 @@ export function Hero({
           className="type-body mt-5 max-w-lg text-[16px] leading-relaxed text-ink-muted"
         >
           {jdVariant?.introNote ||
-            "Product systems for fintech, health-tech, and B2B SaaS teams — built on the belief that hierarchy, restraint, and a real design system beat decoration every time."}
+            "I design and ship complete products alone, real users included, using AI as my team. If your company needs that kind of speed without the usual headcount, you're in the right place."}
         </motion.p>
+
+        {!jdVariant && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.13 }}
+            className="type-body mt-3 max-w-lg text-[14px] leading-relaxed text-ink-soft"
+          >
+            Product and brand design, senior-level, across fintech, health-tech, B2B SaaS and
+            beyond. Built to move at the pace your team actually needs, not the pace a full
+            department usually takes.
+          </motion.p>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -74,17 +87,14 @@ export function Hero({
           transition={{ delay: 0.15 }}
           className="mt-7 flex flex-wrap gap-2.5"
         >
-          <Button href="/contact" size="lg">
-            <Mail size={15} />
-            Get in touch
-          </Button>
           {jdVariant ? (
-            <Button variant="outline" size="lg" href={`/apply/${jdVariant.slug}`}>
+            <Button size="lg" href={`/apply/${jdVariant.slug}`}>
               See what I picked for {jdVariant.companyName}
             </Button>
           ) : (
-            <Button variant="outline" size="lg" href="/projects">
-              See the work
+            <Button size="lg" href="/projects">
+              See What I&rsquo;ve Shipped
+              <ArrowRight size={15} />
             </Button>
           )}
         </motion.div>

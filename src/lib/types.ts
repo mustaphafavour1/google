@@ -278,6 +278,16 @@ export type BackgroundPattern = {
   projectSlugs: string[];
 };
 
+// ---- My products ----------------------------------------------------------------
+
+export type Product = {
+  _id: string;
+  name: string;
+  coverImage?: string;
+  description: string;
+  link: string;
+};
+
 // ---- Portfolio archive ---------------------------------------------------------
 
 export type PortfolioArchiveEntry = {

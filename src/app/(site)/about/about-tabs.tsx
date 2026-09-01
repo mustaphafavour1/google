@@ -1,9 +1,16 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
 
 export function AboutTabs({ about }: { about: SiteSettings["about"] }) {
+  const hasGeneral = about.general.paragraphs.length > 0;
+
+  if (!hasGeneral) {
+    return <AboutSection heading={about.design.heading} paragraphs={about.design.paragraphs} />;
+  }
+
   return (
     <Tabs defaultValue="design">
       <TabsList>
@@ -24,10 +31,16 @@ export function AboutTabs({ about }: { about: SiteSettings["about"] }) {
 function AboutSection({ heading, paragraphs }: { heading: string; paragraphs: string[] }) {
   return (
     <div>
-      <h3 className="type-subheading mb-3">{heading}</h3>
-      <div className="max-w-2xl space-y-3">
+      <h3 className="type-subheading mb-4">{heading}</h3>
+      <div className="flex flex-col rounded-2xl border border-hairline bg-surface-muted px-6 sm:px-8">
         {paragraphs.map((paragraph, i) => (
-          <p key={i} className="type-body">
+          <p
+            key={i}
+            className={cn(
+              "type-body max-w-2xl py-6 first:pt-6 last:pb-6",
+              i > 0 && "border-t border-hairline",
+            )}
+          >
             {paragraph}
           </p>
         ))}
