@@ -3,12 +3,10 @@
 import { useEffect, useState } from "react";
 import { ShieldCheck, X } from "lucide-react";
 import { privacyBannerDismissed } from "@/lib/persistent-toggle";
-import { useSidebarCollapsed } from "./sidebar";
 import { cn } from "@/lib/utils";
 
 export function PrivacyBanner() {
   const dismissed = privacyBannerDismissed.useValue();
-  const sidebarCollapsed = useSidebarCollapsed();
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
@@ -27,8 +25,7 @@ export function PrivacyBanner() {
       role="region"
       aria-label="Privacy notice"
       className={cn(
-        "fixed bottom-24 left-4 right-[4.75rem] z-40 max-w-sm rounded-2xl border border-hairline bg-surface p-4 shadow-[0_16px_40px_rgb(35_25_15_/_0.18)] transition-all duration-300 ease-out lg:bottom-4 lg:right-auto",
-        sidebarCollapsed ? "lg:left-[5.5rem]" : "lg:left-[15rem]",
+        "fixed bottom-24 left-4 right-[4.75rem] z-40 max-w-sm rounded-2xl border border-hairline bg-surface p-4 shadow-[0_16px_40px_rgb(35_25_15_/_0.18)] transition-all duration-300 ease-out lg:bottom-4 lg:right-auto lg:left-[5.5rem]",
         entered ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
       )}
     >

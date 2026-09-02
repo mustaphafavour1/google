@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
 import type { BackgroundPattern as BackgroundPatternT, Project, SiteSettings } from "@/lib/types";
 import { Sidebar } from "./sidebar";
-import { TopBar } from "./top-bar";
-import { LandingNavbar } from "./landing-navbar";
+import { FloatingUtilityBar } from "./floating-utility-bar";
 import { MobileHeader } from "./mobile-header";
 import { BottomTabBar } from "./bottom-tab-bar";
 import { CommandPalette } from "./command-palette";
@@ -26,8 +24,6 @@ export function AppShell({
   children: ReactNode;
 }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const pathname = usePathname();
-  const isOverview = pathname === "/";
 
   useEffect(() => {
     fetch("/api/visit", { method: "POST" }).catch(() => {
@@ -40,12 +36,8 @@ export function AppShell({
       <BackgroundPattern patterns={backgroundPatterns} />
       <RocketTrailCanvas />
       <Sidebar profile={siteSettings.profile} />
+      <FloatingUtilityBar onOpenPalette={() => setPaletteOpen(true)} />
       <div className="flex min-w-0 flex-1 flex-col">
-        {isOverview ? (
-          <LandingNavbar />
-        ) : (
-          <TopBar onOpenPalette={() => setPaletteOpen(true)} />
-        )}
         <MobileHeader />
         <main className="flex-1 pb-24 lg:pb-0">{children}</main>
       </div>

@@ -22,7 +22,7 @@ export function CollapsedBrandMark() {
         variants={container}
         initial="hidden"
         animate="visible"
-        className="flex -rotate-90 items-center whitespace-nowrap font-brand text-[19px] leading-none text-primary-500"
+        className="flex -rotate-90 items-center whitespace-nowrap font-brand text-[27px] leading-none text-primary-500"
       >
         {BRAND_TEXT.split("").map((char, i) => (
           <motion.span key={i} variants={letter} transition={{ duration: 0.25 }}>

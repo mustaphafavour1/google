@@ -1,168 +1,73 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { MapPin, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { primaryNav, isNavItemActive } from "./nav-config";
 import { Logo, initials } from "./logo";
 import { CollapsedBrandMark } from "./collapsed-brand-mark";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/types";
 
-const STORAGE_KEY = "sidebar-collapsed";
-const EXPANDED_W = "14rem";
-const COLLAPSED_W = "4.5rem";
-const collapsedListeners = new Set<() => void>();
-
-function subscribeCollapsed(listener: () => void) {
-  collapsedListeners.add(listener);
-  return () => collapsedListeners.delete(listener);
-}
-
-function getCollapsedSnapshot() {
-  return localStorage.getItem(STORAGE_KEY) === "true";
-}
-
-function getCollapsedServerSnapshot() {
-  return false;
-}
-
-function setCollapsedPreference(next: boolean) {
-  localStorage.setItem(STORAGE_KEY, String(next));
-  collapsedListeners.forEach((listener) => listener());
-}
-
-export function useSidebarCollapsed(): boolean {
-  return useSyncExternalStore(subscribeCollapsed, getCollapsedSnapshot, getCollapsedServerSnapshot);
-}
+const SIDEBAR_W = "4.5rem";
 
 export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
   const pathname = usePathname();
-  const collapsed = useSidebarCollapsed();
-
-  function toggleCollapsed() {
-    setCollapsedPreference(!collapsed);
-  }
-
-  const toggleButton = (
-    <button
-      type="button"
-      onClick={toggleCollapsed}
-      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong"
-    >
-      {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
-    </button>
-  );
 
   return (
-    <motion.aside
-      initial={false}
-      animate={{ width: collapsed ? COLLAPSED_W : EXPANDED_W }}
-      transition={{ type: "tween", duration: 0.2, ease: "easeInOut" }}
-      style={{ width: EXPANDED_W }}
+    <aside
+      style={{ width: SIDEBAR_W }}
       className="sticky top-0 hidden h-screen shrink-0 flex-col overflow-hidden border-r border-hairline bg-surface lg:flex"
     >
-      <div
-        className={cn(
-          "flex h-(--header-h) shrink-0 items-center border-b border-hairline",
-          collapsed ? "justify-center px-2" : "justify-between px-4",
-        )}
-      >
-        {!collapsed && <Logo name={profile.name} title={profile.title} compact={false} />}
-        {collapsed ? (
-          <Tooltip>
-            <TooltipTrigger asChild>{toggleButton}</TooltipTrigger>
-            <TooltipContent side="right">Expand sidebar</TooltipContent>
-          </Tooltip>
-        ) : (
-          toggleButton
-        )}
+      <div className="flex h-(--header-h) shrink-0 items-center justify-center border-b border-hairline px-2">
+        <Logo compact name={profile.name} title={profile.title} />
       </div>
 
-      <nav
-        aria-label="Primary"
-        className={cn("overflow-y-auto px-3 py-4", collapsed ? "shrink-0" : "flex-1")}
-      >
-        <ul className="flex flex-col gap-0.5">
+      <nav aria-label="Primary" className="shrink-0 overflow-y-auto px-2 py-4">
+        <ul className="flex flex-col gap-1">
           {primaryNav.map((item) => {
             const active = isNavItemActive(pathname, item.href);
             const Icon = item.icon;
-            const link = (
-              <Link
-                href={item.href}
-                aria-label={item.label}
-                className={cn(
-                  "flex items-center gap-2.5 truncate rounded-lg px-3 py-2.5 text-[13px] transition-colors",
-                  collapsed && "justify-center px-0",
-                  active
-                    ? "bg-primary-tint font-semibold text-primary-tint-text"
-                    : "text-ink-soft hover:bg-surface-muted hover:text-ink-strong",
-                )}
-              >
-                <Icon size={16} className="shrink-0" strokeWidth={2} />
-                {!collapsed && <span className="truncate whitespace-nowrap">{item.label}</span>}
-              </Link>
-            );
-
             return (
               <li key={item.href}>
-                {collapsed ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>{link}</TooltipTrigger>
-                    <TooltipContent side="right">{item.label}</TooltipContent>
-                  </Tooltip>
-                ) : (
-                  link
-                )}
+                <Link
+                  href={item.href}
+                  aria-label={item.label}
+                  className={cn(
+                    "flex flex-col items-center gap-1 rounded-lg px-1 py-2.5 text-center transition-colors",
+                    active
+                      ? "bg-primary-tint font-semibold text-primary-tint-text"
+                      : "text-ink-soft hover:bg-surface-muted hover:text-ink-strong",
+                  )}
+                >
+                  <Icon size={16} className="shrink-0" strokeWidth={2} />
+                  <span className="text-[8.5px] font-medium leading-[1.15] tracking-tight">
+                    {item.label}
+                  </span>
+                </Link>
               </li>
             );
           })}
         </ul>
       </nav>
 
-      {collapsed && <CollapsedBrandMark />}
+      <CollapsedBrandMark />
 
-      <div className="shrink-0 border-t border-hairline p-3">
-        {collapsed ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="/profile"
-                aria-label={`${profile.name} — Profile`}
-                className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-primary-tint text-[11px] font-semibold text-primary-tint-text"
-              >
-                {initials(profile.name)}
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">{profile.name}</TooltipContent>
-          </Tooltip>
-        ) : (
-          <div className="stat-card !p-3">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[11px] font-semibold text-primary-tint-text">
-                {initials(profile.name)}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[12.5px] font-semibold text-ink-em">{profile.name}</p>
-                <p className="flex items-center gap-1 truncate text-[11px] text-ink-muted">
-                  <MapPin size={10} className="shrink-0" /> {profile.location}
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/contact"
-              className="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-success"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-success" />
-              Open to new work
-            </Link>
-          </div>
-        )}
+      <div className="shrink-0 border-t border-hairline p-2.5">
+        <Link
+          href="/profile"
+          aria-label={`${profile.name} — Profile`}
+          className="flex flex-col items-center gap-1.5 text-center"
+        >
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[11px] font-semibold text-primary-tint-text">
+            {initials(profile.name)}
+          </span>
+          <span className="text-[8.5px] font-medium leading-[1.15] text-ink-soft">Remote-first</span>
+          <span className="flex items-center gap-1 text-[8.5px] font-medium leading-[1.15] text-success">
+            <span className="h-1 w-1 shrink-0 rounded-full bg-success" />
+            Currently Available
+          </span>
+        </Link>
       </div>
-    </motion.aside>
+    </aside>
   );
 }
