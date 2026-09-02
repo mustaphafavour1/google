@@ -1,67 +1,95 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import type { Project } from "@/lib/types";
 
 const DESIGN_SYSTEM_URL = "https://designsystem.headfavour.com";
+const ALLOWANCE_URL = "https://allowance-kohl.vercel.app/";
+const ENSEMBLE_URL = "https://ensemble-two-navy.vercel.app/overview";
 
-const SWATCHES: ("circle" | "pill" | "square")[] = ["circle", "circle", "pill", "square", "circle", "pill"];
+const LINKS = [
+  { label: "Check out the Design System", href: DESIGN_SYSTEM_URL },
+  { label: "Allowance Website", href: ALLOWANCE_URL },
+  { label: "Ensemble Dashboard", href: ENSEMBLE_URL },
+];
 
-const swatchShape: Record<(typeof SWATCHES)[number], string> = {
-  circle: "h-5 w-5 rounded-full",
-  pill: "h-5 w-9 rounded-full",
-  square: "h-5 w-5 rounded-md",
-};
+const ROTATE_MS = 3200;
 
-export function DesignSystemSection() {
+export function DesignSystemSection({ projects }: { projects: Project[] }) {
+  const aiProjects = projects.filter((p) => p.tags.includes("AI-coding") && (p.coverGifUrl ?? p.coverImage));
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (aiProjects.length < 2) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % aiProjects.length), ROTATE_MS);
+    return () => clearInterval(id);
+  }, [aiProjects.length]);
+
+  const active = aiProjects[index];
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.5 }}
-      className="rounded-2xl border border-hairline bg-surface p-6 sm:p-9"
-    >
-      <div className="flex flex-wrap items-center gap-2">
-        {SWATCHES.map((shape, i) => (
-          <motion.span
-            key={i}
-            initial={{ opacity: 0, scale: 0.4 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ delay: 0.15 + i * 0.07, duration: 0.35, ease: "backOut" }}
-            className={cn(swatchShape[shape], "border-2 border-primary-500 bg-primary-500")}
-          />
-        ))}
-        <span className="type-eyebrow ml-1">Consistent, every time</span>
-      </div>
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.5 }}
+        className="mx-auto max-w-2xl text-center"
+      >
+        <h2 className="text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight text-ink-em">
+          With me, AI-built ≠ Slop. With Me, AI-built = Speed + Quality.
+        </h2>
+        <p className="type-body mt-3 text-ink-muted">
+          There&rsquo;s this portfolio, a design system, and several outstanding websites &amp; apps to prove it.
+        </p>
+      </motion.div>
 
-      <h2 className="mt-4 max-w-2xl text-[clamp(1.4rem,2.6vw,1.9rem)] leading-tight tracking-tight">
-        <span className="block font-semibold text-ink-em">
-          Worried AI-built design means inconsistent design?
-        </span>
-        <span className="block font-medium text-ink-soft">I already solved that.</span>
-      </h2>
-      <p className="type-body mt-4 max-w-2xl text-ink-muted">
-        Free to download: the exact specs and taste guidelines I use to keep AI-generated work
-        on-brand and senior-grade, every time, not just occasionally. Tested across four live
-        products.
-      </p>
-      <p className="type-body mt-3 max-w-2xl text-ink-muted">
-        Most companies bringing AI into their design workflow are still figuring out how to keep
-        quality consistent. I already built the system for it. Use mine as a starting point, or
-        bring me in to build yours.
-      </p>
-      <div className="mt-6">
-        <Button asChild>
-          <a href={DESIGN_SYSTEM_URL} target="_blank" rel="noopener noreferrer">
-            Visit the Design System
-            <ArrowUpRight size={14} />
-          </a>
-        </Button>
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 sm:items-stretch">
+        <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-hairline bg-surface-muted">
+          {active && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active._id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="h-full w-full"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
+                <img
+                  src={active.coverGifUrl ?? active.coverImage}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </div>
+
+        <div className="flex aspect-[4/3] w-full flex-col justify-center rounded-2xl border border-hairline bg-surface p-6 sm:p-7">
+          <p className="type-body text-ink-muted">
+            Check out my personal Taste and Spec document in the design system (194 detailed website
+            sections included).
+          </p>
+          <div className="mt-5 flex flex-col gap-3">
+            {LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-ink-em underline decoration-primary-500 decoration-2 underline-offset-2 transition-colors hover:text-primary-500"
+              >
+                {link.label}
+                <ArrowUpRight size={14} />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -2,102 +2,96 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { RoleConstellation } from "./role-constellation";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { useContactForm } from "@/components/contact/contact-form-context";
+import { HeroBlobs } from "./hero-blobs";
 import type { JobApplicationVariant, SiteSettings } from "@/lib/types";
 
 export function Hero({
   profile,
+  hero,
   jdVariant,
 }: {
   profile: SiteSettings["profile"];
+  hero: SiteSettings["landing"]["hero"];
   jdVariant?: JobApplicationVariant;
 }) {
+  const { openForm } = useContactForm();
+
   return (
-    <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
-      <div>
-        {jdVariant ? (
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-primary-tint px-3 py-1 text-[12px] font-medium text-primary-tint-text"
-          >
-            <Sparkles size={12} />
-            Tailored for {jdVariant.companyName}
-          </motion.div>
-        ) : (
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="type-eyebrow mb-4"
-          >
-            Product designer · Lagos, Nigeria
-          </motion.p>
-        )}
+    <div className="relative flex flex-col items-center px-4 py-6 text-center">
+      <HeroBlobs />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 10 }}
+      {jdVariant ? (
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="text-[clamp(2.25rem,4.5vw,3.5rem)] leading-[1.06] tracking-tight"
+          className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-primary-tint px-3 py-1 text-[12px] font-medium text-primary-tint-text"
         >
-          {jdVariant ? (
-            <span className="font-semibold text-ink-em">
-              Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.
-            </span>
-          ) : (
-            <>
-              <span className="block font-semibold text-ink-em">A design department.</span>
-              <span className="block font-medium text-ink-soft">Of one.</span>
-            </>
-          )}
-        </motion.h1>
+          <Sparkles size={12} />
+          Tailored for {jdVariant.companyName}
+        </motion.div>
+      ) : (
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="type-eyebrow mb-4"
+        >
+          Product designer · Lagos, Nigeria
+        </motion.p>
+      )}
 
+      <motion.h1
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="max-w-3xl text-[clamp(2.1rem,4.6vw,3.5rem)] font-semibold leading-[1.08] tracking-tight text-ink-em"
+      >
+        {jdVariant ? <>Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.</> : hero.title}
+      </motion.h1>
+
+      {!jdVariant && hero.titleUnderText && (
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="type-body mt-5 max-w-lg text-[16px] leading-relaxed text-ink-muted"
+          transition={{ delay: 0.08 }}
+          className="mt-2 max-w-xl text-[15px] leading-relaxed text-ink-soft"
         >
-          {jdVariant?.introNote ||
-            "I design and ship complete products alone, real users included, using AI as my team. If your company needs that kind of speed without the usual headcount, you're in the right place."}
+          {hero.titleUnderText}
         </motion.p>
+      )}
 
-        {!jdVariant && (
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.13 }}
-            className="type-body mt-3 max-w-lg text-[14px] leading-relaxed text-ink-soft"
-          >
-            Product and brand design, senior-level, across fintech, health-tech, B2B SaaS and
-            beyond. Built to move at the pace your team actually needs, not the pace a full
-            department usually takes.
-          </motion.p>
-        )}
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="type-body mt-5 max-w-xl text-[16px] leading-relaxed text-ink-muted"
+      >
+        {jdVariant?.introNote || hero.subtitle}
+      </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="mt-7 flex flex-wrap gap-2.5"
-        >
-          {jdVariant ? (
-            <Button size="lg" href={`/apply/${jdVariant.slug}`}>
-              See what I picked for {jdVariant.companyName}
-            </Button>
-          ) : (
-            <Button size="lg" href="/projects">
-              See What I&rsquo;ve Shipped
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="mt-7 flex flex-wrap justify-center gap-2.5"
+      >
+        {jdVariant ? (
+          <Button size="lg" href={`/apply/${jdVariant.slug}`}>
+            See what I picked for {jdVariant.companyName}
+          </Button>
+        ) : (
+          <>
+            <button type="button" onClick={openForm} className={buttonVariants({ size: "lg" })}>
+              {hero.ctaPrimaryLabel}
               <ArrowRight size={15} />
+            </button>
+            <Button variant="outline" size="lg" href="#work">
+              {hero.ctaSecondaryLabel}
             </Button>
-          )}
-        </motion.div>
-      </div>
-
-      <div className="flex justify-center lg:justify-end">
-        <RoleConstellation profile={profile} />
-      </div>
+          </>
+        )}
+      </motion.div>
     </div>
   );
 }
