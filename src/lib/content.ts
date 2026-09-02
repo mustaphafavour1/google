@@ -8,6 +8,9 @@ import {
   allProductsQuery,
   allPortfolioArchiveQuery,
   allBackgroundPatternsQuery,
+  allBlogPostsQuery,
+  blogPostBySlugQuery,
+  allDddEntriesQuery,
   jobApplicationVariantBySlugQuery,
   portfolioPasswordQuery,
   projectBySlugQuery,
@@ -29,6 +32,8 @@ import type {
   SiteSettings,
   PortfolioArchiveEntry,
   BackgroundPattern,
+  BlogPost,
+  DddEntry,
 } from "@/lib/types";
 
 const REVALIDATE_SECONDS = 60;
@@ -129,6 +134,25 @@ export async function getSkills(): Promise<Skill[]> {
  */
 export async function getProducts(): Promise<Product[]> {
   const result = await sanityFetch<Product[]>(allProductsQuery);
+  return result ?? [];
+}
+
+/**
+ * No fallback seed data on purpose, same reasoning as getProducts() — this
+ * is brand-new content with nothing real to fall back to yet.
+ */
+export async function getBlogPosts(): Promise<BlogPost[]> {
+  const result = await sanityFetch<BlogPost[]>(allBlogPostsQuery);
+  return result ?? [];
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
+  const result = await sanityFetch<BlogPost | null>(blogPostBySlugQuery, { slug });
+  return result ?? undefined;
+}
+
+export async function getDddEntries(): Promise<DddEntry[]> {
+  const result = await sanityFetch<DddEntry[]>(allDddEntriesQuery);
   return result ?? [];
 }
 

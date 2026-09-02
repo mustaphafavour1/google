@@ -165,6 +165,44 @@ export const allProductsQuery = /* groq */ `
   }
 `;
 
+export const allBlogPostsQuery = /* groq */ `
+  *[_type == "blogPost"] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    "coverImage": coverImage.asset->url,
+    publishedAt,
+    tags
+  }
+`;
+
+export const blogPostBySlugQuery = /* groq */ `
+  *[_type == "blogPost" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    "coverImage": coverImage.asset->url,
+    publishedAt,
+    tags,
+    content[]{
+      ...,
+      _type == "image" => { "url": asset->url }
+    }
+  }
+`;
+
+export const allDddEntriesQuery = /* groq */ `
+  *[_type == "dddEntry"] | order(day asc, date asc) {
+    _id,
+    "image": image.asset->url,
+    day,
+    date,
+    caption
+  }
+`;
+
 export const allPortfolioArchiveQuery = /* groq */ `
   *[_type == "portfolioArchive"] | order(year desc) {
     _id,

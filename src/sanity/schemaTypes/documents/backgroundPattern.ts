@@ -4,6 +4,7 @@ const PAGE_OPTIONS = [
   { title: "Overview", value: "overview" },
   { title: "Projects (index)", value: "projects" },
   { title: "Gallery", value: "gallery" },
+  { title: "Products", value: "products" },
   { title: "Profile", value: "profile" },
   { title: "Playground", value: "playground" },
   { title: "Archive", value: "archive" },
@@ -11,6 +12,8 @@ const PAGE_OPTIONS = [
   { title: "Skills", value: "skills" },
   { title: "Contact", value: "contact" },
   { title: "Analytics", value: "analytics" },
+  { title: "Blog", value: "blog" },
+  { title: "Daily Design Dose", value: "ddd" },
 ];
 
 export const backgroundPattern = defineType({

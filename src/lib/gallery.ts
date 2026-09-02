@@ -80,15 +80,6 @@ export function buildGalleryItems(
   return items;
 }
 
-/** Deterministic ~-2..2deg tilt per item, derived from its own key so it's stable across server/client renders. */
-export function tiltForKey(key: string): number {
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) {
-    hash = (hash * 31 + key.charCodeAt(i)) | 0;
-  }
-  return (Math.abs(hash) % 400) / 100 - 2;
-}
-
 /** Fisher-Yates shuffle — called from a click handler only, never during render, so it needs no SSR-safe seeding. */
 export function shuffle<T>(items: T[]): T[] {
   const result = [...items];

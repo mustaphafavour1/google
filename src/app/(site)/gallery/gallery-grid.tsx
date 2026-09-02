@@ -6,8 +6,8 @@ import { AutoScrollControl } from "@/components/ui/auto-scroll-control";
 import { Lightbox } from "@/components/ui/lightbox";
 import { useLightbox } from "@/components/ui/use-lightbox";
 import { EmptyState } from "@/components/ui/empty-state";
-import { tiltForKey, shuffle, type GalleryItem } from "@/lib/gallery";
-import { cn } from "@/lib/utils";
+import { shuffle, type GalleryItem } from "@/lib/gallery";
+import { cn, tiltForKey } from "@/lib/utils";
 
 export function GalleryGrid({ items }: { items: GalleryItem[] }) {
   const [order, setOrder] = useState<"ordered" | "random">("ordered");

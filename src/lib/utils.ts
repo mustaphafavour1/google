@@ -17,3 +17,12 @@ export function formatCompactCurrency(amount: number, currency = "USD"): string 
     maximumFractionDigits: 1,
   }).format(amount);
 }
+
+/** Deterministic ~-2..2deg tilt per key, so scattered-photo grids are stable across server/client renders. */
+export function tiltForKey(key: string): number {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    hash = (hash * 31 + key.charCodeAt(i)) | 0;
+  }
+  return (Math.abs(hash) % 400) / 100 - 2;
+}

@@ -7,6 +7,7 @@ const PAGE_KEY_BY_PATH: Record<string, BackgroundPatternPageKey> = {
   "/": "overview",
   "/projects": "projects",
   "/gallery": "gallery",
+  "/products": "products",
   "/profile": "profile",
   "/playground": "playground",
   "/archive": "archive",
@@ -14,6 +15,8 @@ const PAGE_KEY_BY_PATH: Record<string, BackgroundPatternPageKey> = {
   "/skills": "skills",
   "/contact": "contact",
   "/analytics": "analytics",
+  "/blog": "blog",
+  "/ddd": "ddd",
 };
 
 function resolvePattern(patterns: BackgroundPattern[], pathname: string): BackgroundPattern | null {

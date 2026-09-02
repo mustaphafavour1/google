@@ -13,6 +13,14 @@ export type ScaleMetric = {
   label: string;
 };
 
+export type PortableTextImageEntry = {
+  _type: "image";
+  _key: string;
+  url?: string;
+};
+
+export type RichContentValue = (PortableTextBlock | PortableTextImageEntry)[];
+
 export type ProjectLink = {
   label: string;
   url: string;
@@ -47,7 +55,7 @@ export type RichTextBlock = {
   _type: "richText";
   _key: string;
   heading?: string;
-  content: PortableTextBlock[];
+  content: RichContentValue;
 };
 
 export type SideBySideCardsBlock = {
@@ -282,13 +290,16 @@ export type BackgroundPatternPageKey =
   | "overview"
   | "projects"
   | "gallery"
+  | "products"
   | "profile"
   | "playground"
   | "archive"
   | "process"
   | "skills"
   | "contact"
-  | "analytics";
+  | "analytics"
+  | "blog"
+  | "ddd";
 
 export type BackgroundPattern = {
   _id: string;
@@ -318,6 +329,29 @@ export type PortfolioArchiveEntry = {
   url: string;
   image?: string;
   description: string;
+};
+
+// ---- Blog -----------------------------------------------------------------------
+
+export type BlogPost = {
+  _id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  coverImage?: string;
+  publishedAt: string;
+  tags: string[];
+  content: RichContentValue;
+};
+
+// ---- Daily Design Dose ------------------------------------------------------------
+
+export type DddEntry = {
+  _id: string;
+  image: string;
+  day?: number;
+  date?: string;
+  caption?: string;
 };
 
 // ---- Job application variant --------------------------------------------------
