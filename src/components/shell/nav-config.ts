@@ -2,11 +2,10 @@ import type { LucideIcon } from "lucide-react";
 import {
   Archive,
   Briefcase,
+  Home,
   Images,
   Lightbulb,
-  LayoutDashboard,
   Newspaper,
-  Package,
   Rocket,
   User,
   Workflow,
@@ -19,10 +18,9 @@ export type NavItem = {
 };
 
 export const primaryNav: NavItem[] = [
-  { label: "Overview", href: "/", icon: LayoutDashboard },
+  { label: "Overview", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
   { label: "Gallery", href: "/gallery", icon: Images },
-  { label: "Products", href: "/products", icon: Package },
   { label: "Process", href: "/process", icon: Workflow },
   { label: "Blog", href: "/blog", icon: Newspaper },
   { label: "DDD", href: "/ddd", icon: Lightbulb },
@@ -32,14 +30,13 @@ export const primaryNav: NavItem[] = [
 ];
 
 export const mobileTabs: NavItem[] = [
-  { label: "Overview", href: "/", icon: LayoutDashboard },
+  { label: "Overview", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
   { label: "Gallery", href: "/gallery", icon: Images },
   { label: "Profile", href: "/profile", icon: User },
 ];
 
 export const moreSheetItems: NavItem[] = [
-  { label: "Products", href: "/products", icon: Package },
   { label: "Process", href: "/process", icon: Workflow },
   { label: "Blog", href: "/blog", icon: Newspaper },
   { label: "DDD", href: "/ddd", icon: Lightbulb },

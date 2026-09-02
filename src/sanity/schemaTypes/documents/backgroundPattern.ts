@@ -4,7 +4,6 @@ const PAGE_OPTIONS = [
   { title: "Overview", value: "overview" },
   { title: "Projects (index)", value: "projects" },
   { title: "Gallery", value: "gallery" },
-  { title: "Products", value: "products" },
   { title: "Profile", value: "profile" },
   { title: "Playground", value: "playground" },
   { title: "Archive", value: "archive" },

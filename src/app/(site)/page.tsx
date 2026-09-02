@@ -46,7 +46,7 @@ export default async function HomePage({
         <StatsStrip metrics={siteMetrics} />
         <VisitorMetrics />
         <div className="mt-8">
-          <Button variant="outline" href="/products">
+          <Button variant="outline" href="/profile#products">
             See the Products Behind These Numbers
             <ArrowRight size={14} />
           </Button>

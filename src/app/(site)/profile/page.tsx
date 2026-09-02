@@ -1,14 +1,17 @@
-import { ArrowUpRight, Download, Globe, Mail } from "lucide-react";
+import { ArrowUpRight, Download, Globe, Mail, Package } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { initials } from "@/components/shell/logo";
 import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { ThumbnailImage } from "@/components/ui/thumbnail-image";
-import { getSiteSettings } from "@/lib/content";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ProductCard } from "@/components/cards/product-card";
+import { getProducts, getSiteSettings } from "@/lib/content";
 import { AboutTabs } from "./about-tabs";
 import { ProfileMediaRail } from "./profile-media-rail";
+import { ContactTriggerButton } from "./contact-trigger-button";
 
 export default async function ProfilePage() {
-  const siteSettings = await getSiteSettings();
+  const [siteSettings, products] = await Promise.all([getSiteSettings(), getProducts()]);
   const { profile, contact, hobbies, about, profileMedia } = siteSettings;
 
   return (
@@ -46,6 +49,7 @@ export default async function ProfilePage() {
                 <Globe size={16} className="shrink-0 text-ink-soft" />
                 {contact.website.label}
               </a>
+              <ContactTriggerButton />
 
               <div className="mt-5 flex flex-wrap gap-2.5 border-t border-hairline pt-5">
                 {contact.socials.map((social) => (
@@ -98,6 +102,23 @@ export default async function ProfilePage() {
                 </div>
               ))}
             </div>
+          </section>
+
+          <section id="products" className="mt-9 scroll-mt-24 border-t border-hairline pt-9">
+            <p className="type-eyebrow mb-4">Products</p>
+            {products.length === 0 ? (
+              <EmptyState
+                icon={Package}
+                title="No products yet"
+                description="Add one in Studio and it'll show up here."
+              />
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {products.map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            )}
           </section>
 
           <section id="about" className="mt-9 scroll-mt-24 border-t border-hairline pt-9">
