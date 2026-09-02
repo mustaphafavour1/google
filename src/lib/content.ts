@@ -34,17 +34,25 @@ import type {
 const REVALIDATE_SECONDS = 60;
 
 /**
- * `accent` has no `.required()` rule in the Sanity schema (see
- * documents/project.ts) — a project authored or migrated without one is
- * valid content, not a bug. Every accent-consuming component assumes it's
- * always there, so fill the gap here, at the one boundary all three
- * project-shaped queries pass through, rather than defensively in every
- * gradient call site.
+ * `accent`, `links`, and `showOnPortfolio` all have no `.required()` rule
+ * in the Sanity schema (see documents/project.ts) — a project authored or
+ * migrated before one of these fields existed is valid content, not a
+ * bug, and comes back from Sanity as `null` rather than the type's
+ * declared shape. Every consuming component assumes the real shape is
+ * always there, so fill the gaps here, at the one boundary all
+ * project-shaped queries pass through, rather than defensively at every
+ * call site.
  */
 const DEFAULT_PROJECT_ACCENT = { primary: "#a55c4e", secondary: "#d19686" };
 
-function withAccentFallback(project: Project): Project {
-  return project.accent ? project : { ...project, accent: DEFAULT_PROJECT_ACCENT };
+function withProjectDefaults(project: Project): Project {
+  return {
+    ...project,
+    accent: project.accent ?? DEFAULT_PROJECT_ACCENT,
+    links: project.links ?? [],
+    scale: project.scale ?? [],
+    showOnPortfolio: project.showOnPortfolio ?? true,
+  };
 }
 
 /**
@@ -67,12 +75,12 @@ async function sanityFetch<T>(query: string, params: Record<string, unknown> = {
 
 export async function getProjects(): Promise<Project[]> {
   const result = await sanityFetch<Project[]>(allProjectsQuery);
-  return result && result.length > 0 ? result.map(withAccentFallback) : projectsFallback;
+  return result && result.length > 0 ? result.map(withProjectDefaults) : projectsFallback;
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | undefined> {
   const result = await sanityFetch<Project | null>(projectBySlugQuery, { slug });
-  return result ? withAccentFallback(result) : getProjectBySlugFallback(slug);
+  return result ? withProjectDefaults(result) : getProjectBySlugFallback(slug);
 }
 
 export type ProjectAiContext = {
@@ -127,7 +135,7 @@ export async function getProducts(): Promise<Product[]> {
 export async function getSiteSettings(): Promise<SiteSettings> {
   const result = await sanityFetch<SiteSettings | null>(siteSettingsQuery);
   if (!result) return siteSettingsFallback;
-  return { ...result, featuredProjects: result.featuredProjects.map(withAccentFallback) };
+  return { ...result, featuredProjects: result.featuredProjects.map(withProjectDefaults) };
 }
 
 /**
@@ -148,7 +156,7 @@ export async function getJobApplicationVariant(
     slug,
   });
   return result
-    ? { ...result, selectedProjects: result.selectedProjects.map(withAccentFallback) }
+    ? { ...result, selectedProjects: result.selectedProjects.map(withProjectDefaults) }
     : getJobApplicationBySlugFallback(slug);
 }
 

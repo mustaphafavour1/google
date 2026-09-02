@@ -1,4 +1,5 @@
 import type { Project } from "@/lib/types";
+import { paragraph } from "@/lib/data/portable-text";
 
 export const caretrace: Project = {
   _id: "project-caretrace",
@@ -50,10 +51,13 @@ export const caretrace: Project = {
       _type: "richText",
       _key: "caretrace-problem",
       heading: "The problem",
-      format: "prose",
-      paragraphs: [
-        "Home-care agencies run a mobile workforce — caregivers visiting patients in their homes — but coordinate it with phone trees, paper timesheets, and spreadsheets. Missed visits, unverifiable hours, and billing disputes follow directly from that.",
-        "Compliance made it harder before it made it easier: electronic visit verification became a requirement in many regions, but most agencies bolted on a separate EVV tool rather than folding verification into the workflow caregivers and schedulers already used.",
+      content: [
+        paragraph(
+          "Home-care agencies run a mobile workforce — caregivers visiting patients in their homes — but coordinate it with phone trees, paper timesheets, and spreadsheets. Missed visits, unverifiable hours, and billing disputes follow directly from that.",
+        ),
+        paragraph(
+          "Compliance made it harder before it made it easier: electronic visit verification became a requirement in many regions, but most agencies bolted on a separate EVV tool rather than folding verification into the workflow caregivers and schedulers already used.",
+        ),
       ],
     },
     {

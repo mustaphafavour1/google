@@ -6,6 +6,8 @@
  * components that render it.
  */
 
+import type { PortableTextBlock } from "@portabletext/types";
+
 export type ScaleMetric = {
   value: string;
   label: string;
@@ -45,9 +47,7 @@ export type RichTextBlock = {
   _type: "richText";
   _key: string;
   heading?: string;
-  format: "prose" | "bullets";
-  paragraphs?: string[];
-  bullets?: string[];
+  content: PortableTextBlock[];
 };
 
 export type SideBySideCardsBlock = {

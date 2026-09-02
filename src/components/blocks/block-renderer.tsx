@@ -28,7 +28,7 @@ export function BlockRenderer({ block, project }: { block: ProjectBlock; project
     case "sideBySideCards":
       return <SideBySideCardsBlock block={block} />;
     case "imageGallery":
-      return <ImageGalleryBlock block={block} project={project} />;
+      return <ImageGalleryBlock block={block} />;
     case "chart":
       return <ChartBlock block={block} project={project} />;
     case "quote":
@@ -36,9 +36,9 @@ export function BlockRenderer({ block, project }: { block: ProjectBlock; project
     case "processTimeline":
       return <ProcessTimelineBlock block={block} />;
     case "fullBleedImage":
-      return <FullBleedImageBlock block={block} project={project} />;
+      return <FullBleedImageBlock block={block} />;
     case "imageGrid":
-      return <ImageGridBlock block={block} project={project} />;
+      return <ImageGridBlock block={block} />;
     case "video":
       return <VideoBlock block={block} project={project} />;
     case "textGrid":

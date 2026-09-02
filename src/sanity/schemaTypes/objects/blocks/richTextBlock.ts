@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const richTextBlock = defineType({
   name: "richText",
@@ -7,32 +7,31 @@ export const richTextBlock = defineType({
   fields: [
     defineField({ name: "heading", type: "string" }),
     defineField({
-      name: "format",
-      type: "string",
-      options: {
-        list: [
-          { title: "Prose", value: "prose" },
-          { title: "Bullet list", value: "bullets" },
-        ],
-        layout: "radio",
-      },
-      initialValue: "prose",
+      name: "content",
+      title: "Content",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "block",
+          styles: [{ title: "Normal", value: "normal" }],
+          lists: [
+            { title: "Bullet", value: "bullet" },
+            { title: "Numbered", value: "number" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Bold", value: "strong" },
+              { title: "Italic", value: "em" },
+              { title: "Underline", value: "underline" },
+            ],
+          },
+        }),
+      ],
       validation: (r) => r.required(),
-    }),
-    defineField({
-      name: "paragraphs",
-      type: "array",
-      of: [{ type: "text", rows: 3 }],
-      hidden: ({ parent }) => parent?.format !== "prose",
-    }),
-    defineField({
-      name: "bullets",
-      type: "array",
-      of: [{ type: "string" }],
-      hidden: ({ parent }) => parent?.format !== "bullets",
     }),
   ],
   preview: {
-    select: { title: "heading", subtitle: "format" },
+    select: { title: "heading" },
+    prepare: ({ title }) => ({ title: title || "Rich text" }),
   },
 });

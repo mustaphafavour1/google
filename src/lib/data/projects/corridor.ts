@@ -1,4 +1,5 @@
 import type { Project } from "@/lib/types";
+import { paragraph } from "@/lib/data/portable-text";
 
 export const corridor: Project = {
   _id: "project-corridor",
@@ -38,10 +39,13 @@ export const corridor: Project = {
       _type: "richText",
       _key: "corridor-problem",
       heading: "The problem",
-      format: "prose",
-      paragraphs: [
-        "Paying people across borders means stitching together bank rails, card networks, and local payout partners that all fail differently, settle on different timelines, and price FX differently. Finance and ops teams end up managing that complexity by hand, in spreadsheets, per corridor.",
-        "The console needed to make routing decisions legible — why a payout took the path it did, what it cost, and where it's stuck — without requiring the person watching it to understand the underlying rail topology.",
+      content: [
+        paragraph(
+          "Paying people across borders means stitching together bank rails, card networks, and local payout partners that all fail differently, settle on different timelines, and price FX differently. Finance and ops teams end up managing that complexity by hand, in spreadsheets, per corridor.",
+        ),
+        paragraph(
+          "The console needed to make routing decisions legible — why a payout took the path it did, what it cost, and where it's stuck — without requiring the person watching it to understand the underlying rail topology.",
+        ),
       ],
     },
     {

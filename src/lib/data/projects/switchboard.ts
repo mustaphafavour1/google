@@ -1,4 +1,5 @@
 import type { Project } from "@/lib/types";
+import { bulletItem } from "@/lib/data/portable-text";
 
 export const switchboard: Project = {
   _id: "project-switchboard",
@@ -69,13 +70,12 @@ export const switchboard: Project = {
       _type: "richText",
       _key: "switchboard-coverage",
       heading: "What the console covers",
-      format: "bullets",
-      bullets: [
-        "Provider Catalog — every connected provider and model, with capability and pricing metadata",
-        "Products & Routing — which product surfaces route to which provider, with fallback chains",
-        "Access & Audit — who can change routing or spend limits, and a full change history",
-        "Cost & Usage — spend and token usage broken down by provider, product, and team",
-        "Uptime & Availability — live status per provider, so a routing decision can account for it",
+      content: [
+        bulletItem("Provider Catalog — every connected provider and model, with capability and pricing metadata"),
+        bulletItem("Products & Routing — which product surfaces route to which provider, with fallback chains"),
+        bulletItem("Access & Audit — who can change routing or spend limits, and a full change history"),
+        bulletItem("Cost & Usage — spend and token usage broken down by provider, product, and team"),
+        bulletItem("Uptime & Availability — live status per provider, so a routing decision can account for it"),
       ],
     },
     {

@@ -95,7 +95,7 @@ export const allSkillsQuery = /* groq */ `
 export const siteSettingsQuery = /* groq */ `
   *[_id == "siteSettings"][0]{
     profile,
-    "featuredProjects": featuredProjects[]->{ ${projectFields} }[showOnPortfolio != false],
+    "featuredProjects": featuredProjects[@->showOnPortfolio != false]->{ ${projectFields} },
     "profileMedia": profileMedia[]{
       "image": image.asset->url,
       "video": video.asset->url,
