@@ -2,11 +2,13 @@
 
 import { motion } from "framer-motion";
 import { Download, Mail } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ResumeGateButton } from "@/components/resume/resume-gate-button";
+import { useContactForm } from "@/components/contact/contact-form-context";
 import type { SiteSettings } from "@/lib/types";
 
 export function FinalCtaSection({ contact }: { contact: SiteSettings["contact"] }) {
+  const { openForm } = useContactForm();
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -32,10 +34,10 @@ export function FinalCtaSection({ contact }: { contact: SiteSettings["contact"] 
       </p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-        <Button href="/contact" size="lg">
+        <button type="button" onClick={openForm} className={buttonVariants({ size: "lg" })}>
           <Mail size={15} />
           Get In Touch
-        </Button>
+        </button>
         {contact.resumeUrl && (
           <ResumeGateButton className={buttonVariants({ variant: "outline", size: "lg" })}>
             <Download size={15} />

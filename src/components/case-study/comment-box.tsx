@@ -17,51 +17,51 @@ export function CommentBox({ projectName }: { projectName: string }) {
 
   function handleSubmit(_event: FormEvent<HTMLFormElement>) {
     // Submission proceeds into the hidden iframe below — no redirect, no
-    // visible Google Forms response page.
+    // visible Google Forms response page. The iframe stays mounted
+    // regardless of `submitted` so unmounting it here can't race with
+    // (and cancel) the in-flight navigation it's carrying.
     setSubmitted(true);
-  }
-
-  if (submitted) {
-    return (
-      <p className="flex items-center gap-2 text-[13px] text-ink-muted">
-        <Check size={15} className="text-success" />
-        Thanks — that&rsquo;s been sent.
-      </p>
-    );
   }
 
   return (
     <>
-      <form action={FORM_URL} method="POST" target={FRAME_NAME} onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <input
-          type="text"
-          name={FORM_NAME_ENTRY_ID}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          placeholder="Your name (optional)"
-          className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted"
-        />
-        <div className="flex flex-col gap-2 sm:flex-row">
+      {submitted ? (
+        <p className="flex items-center gap-2 text-[13px] text-ink-muted">
+          <Check size={15} className="text-success" />
+          Thanks — that&rsquo;s been sent.
+        </p>
+      ) : (
+        <form action={FORM_URL} method="POST" target={FRAME_NAME} onSubmit={handleSubmit} className="flex flex-col gap-2">
           <input
             type="text"
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            placeholder="Leave a thought on this case study…"
-            required
-            className="h-10 flex-1 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted"
+            name={FORM_NAME_ENTRY_ID}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder="Your name (optional)"
+            className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted"
           />
-          {/* Carries the project name alongside the comment — the form itself
-              has no separate field for it. */}
-          <input type="hidden" name={FORM_ENTRY_ID} value={text ? `[${projectName}] ${text}` : ""} />
-          <button
-            type="submit"
-            className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-md bg-primary-500 px-4 text-[13px] font-medium text-white transition-colors hover:bg-primary-600"
-          >
-            <Send size={13} />
-            Send
-          </button>
-        </div>
-      </form>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              type="text"
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+              placeholder="Leave a thought on this case study…"
+              required
+              className="h-10 flex-1 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted"
+            />
+            {/* Carries the project name alongside the comment — the form itself
+                has no separate field for it. */}
+            <input type="hidden" name={FORM_ENTRY_ID} value={text ? `[${projectName}] ${text}` : ""} />
+            <button
+              type="submit"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-md bg-primary-500 px-4 text-[13px] font-medium text-white transition-colors hover:bg-primary-600"
+            >
+              <Send size={13} />
+              Send
+            </button>
+          </div>
+        </form>
+      )}
       <iframe name={FRAME_NAME} title="Comment submission target" aria-hidden="true" tabIndex={-1} className="hidden" />
     </>
   );
