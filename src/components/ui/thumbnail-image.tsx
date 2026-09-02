@@ -30,7 +30,12 @@ export function ThumbnailImage({
         <img src={src} alt={alt} className="h-full w-full object-cover" />
       </button>
 
-      {lightbox.open && <Lightbox src={src} alt={alt} onClose={lightbox.hide} />}
+      {lightbox.open && (
+        <Lightbox label={alt} onClose={lightbox.hide}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
+          <img src={src} alt={alt} className="max-h-full max-w-full object-contain" />
+        </Lightbox>
+      )}
     </>
   );
 }

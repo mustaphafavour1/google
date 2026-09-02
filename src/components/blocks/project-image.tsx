@@ -20,7 +20,12 @@ export function ProjectImage({ src, caption }: { src: string; caption?: string }
         )}
       </figure>
 
-      {lightbox.open && <Lightbox src={src} alt={caption} onClose={lightbox.hide} />}
+      {lightbox.open && (
+        <Lightbox label={caption} onClose={lightbox.hide}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
+          <img src={src} alt={caption ?? ""} className="max-h-full max-w-full object-contain" />
+        </Lightbox>
+      )}
     </>
   );
 }

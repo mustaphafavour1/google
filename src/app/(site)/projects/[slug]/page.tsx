@@ -9,7 +9,7 @@ import { getProjectBySlug, getProjects, getProcessTracks, getSiteSettings } from
 import { buildChatModes } from "@/lib/chatbot-content";
 import { CaseStudyToc } from "./case-study-toc";
 import { CaseStudyMiniMetrics } from "./case-study-mini-metrics";
-import { AutoScrollControl } from "./auto-scroll-control";
+import { AutoScrollControl } from "@/components/ui/auto-scroll-control";
 import { FaveAiMini } from "./faveai-mini";
 import { ProjectHeader } from "./project-header";
 import { CaseStudyFooter } from "@/components/case-study/case-study-footer";
