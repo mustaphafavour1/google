@@ -5,13 +5,14 @@ import { Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const SPEEDS = [0.5, 1, 1.5, 2] as const;
-const BASE_PX_PER_SECOND = 36;
+const BASE_PX_PER_SECOND = 108;
 
 export function AutoScrollControl() {
   const [active, setActive] = useState(false);
   const [speed, setSpeed] = useState<(typeof SPEEDS)[number]>(1);
   const frameRef = useRef<number | null>(null);
   const lastTsRef = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!active) return;
@@ -21,7 +22,7 @@ export function AutoScrollControl() {
       const dt = (ts - lastTsRef.current) / 1000;
       lastTsRef.current = ts;
 
-      window.scrollBy(0, BASE_PX_PER_SECOND * speed * dt);
+      window.scrollTo({ top: window.scrollY + BASE_PX_PER_SECOND * speed * dt, behavior: "instant" });
 
       const atBottom =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
@@ -39,8 +40,36 @@ export function AutoScrollControl() {
     };
   }, [active, speed]);
 
+  useEffect(() => {
+    if (!active) return;
+
+    function onClick(e: MouseEvent) {
+      if (containerRef.current?.contains(e.target as Node)) return;
+      setActive(false);
+    }
+    window.addEventListener("click", onClick, { capture: true });
+    return () => window.removeEventListener("click", onClick, { capture: true });
+  }, [active]);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (!e.shiftKey) return;
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActive(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActive(false);
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
-    <div>
+    <div ref={containerRef}>
       <p className="type-eyebrow mb-2.5">Auto-scroll</p>
       <div className="flex items-center gap-2">
         <button
@@ -76,6 +105,9 @@ export function AutoScrollControl() {
           ))}
         </div>
       </div>
+      <p className="mt-1.5 text-[10px] leading-snug text-ink-faint">
+        Click anywhere to pause · Shift+↑ top · Shift+↓ end
+      </p>
     </div>
   );
 }

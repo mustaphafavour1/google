@@ -7,7 +7,7 @@ import { Lightbox } from "@/components/ui/lightbox";
 import { useLightbox } from "@/components/ui/use-lightbox";
 import { EmptyState } from "@/components/ui/empty-state";
 import { shuffle, type GalleryItem } from "@/lib/gallery";
-import { cn, tiltForKey } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export function GalleryGrid({ items }: { items: GalleryItem[] }) {
   const [order, setOrder] = useState<"ordered" | "random">("ordered");
@@ -62,11 +62,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
 
       <div className="columns-2 gap-4 sm:columns-3 lg:columns-4">
         {displayItems.map((item) => (
-          <div
-            key={item.key}
-            className="mb-4 break-inside-avoid"
-            style={{ transform: `rotate(${tiltForKey(item.key)}deg)` }}
-          >
+          <div key={item.key} className="mb-4 break-inside-avoid">
             <GalleryTile item={item} />
           </div>
         ))}
@@ -83,7 +79,7 @@ function GalleryTile({ item }: { item: GalleryItem }) {
       <button
         type="button"
         onClick={lightbox.show}
-        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-lg border border-hairline shadow-sm transition-transform hover:z-10 hover:scale-[1.03] hover:rotate-0 hover:shadow-lg"
+        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-lg border border-hairline shadow-sm transition-transform hover:z-10 hover:scale-[1.03] hover:shadow-lg"
       >
         {item.kind === "image" && (
           // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
