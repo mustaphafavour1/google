@@ -57,6 +57,7 @@ function withProjectDefaults(project: Project): Project {
     links: project.links ?? [],
     scale: project.scale ?? [],
     showOnPortfolio: project.showOnPortfolio ?? true,
+    industry: project.industry ?? "General",
   };
 }
 
@@ -129,8 +130,8 @@ export async function getSkills(): Promise<Skill[]> {
 /**
  * No fallback seed data on purpose — unlike the other content types, there's
  * no real product list to fall back to yet. An empty result renders an
- * empty state on /products until real ones are added in Studio, rather than
- * showing invented placeholder products.
+ * empty state on the Profile page's Products section until real ones are
+ * added in Studio, rather than showing invented placeholder products.
  */
 export async function getProducts(): Promise<Product[]> {
   const result = await sanityFetch<Product[]>(allProductsQuery);
@@ -161,7 +162,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   if (!result) return siteSettingsFallback;
   return {
     ...result,
-    featuredProjects: result.featuredProjects.map(withProjectDefaults),
+    profile: { ...result.profile, brandTextRotation: result.profile.brandTextRotation ?? ["Favour M."] },
+    featuredProjects: (result.featuredProjects ?? []).map(withProjectDefaults),
     profileMedia: result.profileMedia ?? [],
   };
 }
