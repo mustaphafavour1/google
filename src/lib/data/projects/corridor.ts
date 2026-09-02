@@ -11,7 +11,12 @@ export const corridor: Project = {
   year: 2025,
   role: "Product design · design system",
   techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Apache ECharts", "shadcn/ui", "Parkinsans"],
-  scale: { pages: 12, entities: 6, roles: 4 },
+  links: [],
+  scale: [
+    { value: "12", label: "Pages designed" },
+    { value: "6", label: "Core entities" },
+    { value: "4", label: "Roles modeled" },
+  ],
   valueImpact: {
     label: "Annual cross-border payout volume modeled across corridors",
     amount: 42_000_000,
@@ -19,6 +24,7 @@ export const corridor: Project = {
   },
   accent: { primary: "#5C6B47", secondary: "#C08A6E" },
   processDisciplines: ["UI/UX", "Web Development"],
+  showOnPortfolio: true,
   blocks: [
     {
       _type: "hero",

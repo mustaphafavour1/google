@@ -13,9 +13,12 @@ import { ImageGridBlock } from "./image-grid-block";
 import { VideoBlock } from "./video-block";
 import { TextGridBlock } from "./text-grid-block";
 import { PipLinkPreviewBlock } from "./pip-link-preview-block";
+import { SectionBreakBlock } from "./section-break-block";
 
 export function BlockRenderer({ block, project }: { block: ProjectBlock; project: Project }) {
   switch (block._type) {
+    case "sectionBreak":
+      return <SectionBreakBlock block={block} />;
     case "hero":
       return <HeroBlock block={block} project={project} />;
     case "metricsRow":

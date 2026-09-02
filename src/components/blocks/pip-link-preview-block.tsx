@@ -2,6 +2,23 @@ import { ExternalLink, Globe } from "lucide-react";
 import type { PipLinkPreviewBlock as PipLinkPreviewBlockT } from "@/lib/types";
 
 export function PipLinkPreviewBlock({ block }: { block: PipLinkPreviewBlockT }) {
+  if (block.url.includes("figma.com")) {
+    return (
+      <div>
+        {block.title && <h4 className="text-[14px] font-semibold text-ink-em">{block.title}</h4>}
+        {block.description && <p className="type-body mt-1 text-ink-muted">{block.description}</p>}
+        <div className="mt-3 overflow-hidden rounded-xl border border-hairline">
+          <iframe
+            src={`https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(block.url)}`}
+            title={block.title || "Figma prototype"}
+            className="aspect-video w-full"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    );
+  }
+
   let hostname = block.url;
   try {
     hostname = new URL(block.url).hostname.replace(/^www\./, "");

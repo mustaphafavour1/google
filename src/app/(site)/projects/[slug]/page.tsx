@@ -29,29 +29,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-function tocEntry(block: ProjectBlock): { id: string; label: string } | null {
-  switch (block._type) {
-    case "metricsRow":
-      return { id: block._key, label: block.heading || "Scope at a glance" };
-    case "richText":
-      return { id: block._key, label: block.heading || "Overview" };
-    case "sideBySideCards":
-      return { id: block._key, label: block.heading || "Design focus" };
-    case "imageGallery":
-      return { id: block._key, label: block.heading || "Selected screens" };
-    case "chart":
-      return { id: block._key, label: block.heading || "By the numbers" };
-    case "processTimeline":
-      return { id: block._key, label: block.heading || "Process" };
-    case "imageGrid":
-      return { id: block._key, label: block.heading || "Screens" };
-    case "video":
-      return { id: block._key, label: block.heading || "Walkthrough" };
-    case "textGrid":
-      return { id: block._key, label: block.heading || "Highlights" };
-    default:
-      return null;
+function buildTocItems(blocks: ProjectBlock[]): { id: string; label: string }[] {
+  const items: { id: string; label: string }[] = [];
+  const firstBreakIndex = blocks.findIndex((block) => block._type === "sectionBreak");
+
+  if (blocks.length > 0 && firstBreakIndex !== 0) {
+    items.push({ id: blocks[0]._key, label: "Overview" });
   }
+
+  for (const block of blocks) {
+    if (block._type === "sectionBreak") {
+      items.push({ id: block._key, label: block.title });
+    }
+  }
+
+  return items;
 }
 
 export default async function ProjectDetailPage({
@@ -73,7 +65,7 @@ export default async function ProjectDetailPage({
   const currentIndex = projects.findIndex((p) => p.slug === slug);
   const next = projects[(currentIndex + 1) % projects.length];
 
-  const tocItems = project.blocks.map(tocEntry).filter((entry) => entry !== null);
+  const tocItems = buildTocItems(project.blocks);
   const relevantTracks = processTracks.filter((track) =>
     project.processDisciplines?.includes(track.discipline),
   );

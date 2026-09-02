@@ -16,6 +16,7 @@ export const siteSettingsFallback: SiteSettings = {
     founderNote: "Founder, Stampdx",
   },
   featuredProjects: [],
+  profileMedia: [],
   siteMetrics: [
     { key: "projects", label: "Projects delivered", value: "60+", isPlaceholder: true },
     { key: "years", label: "Years of experience", value: "7", isPlaceholder: false },
@@ -54,7 +55,7 @@ export const siteSettingsFallback: SiteSettings = {
   hobbies: [
     { label: "Building small tools", note: "Side projects under Stampdx, usually solving my own annoyance." },
     { label: "Reading sci-fi", note: "Anything that treats systems and infrastructure as characters." },
-    { label: "Basketball", note: "Weekend pickup games — a decent counterweight to a screen-heavy week." },
+    { label: "Table Tennis", note: "Weekend pickup games — a decent counterweight to a screen-heavy week." },
     { label: "Tinkering with hardware", note: "A leftover habit from Mechatronics Engineering." },
   ],
   analyticsAggregate: {

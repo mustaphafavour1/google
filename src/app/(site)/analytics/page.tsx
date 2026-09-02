@@ -1,7 +1,11 @@
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
 import { getProjects, getSiteSettings } from "@/lib/content";
-import { getCumulativeValueImpact, getPagesByProject, getTotalPagesDesigned } from "@/lib/data/analytics";
+import {
+  getCumulativeValueImpact,
+  getScaleMetricsByProject,
+  getTotalScaleMetricsLogged,
+} from "@/lib/data/analytics";
 import { AnalyticsCharts } from "./analytics-charts";
 
 export default async function AnalyticsPage() {
@@ -16,9 +20,9 @@ export default async function AnalyticsPage() {
       />
       <AnalyticsCharts
         caseStudyCount={projects.length}
-        totalPagesDesigned={getTotalPagesDesigned(projects)}
+        totalScaleMetricsLogged={getTotalScaleMetricsLogged(projects)}
         cumulativeValueImpact={getCumulativeValueImpact(projects)}
-        pagesByProject={getPagesByProject(projects)}
+        scaleMetricsByProject={getScaleMetricsByProject(projects)}
         projectsDelivered={projectsDelivered}
         analyticsAggregate={siteSettings.analyticsAggregate}
       />

@@ -6,10 +6,14 @@
  * components that render it.
  */
 
-export type ProjectScale = {
-  pages: number;
-  entities: number;
-  roles: number;
+export type ScaleMetric = {
+  value: string;
+  label: string;
+};
+
+export type ProjectLink = {
+  label: string;
+  url: string;
 };
 
 export type ValueImpact = {
@@ -130,6 +134,13 @@ export type PipLinkPreviewBlock = {
   linkLabel?: string;
 };
 
+export type SectionBreakBlock = {
+  _type: "sectionBreak";
+  _key: string;
+  title: string;
+  subtitle?: string;
+};
+
 export type ProjectBlock =
   | HeroBlock
   | MetricsRowBlock
@@ -143,7 +154,8 @@ export type ProjectBlock =
   | ImageGridBlock
   | VideoBlock
   | TextGridBlock
-  | PipLinkPreviewBlock;
+  | PipLinkPreviewBlock
+  | SectionBreakBlock;
 
 // ---- Documents ---------------------------------------------------------------
 
@@ -160,7 +172,8 @@ export type Project = {
   year: number;
   role: string;
   techStack: string[];
-  scale: ProjectScale;
+  links: ProjectLink[];
+  scale: ScaleMetric[];
   valueImpact?: ValueImpact;
   complexity?: number;
   recency?: number;
@@ -171,6 +184,7 @@ export type Project = {
   };
   processDisciplines?: ProcessDiscipline[];
   aiContext?: string;
+  showOnPortfolio: boolean;
   blocks: ProjectBlock[];
 };
 
@@ -224,6 +238,13 @@ export type SocialLink = {
 export type Hobby = {
   label: string;
   note?: string;
+  image?: string;
+};
+
+export type ProfileMediaItem = {
+  image?: string;
+  video?: string;
+  caption?: string;
 };
 
 export type SiteSettings = {
@@ -236,6 +257,7 @@ export type SiteSettings = {
     founderNote: string;
   };
   featuredProjects: Project[];
+  profileMedia: ProfileMediaItem[];
   siteMetrics: SiteMetric[];
   about: {
     design: AboutSection;

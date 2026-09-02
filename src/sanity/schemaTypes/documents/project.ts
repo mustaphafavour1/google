@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const project = defineType({
   name: "project",
@@ -6,7 +6,8 @@ export const project = defineType({
   type: "document",
   groups: [
     { name: "content", title: "Content", default: true },
-    { name: "meta", title: "Meta & scale" },
+    { name: "meta", title: "Info & Meta" },
+    { name: "scale", title: "Scale & Scores" },
     { name: "blocks", title: "Page blocks" },
   ],
   fields: [
@@ -34,11 +35,20 @@ export const project = defineType({
       description: "Optional animated cover — shown instead of the static cover image when set.",
     }),
     defineField({
+      name: "showOnPortfolio",
+      title: "Show on portfolio",
+      type: "boolean",
+      group: "content",
+      initialValue: true,
+      description: "Turn off to hide this project everywhere on the live site without deleting it.",
+    }),
+    defineField({
       name: "blocks",
       title: "Page blocks",
       type: "array",
       group: "blocks",
       of: [
+        { type: "sectionBreak" },
         { type: "hero" },
         { type: "metricsRow" },
         { type: "richText" },
@@ -90,26 +100,71 @@ export const project = defineType({
       of: [{ type: "string" }],
       options: { layout: "tags" },
     }),
-    defineField({ name: "scale", type: "projectScale", group: "meta" }),
+    defineField({
+      name: "links",
+      title: "Links",
+      type: "array",
+      group: "meta",
+      description:
+        "Shown as outline buttons at the top of the project page, under the role/year/industry row.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "projectLink",
+          fields: [
+            defineField({ name: "label", type: "string", validation: (r) => r.required() }),
+            defineField({ name: "url", type: "url", validation: (r) => r.required() }),
+          ],
+          preview: { select: { title: "label", subtitle: "url" } },
+        }),
+      ],
+    }),
     defineField({ name: "valueImpact", type: "valueImpact", group: "meta" }),
     defineField({ name: "accent", type: "projectAccent", group: "meta" }),
     defineField({
+      name: "aiContext",
+      title: "AI context",
+      type: "text",
+      rows: 6,
+      group: "meta",
+      description: "Reference notes for FaveAI to draw on when answering questions about this project — not shown on the page itself.",
+    }),
+    defineField({
+      name: "scale",
+      title: "Scale & scope metrics",
+      type: "array",
+      group: "scale",
+      description:
+        "Shown in the case-study sidebar's \"Scope at a glance\" card. Add any number + label pair you want — not fixed to specific fields.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "scaleMetric",
+          fields: [
+            defineField({ name: "value", type: "string", validation: (r) => r.required() }),
+            defineField({ name: "label", type: "string", validation: (r) => r.required() }),
+          ],
+          preview: { select: { title: "value", subtitle: "label" } },
+        }),
+      ],
+    }),
+    defineField({
       name: "complexity",
       type: "number",
-      group: "meta",
+      group: "scale",
       description: "Carried over from the old portfolio — a 0-10 self-rated complexity score.",
     }),
     defineField({
       name: "recency",
       type: "number",
-      group: "meta",
+      group: "scale",
       description: "Carried over from the old portfolio — a 0-10 self-rated recency/relevance score.",
     }),
     defineField({
       name: "cardSize",
       title: "Card size (Projects grid)",
       type: "string",
-      group: "meta",
+      group: "scale",
       description: "Controls how much room this project's card takes in the /projects mosaic grid.",
       options: {
         list: [
@@ -122,18 +177,10 @@ export const project = defineType({
       initialValue: "small",
     }),
     defineField({
-      name: "aiContext",
-      title: "AI context",
-      type: "text",
-      rows: 6,
-      group: "meta",
-      description: "Reference notes for FaveAI to draw on when answering questions about this project — not shown on the page itself.",
-    }),
-    defineField({
       name: "processDisciplines",
       title: "Relevant process disciplines",
       type: "array",
-      group: "meta",
+      group: "scale",
       description: "Which /process tracks to show as horizontal tabs on this case study page.",
       of: [{ type: "string" }],
       options: {
@@ -145,7 +192,11 @@ export const project = defineType({
     }),
   ],
   preview: {
-    select: { title: "name", industryName: "industry.name", media: "coverImage" },
-    prepare: ({ title, industryName, media }) => ({ title, subtitle: industryName, media }),
+    select: { title: "name", industryName: "industry.name", media: "coverImage", hidden: "showOnPortfolio" },
+    prepare: ({ title, industryName, media, hidden }) => ({
+      title,
+      subtitle: hidden === false ? `${industryName} — hidden` : industryName,
+      media,
+    }),
   },
 });

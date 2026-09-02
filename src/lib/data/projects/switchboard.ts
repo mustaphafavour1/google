@@ -12,7 +12,12 @@ export const switchboard: Project = {
   year: 2026,
   role: "Product design & front-end build",
   techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Space Grotesk", "Inter", "Nivo"],
-  scale: { pages: 12, entities: 6, roles: 4 },
+  links: [],
+  scale: [
+    { value: "12", label: "Pages designed" },
+    { value: "6", label: "Core entities" },
+    { value: "4", label: "Roles modeled" },
+  ],
   valueImpact: {
     label: "Annual AI infrastructure spend modeled under routing & cost controls",
     amount: 3_200_000,
@@ -20,6 +25,7 @@ export const switchboard: Project = {
   },
   accent: { primary: "#6366F1", secondary: "#8B5CF6" },
   processDisciplines: ["UI/UX", "Web Development"],
+  showOnPortfolio: true,
   blocks: [
     {
       _type: "hero",

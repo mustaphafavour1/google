@@ -1,5 +1,16 @@
 import type { LucideIcon } from "lucide-react";
-import { Archive, Briefcase, Images, Info, LayoutDashboard, Package, Rocket, User, Workflow } from "lucide-react";
+import {
+  Archive,
+  Briefcase,
+  Images,
+  Lightbulb,
+  LayoutDashboard,
+  Newspaper,
+  Package,
+  Rocket,
+  User,
+  Workflow,
+} from "lucide-react";
 
 export type NavItem = {
   label: string;
@@ -10,12 +21,13 @@ export type NavItem = {
 export const primaryNav: NavItem[] = [
   { label: "Overview", href: "/", icon: LayoutDashboard },
   { label: "Projects", href: "/projects", icon: Briefcase },
-  { label: "My Products", href: "/products", icon: Package },
-  { label: "About", href: "/about", icon: Info },
-  { label: "Process", href: "/process", icon: Workflow },
   { label: "Gallery", href: "/gallery", icon: Images },
+  { label: "Products", href: "/products", icon: Package },
+  { label: "Process", href: "/process", icon: Workflow },
+  { label: "Blog", href: "/blog", icon: Newspaper },
+  { label: "DDD", href: "/ddd", icon: Lightbulb },
   { label: "Profile", href: "/profile", icon: User },
-  { label: "Playground", href: "/playground", icon: Rocket },
+  { label: "For Fun", href: "/playground", icon: Rocket },
   { label: "Archive", href: "/archive", icon: Archive },
 ];
 
@@ -27,10 +39,11 @@ export const mobileTabs: NavItem[] = [
 ];
 
 export const moreSheetItems: NavItem[] = [
-  { label: "My Products", href: "/products", icon: Package },
-  { label: "About", href: "/about", icon: Info },
+  { label: "Products", href: "/products", icon: Package },
   { label: "Process", href: "/process", icon: Workflow },
-  { label: "Playground", href: "/playground", icon: Rocket },
+  { label: "Blog", href: "/blog", icon: Newspaper },
+  { label: "DDD", href: "/ddd", icon: Lightbulb },
+  { label: "For Fun", href: "/playground", icon: Rocket },
   { label: "Archive", href: "/archive", icon: Archive },
 ];
 

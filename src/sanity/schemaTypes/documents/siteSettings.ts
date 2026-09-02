@@ -6,6 +6,7 @@ export const siteSettings = defineType({
   type: "document",
   groups: [
     { name: "profile", title: "Profile", default: true },
+    { name: "profileMedia", title: "Profile media" },
     { name: "about", title: "About" },
     { name: "contact", title: "Contact" },
     { name: "hobbies", title: "Hobbies" },
@@ -34,6 +35,30 @@ export const siteSettings = defineType({
         "Shown in the Overview page's \"Shipped, Not Just Designed\" section — pick up to 4. Falls back to the 4 most recent projects if left empty.",
       of: [{ type: "reference", to: [{ type: "project" }] }],
       validation: (r) => r.max(4).unique(),
+    }),
+    defineField({
+      name: "profileMedia",
+      title: "Photo/video carousel",
+      type: "array",
+      group: "profileMedia",
+      description: "Shown in the fixed rail on the Profile page. Mix photos and short video clips freely.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "mediaItem",
+          fields: [
+            defineField({ name: "image", type: "image", options: { hotspot: true } }),
+            defineField({
+              name: "video",
+              title: "Video (short clip — use instead of image)",
+              type: "file",
+              options: { accept: "video/*" },
+            }),
+            defineField({ name: "caption", type: "string" }),
+          ],
+          preview: { select: { title: "caption", media: "image" } },
+        }),
+      ],
     }),
     defineField({
       name: "siteMetrics",
@@ -104,8 +129,9 @@ export const siteSettings = defineType({
           fields: [
             defineField({ name: "label", type: "string", validation: (r) => r.required() }),
             defineField({ name: "note", type: "string" }),
+            defineField({ name: "image", type: "image", options: { hotspot: true } }),
           ],
-          preview: { select: { title: "label", subtitle: "note" } },
+          preview: { select: { title: "label", subtitle: "note", media: "image" } },
         }),
       ],
     }),

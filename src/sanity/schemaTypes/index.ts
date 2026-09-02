@@ -23,8 +23,8 @@ import { imageGridBlock } from "./objects/blocks/imageGridBlock";
 import { videoBlock } from "./objects/blocks/videoBlock";
 import { textGridBlock } from "./objects/blocks/textGridBlock";
 import { pipLinkPreviewBlock } from "./objects/blocks/pipLinkPreviewBlock";
+import { sectionBreakBlock } from "./objects/blocks/sectionBreakBlock";
 
-import { projectScale } from "./objects/projectScale";
 import { valueImpact } from "./objects/valueImpact";
 import { projectAccent } from "./objects/projectAccent";
 import { aboutSection } from "./objects/aboutSection";
@@ -55,8 +55,8 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   videoBlock,
   textGridBlock,
   pipLinkPreviewBlock,
+  sectionBreakBlock,
   // Shared objects
-  projectScale,
   valueImpact,
   projectAccent,
   aboutSection,

@@ -1,3 +1,6 @@
+import { ArrowUpRight } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/types";
 
 export function ProjectHeader({ project }: { project: Project }) {
@@ -5,23 +8,9 @@ export function ProjectHeader({ project }: { project: Project }) {
 
   return (
     <div className="mb-10">
-      <div
-        className="relative h-64 w-full overflow-hidden rounded-2xl sm:h-80"
-        style={{
-          background: `linear-gradient(135deg, ${project.accent.primary}, ${project.accent.secondary})`,
-        }}
-      >
-        {coverSrc && (
-          // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
-          <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-        <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-9">
-          <span className="type-eyebrow text-white/85">{project.industry}</span>
-          <h1 className="type-display mt-1 text-white">{project.name}</h1>
-          <p className="mt-2 max-w-2xl text-[14px] text-white/85 sm:text-[15px]">{project.oneLiner}</p>
-        </div>
-      </div>
+      <span className="type-eyebrow text-ink-muted">{project.industry}</span>
+      <h1 className="type-display mt-1 text-ink-em">{project.name}</h1>
+      <p className="mt-2 max-w-2xl text-[14px] text-ink-soft sm:text-[15px]">{project.oneLiner}</p>
 
       <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-3">
         <MetaItem label="Role" value={project.role} />
@@ -41,6 +30,35 @@ export function ProjectHeader({ project }: { project: Project }) {
               ))}
             </div>
           </>
+        )}
+      </div>
+
+      {project.links.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {project.links.map((link) => (
+            <a
+              key={link.url}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              {link.label}
+              <ArrowUpRight size={13} />
+            </a>
+          ))}
+        </div>
+      )}
+
+      <div
+        className="relative mt-6 h-64 w-full overflow-hidden rounded-2xl sm:h-80"
+        style={{
+          background: `linear-gradient(135deg, ${project.accent.primary}, ${project.accent.secondary})`,
+        }}
+      >
+        {coverSrc && (
+          // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+          <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
         )}
       </div>
     </div>

@@ -11,6 +11,7 @@ export const projectFields = /* groq */ `
   year,
   role,
   techStack,
+  "links": links[]{ label, url },
   scale,
   valueImpact,
   accent,
@@ -18,6 +19,7 @@ export const projectFields = /* groq */ `
   complexity,
   recency,
   cardSize,
+  showOnPortfolio,
   blocks[]{
     ...,
     _type == "imageGallery" => {
@@ -42,10 +44,12 @@ export const projectFields = /* groq */ `
   }
 `;
 
-export const allProjectsQuery = /* groq */ `*[_type == "project"] | order(year desc) { ${projectFields} }`;
+export const allProjectsQuery = /* groq */ `
+  *[_type == "project" && showOnPortfolio != false] | order(year desc) { ${projectFields} }
+`;
 
 export const projectBySlugQuery = /* groq */ `
-  *[_type == "project" && slug.current == $slug][0] { ${projectFields} }
+  *[_type == "project" && slug.current == $slug && showOnPortfolio != false][0] { ${projectFields} }
 `;
 
 /**
@@ -55,7 +59,7 @@ export const projectBySlugQuery = /* groq */ `
  * uses and only fetched here, by the chat API route.
  */
 export const allProjectsAiContextQuery = /* groq */ `
-  *[_type == "project"] | order(year desc) {
+  *[_type == "project" && showOnPortfolio != false] | order(year desc) {
     name,
     "slug": slug.current,
     oneLiner,
@@ -66,7 +70,9 @@ export const allProjectsAiContextQuery = /* groq */ `
   }
 `;
 
-export const allProjectSlugsQuery = /* groq */ `*[_type == "project"]{ "slug": slug.current }`;
+export const allProjectSlugsQuery = /* groq */ `
+  *[_type == "project" && showOnPortfolio != false]{ "slug": slug.current }
+`;
 
 export const allProcessTracksQuery = /* groq */ `
   *[_type == "processTrack"] | order((discipline == "Overall") desc, discipline asc) {
@@ -89,7 +95,12 @@ export const allSkillsQuery = /* groq */ `
 export const siteSettingsQuery = /* groq */ `
   *[_id == "siteSettings"][0]{
     profile,
-    "featuredProjects": featuredProjects[]->{ ${projectFields} },
+    "featuredProjects": featuredProjects[]->{ ${projectFields} }[showOnPortfolio != false],
+    "profileMedia": profileMedia[]{
+      "image": image.asset->url,
+      "video": video.asset->url,
+      caption
+    },
     siteMetrics,
     about,
     contact{
@@ -98,7 +109,11 @@ export const siteSettingsQuery = /* groq */ `
       website,
       socials
     },
-    hobbies,
+    "hobbies": hobbies[]{
+      label,
+      note,
+      "image": image.asset->url
+    },
     analyticsAggregate
   }
 `;

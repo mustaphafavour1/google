@@ -11,7 +11,7 @@ export default async function ProductsPage() {
   return (
     <PageContainer>
       <PageHeader
-        title="My Products"
+        title="Products"
         subtitle="Live products I've built and shipped, end to end — not concept-only mockups."
       />
 

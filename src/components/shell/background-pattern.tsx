@@ -10,7 +10,6 @@ const PAGE_KEY_BY_PATH: Record<string, BackgroundPatternPageKey> = {
   "/profile": "profile",
   "/playground": "playground",
   "/archive": "archive",
-  "/about": "about",
   "/process": "process",
   "/skills": "skills",
   "/contact": "contact",

@@ -13,18 +13,18 @@ const HIGHLIGHT = "#B35A04";
 
 type Props = {
   caseStudyCount: number;
-  totalPagesDesigned: number;
+  totalScaleMetricsLogged: number;
   cumulativeValueImpact: number;
-  pagesByProject: { project: string; pages: number }[];
+  scaleMetricsByProject: { project: string; metrics: number }[];
   projectsDelivered: SiteMetric | undefined;
   analyticsAggregate: SiteSettings["analyticsAggregate"];
 };
 
 export function AnalyticsCharts({
   caseStudyCount,
-  totalPagesDesigned,
+  totalScaleMetricsLogged,
   cumulativeValueImpact,
-  pagesByProject,
+  scaleMetricsByProject,
   projectsDelivered,
   analyticsAggregate,
 }: Props) {
@@ -37,8 +37,8 @@ export function AnalyticsCharts({
     <>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard
-          label="Pages designed"
-          value={formatNumber(totalPagesDesigned)}
+          label="Scope metrics logged"
+          value={formatNumber(totalScaleMetricsLogged)}
           caption={`Across the ${caseStudyCount} case studies`}
         />
         <StatCard label="Case studies analyzed" value={String(caseStudyCount)} />
@@ -56,12 +56,12 @@ export function AnalyticsCharts({
 
       <div className="mt-8 grid gap-4 lg:grid-cols-2">
         <div className="card p-5">
-          <h3 className="type-subheading">Pages designed per case study</h3>
+          <h3 className="type-subheading">Scope metrics per case study</h3>
           <p className="type-meta mb-4 mt-1">Derived directly from each project&rsquo;s scope</p>
           <div className="h-[260px]">
             <ResponsiveBar
-              data={pagesByProject}
-              keys={["pages"]}
+              data={scaleMetricsByProject}
+              keys={["metrics"]}
               indexBy="project"
               margin={{ top: 10, right: 10, bottom: 32, left: 32 }}
               padding={0.5}

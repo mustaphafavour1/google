@@ -17,8 +17,7 @@ export default async function ArchivePage() {
       <p className="type-eyebrow">Archive</p>
       <h1 className="type-display mt-2">Past versions of this portfolio</h1>
       <p className="type-body mt-3 max-w-xl text-ink-muted">
-        A running record of how this site has looked over the years — year, a snapshot, and what
-        it was for.
+        How my design portfolio has evolved over the years.
       </p>
 
       <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -12,7 +12,12 @@ export const caretrace: Project = {
   year: 2025,
   role: "Product design & front-end build",
   techStack: ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "Nivo", "Alan Sans"],
-  scale: { pages: 12, entities: 7, roles: 4 },
+  links: [],
+  scale: [
+    { value: "12", label: "Pages designed" },
+    { value: "7", label: "Core entities" },
+    { value: "4", label: "Roles modeled" },
+  ],
   valueImpact: {
     label: "Annual billable visit revenue modeled in the scheduling & billing flow",
     amount: 9_600_000,
@@ -20,6 +25,7 @@ export const caretrace: Project = {
   },
   accent: { primary: "#0F9488", secondary: "#EC4899" },
   processDisciplines: ["UI/UX", "Web Development"],
+  showOnPortfolio: true,
   blocks: [
     {
       _type: "hero",

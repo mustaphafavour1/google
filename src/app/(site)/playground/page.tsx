@@ -9,7 +9,7 @@ export default function PlaygroundPage() {
     <PageContainer>
       <div className="flex items-center gap-2.5">
         <Rocket size={20} className="text-primary-500" />
-        <h1 className="type-display">Playground</h1>
+        <h1 className="type-display">For Fun</h1>
       </div>
       <p className="type-body mt-2 max-w-lg text-ink-muted">
         Three small games — no prize at the end, just something to fidget with.
