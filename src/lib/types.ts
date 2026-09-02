@@ -263,6 +263,7 @@ export type SiteSettings = {
     location: string;
     tagline: string;
     founderNote: string;
+    brandTextRotation: string[];
   };
   featuredProjects: Project[];
   profileMedia: ProfileMediaItem[];
@@ -290,7 +291,6 @@ export type BackgroundPatternPageKey =
   | "overview"
   | "projects"
   | "gallery"
-  | "products"
   | "profile"
   | "playground"
   | "archive"

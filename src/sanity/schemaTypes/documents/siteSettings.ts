@@ -24,6 +24,22 @@ export const siteSettings = defineType({
         defineField({ name: "location", type: "string", validation: (r) => r.required() }),
         defineField({ name: "tagline", type: "text", rows: 2, validation: (r) => r.required() }),
         defineField({ name: "founderNote", type: "string" }),
+        defineField({
+          name: "brandTextRotation",
+          title: "Sidebar rotating text",
+          type: "array",
+          of: [{ type: "string" }],
+          description:
+            "Shown rotating in the collapsed sidebar's vertical brand mark. Add, remove, or reorder freely.",
+          initialValue: [
+            "Favour M.",
+            "Welcome here",
+            "How can I help?",
+            "Let's Build something Amazing",
+            "Let's get in touch",
+            "Try the fun Section",
+          ],
+        }),
       ],
     }),
     defineField({

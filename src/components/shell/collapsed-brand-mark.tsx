@@ -1,12 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-const BRAND_TEXT = "HeadFavour's Portfolio";
+const ROTATE_MS = 4000;
 
 const container = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.045 } },
+  visible: { transition: { staggerChildren: 0.035 } },
 };
 
 const letter = {
@@ -14,22 +15,36 @@ const letter = {
   visible: { opacity: 1, y: 0 },
 };
 
-export function CollapsedBrandMark() {
+export function CollapsedBrandMark({ phrases }: { phrases: string[] }) {
+  const list = phrases.length > 0 ? phrases : ["Favour M."];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (list.length <= 1) return;
+    const timer = setInterval(() => setIndex((i) => (i + 1) % list.length), ROTATE_MS);
+    return () => clearInterval(timer);
+  }, [list.length]);
+
+  const text = list[index % list.length];
+
   return (
     <div className="flex flex-1 items-center justify-center overflow-hidden py-4">
-      <motion.div
-        key="collapsed-brand-mark"
-        variants={container}
-        initial="hidden"
-        animate="visible"
-        className="flex -rotate-90 items-center whitespace-nowrap font-brand text-[27px] leading-none text-primary-500"
-      >
-        {BRAND_TEXT.split("").map((char, i) => (
-          <motion.span key={i} variants={letter} transition={{ duration: 0.25 }}>
-            {char === " " ? " " : char}
-          </motion.span>
-        ))}
-      </motion.div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          variants={container}
+          initial="hidden"
+          animate="visible"
+          exit={{ opacity: 0, transition: { duration: 0.2 } }}
+          className="flex -rotate-90 items-center whitespace-nowrap font-brand text-[14px] leading-none text-primary-500"
+        >
+          {text.split("").map((char, i) => (
+            <motion.span key={i} variants={letter} transition={{ duration: 0.25 }}>
+              {char === " " ? " " : char}
+            </motion.span>
+          ))}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

@@ -14,6 +14,14 @@ export const siteSettingsFallback: SiteSettings = {
     tagline:
       "I design and build dashboards and product systems for fintech, health-tech, and B2B SaaS teams.",
     founderNote: "Founder, Stampdx",
+    brandTextRotation: [
+      "Favour M.",
+      "Welcome here",
+      "How can I help?",
+      "Let's Build something Amazing",
+      "Let's get in touch",
+      "Try the fun Section",
+    ],
   },
   featuredProjects: [],
   profileMedia: [],

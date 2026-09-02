@@ -50,21 +50,16 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
         </ul>
       </nav>
 
-      <CollapsedBrandMark />
+      <CollapsedBrandMark phrases={profile.brandTextRotation} />
 
       <div className="shrink-0 border-t border-hairline p-2.5">
         <Link
           href="/profile"
           aria-label={`${profile.name} — Profile`}
-          className="flex flex-col items-center gap-1.5 text-center"
+          className="flex items-center justify-center"
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[11px] font-semibold text-primary-tint-text">
             {initials(profile.name)}
-          </span>
-          <span className="text-[8.5px] font-medium leading-[1.15] text-ink-soft">Remote-first</span>
-          <span className="flex items-center gap-1 text-[8.5px] font-medium leading-[1.15] text-success">
-            <span className="h-1 w-1 shrink-0 rounded-full bg-success" />
-            Currently Available
           </span>
         </Link>
       </div>
