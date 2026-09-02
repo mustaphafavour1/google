@@ -285,7 +285,6 @@ export type BackgroundPatternPageKey =
   | "profile"
   | "playground"
   | "archive"
-  | "about"
   | "process"
   | "skills"
   | "contact"

@@ -135,7 +135,11 @@ export async function getProducts(): Promise<Product[]> {
 export async function getSiteSettings(): Promise<SiteSettings> {
   const result = await sanityFetch<SiteSettings | null>(siteSettingsQuery);
   if (!result) return siteSettingsFallback;
-  return { ...result, featuredProjects: result.featuredProjects.map(withProjectDefaults) };
+  return {
+    ...result,
+    featuredProjects: result.featuredProjects.map(withProjectDefaults),
+    profileMedia: result.profileMedia ?? [],
+  };
 }
 
 /**

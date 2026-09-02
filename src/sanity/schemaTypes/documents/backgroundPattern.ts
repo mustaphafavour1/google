@@ -7,7 +7,6 @@ const PAGE_OPTIONS = [
   { title: "Profile", value: "profile" },
   { title: "Playground", value: "playground" },
   { title: "Archive", value: "archive" },
-  { title: "About", value: "about" },
   { title: "Process", value: "process" },
   { title: "Skills", value: "skills" },
   { title: "Contact", value: "contact" },

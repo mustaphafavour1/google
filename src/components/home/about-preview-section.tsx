@@ -43,7 +43,7 @@ export function AboutPreviewSection() {
       </div>
 
       <div className="mt-7">
-        <Button variant="outline" href="/about">
+        <Button variant="outline" href="/profile#about">
           Read the Full Background
           <ArrowRight size={14} />
         </Button>
