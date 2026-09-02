@@ -5,6 +5,7 @@ import {
   allProjectsAiContextQuery,
   allProcessTracksQuery,
   allSkillsQuery,
+  allSkillGroupsQuery,
   allProductsQuery,
   allPortfolioArchiveQuery,
   allBackgroundPatternsQuery,
@@ -19,6 +20,7 @@ import {
 import { projects as projectsFallback, getProjectBySlug as getProjectBySlugFallback } from "@/lib/data/projects";
 import { processTracks as processTracksFallback } from "@/lib/data/process";
 import { skills as skillsFallback } from "@/lib/data/skills";
+import { skillGroups as skillGroupsFallback } from "@/lib/data/skill-groups";
 import { siteSettingsFallback } from "@/lib/data/site";
 import { getJobApplicationBySlug as getJobApplicationBySlugFallback } from "@/lib/data/job-applications";
 import { portfolioArchiveFallback } from "@/lib/data/portfolio-archive";
@@ -28,6 +30,7 @@ import type {
   Project,
   ProcessTrack,
   Skill,
+  SkillGroup,
   Product,
   SiteSettings,
   PortfolioArchiveEntry,
@@ -127,6 +130,11 @@ export async function getSkills(): Promise<Skill[]> {
   return result && result.length > 0 ? result : skillsFallback;
 }
 
+export async function getSkillGroups(): Promise<SkillGroup[]> {
+  const result = await sanityFetch<SkillGroup[]>(allSkillGroupsQuery);
+  return result && result.length > 0 ? result : skillGroupsFallback;
+}
+
 /**
  * No fallback seed data on purpose — unlike the other content types, there's
  * no real product list to fall back to yet. An empty result renders an
@@ -165,6 +173,12 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     profile: { ...result.profile, brandTextRotation: result.profile.brandTextRotation ?? ["Favour M."] },
     featuredProjects: (result.featuredProjects ?? []).map(withProjectDefaults),
     profileMedia: result.profileMedia ?? [],
+    landing: {
+      hero: { ...siteSettingsFallback.landing.hero, ...result.landing?.hero },
+      journeyMilestones: result.landing?.journeyMilestones ?? siteSettingsFallback.landing.journeyMilestones,
+      workingTogetherItems:
+        result.landing?.workingTogetherItems ?? siteSettingsFallback.landing.workingTogetherItems,
+    },
   };
 }
 

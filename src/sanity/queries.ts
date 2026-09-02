@@ -92,6 +92,15 @@ export const allSkillsQuery = /* groq */ `
   }
 `;
 
+export const allSkillGroupsQuery = /* groq */ `
+  *[_type == "skillGroup"] | order(order asc) {
+    _id,
+    title,
+    order,
+    pills
+  }
+`;
+
 export const siteSettingsQuery = /* groq */ `
   *[_id == "siteSettings"][0]{
     profile,
@@ -101,6 +110,7 @@ export const siteSettingsQuery = /* groq */ `
       "video": video.asset->url,
       caption
     },
+    landing,
     siteMetrics,
     about,
     contact{

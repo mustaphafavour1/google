@@ -7,6 +7,7 @@ export const siteSettings = defineType({
   groups: [
     { name: "profile", title: "Profile", default: true },
     { name: "profileMedia", title: "Profile media" },
+    { name: "landing", title: "Landing page" },
     { name: "about", title: "About" },
     { name: "contact", title: "Contact" },
     { name: "hobbies", title: "Hobbies" },
@@ -73,6 +74,89 @@ export const siteSettings = defineType({
             defineField({ name: "caption", type: "string" }),
           ],
           preview: { select: { title: "caption", media: "image" } },
+        }),
+      ],
+    }),
+    defineField({
+      name: "landing",
+      title: "Landing page copy",
+      type: "object",
+      group: "landing",
+      fields: [
+        defineField({
+          name: "hero",
+          title: "Hero",
+          type: "object",
+          fields: [
+            defineField({ name: "title", type: "string", validation: (r) => r.required() }),
+            defineField({
+              name: "titleUnderText",
+              title: "Title under-text (smaller line under the title)",
+              type: "string",
+            }),
+            defineField({ name: "subtitle", type: "text", rows: 2 }),
+            defineField({
+              name: "ctaPrimaryLabel",
+              title: "Primary CTA label (opens the Contact Me form)",
+              type: "string",
+              initialValue: "Let's discuss",
+            }),
+            defineField({
+              name: "ctaSecondaryLabel",
+              title: "Secondary CTA label (scrolls to Featured Projects)",
+              type: "string",
+              initialValue: "See some proofs",
+            }),
+          ],
+        }),
+        defineField({
+          name: "journeyMilestones",
+          title: "Journey so far — year-by-year annotations",
+          type: "array",
+          description:
+            "Powers the animated career graph. Order matters (chronological, oldest first).",
+          of: [
+            defineArrayMember({
+              type: "object",
+              name: "milestone",
+              fields: [
+                defineField({
+                  name: "year",
+                  title: "Year label (e.g. \"Jan. 2019\" or \"2022\")",
+                  type: "string",
+                  validation: (r) => r.required(),
+                }),
+                defineField({ name: "text", type: "text", rows: 2, validation: (r) => r.required() }),
+              ],
+              preview: { select: { title: "year", subtitle: "text" } },
+            }),
+          ],
+        }),
+        defineField({
+          name: "workingTogetherItems",
+          title: "Working together — per-discipline copy",
+          type: "array",
+          of: [
+            defineArrayMember({
+              type: "object",
+              name: "workingTogetherItem",
+              fields: [
+                defineField({
+                  name: "discipline",
+                  type: "string",
+                  options: {
+                    list: ["UI/UX", "Web Development", "Branding", "Campaigns & Marketing"].map((v) => ({
+                      title: v,
+                      value: v,
+                    })),
+                  },
+                  validation: (r) => r.required(),
+                }),
+                defineField({ name: "description", type: "text", rows: 3, validation: (r) => r.required() }),
+              ],
+              preview: { select: { title: "discipline", subtitle: "description" } },
+            }),
+          ],
         }),
       ],
     }),

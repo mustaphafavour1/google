@@ -205,6 +205,13 @@ export type Skill = {
   group: string;
 };
 
+export type SkillGroup = {
+  _id: string;
+  title: string;
+  order: number;
+  pills: string[];
+};
+
 export type ProcessDiscipline =
   | "Overall"
   | "UI/UX"
@@ -255,6 +262,16 @@ export type ProfileMediaItem = {
   caption?: string;
 };
 
+export type JourneyMilestone = {
+  year: string;
+  text: string;
+};
+
+export type WorkingTogetherItem = {
+  discipline: ProcessDiscipline;
+  description: string;
+};
+
 export type SiteSettings = {
   profile: {
     name: string;
@@ -267,6 +284,17 @@ export type SiteSettings = {
   };
   featuredProjects: Project[];
   profileMedia: ProfileMediaItem[];
+  landing: {
+    hero: {
+      title: string;
+      titleUnderText: string;
+      subtitle: string;
+      ctaPrimaryLabel: string;
+      ctaSecondaryLabel: string;
+    };
+    journeyMilestones: JourneyMilestone[];
+    workingTogetherItems: WorkingTogetherItem[];
+  };
   siteMetrics: SiteMetric[];
   about: {
     design: AboutSection;

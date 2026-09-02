@@ -25,6 +25,48 @@ export const siteSettingsFallback: SiteSettings = {
   },
   featuredProjects: [],
   profileMedia: [],
+  landing: {
+    hero: {
+      title: "Sort Your Design Needs; Achieve Your Goals",
+      titleUnderText: "without compromising on quality, speed or range.",
+      subtitle:
+        "I bring a rare synergy of Design Experience, Creativity, AI-development, Strategy, Global Range and Business Acumen to help you achieve your business or personal goals.",
+      ctaPrimaryLabel: "Let's discuss",
+      ctaSecondaryLabel: "See some proofs",
+    },
+    journeyMilestones: [
+      { year: "2019", text: "I learnt graphic design to fill an unpaid role." },
+      { year: "2020", text: "I transited into adding product design to my arsenal." },
+      { year: "2021", text: "Did mostly graphic design." },
+      { year: "2022", text: "Took on more UI/UX roles and gigs." },
+      { year: "2023", text: "Helped a startup raise seed fund." },
+      { year: "2024", text: "Skilled up further in product design." },
+      { year: "2025", text: "July: dived deep into AI-development; built my first webapp." },
+      { year: "2026", text: "Now extremely fluent in AI development — improved quality of output." },
+    ],
+    workingTogetherItems: [
+      {
+        discipline: "UI/UX",
+        description:
+          "End to end product design/building for mobile apps, dashboards, software etc. could take so long and have various stages, but I always ensure to make it a beautiful experience for all parties involved.",
+      },
+      {
+        discipline: "Web Development",
+        description:
+          "Taking a product from design file to a live, working build could easily turn into a long back-and-forth between design and engineering, but I keep it one smooth, handoff-free process from start to finish.",
+      },
+      {
+        discipline: "Branding",
+        description:
+          "Building an identity, from positioning to every asset that carries it, could take so long and involve endless rounds of revisions, but I always ensure it stays a clear, enjoyable process for everyone involved.",
+      },
+      {
+        discipline: "Campaigns & Marketing",
+        description:
+          "Shipping a campaign across every format on a tight deadline could easily get chaotic, but I always ensure it stays organised and enjoyable for everyone involved, right up to launch.",
+      },
+    ],
+  },
   siteMetrics: [
     { key: "projects", label: "Projects delivered", value: "60+", isPlaceholder: true },
     { key: "years", label: "Years of experience", value: "7", isPlaceholder: false },

@@ -5,6 +5,7 @@ import { product } from "./documents/product";
 import { industry } from "./documents/industry";
 import { processTrack } from "./documents/processTrack";
 import { skill } from "./documents/skill";
+import { skillGroup } from "./documents/skillGroup";
 import { siteSettings } from "./documents/siteSettings";
 import { jobApplicationVariant } from "./documents/jobApplicationVariant";
 import { portfolioArchive } from "./documents/portfolioArchive";
@@ -39,6 +40,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   industry,
   processTrack,
   skill,
+  skillGroup,
   siteSettings,
   jobApplicationVariant,
   portfolioArchive,
