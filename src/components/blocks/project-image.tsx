@@ -14,7 +14,7 @@ export function ProjectImage({ src, caption }: { src: string; caption?: string }
           <img src={src} alt={caption ?? ""} className="w-full" />
         </button>
         {caption && (
-          <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-1.5 bg-gradient-to-t from-black/75 to-transparent px-3 py-2.5 text-[12px] text-white opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+          <figcaption className="pointer-events-none absolute bottom-2.5 left-2.5 max-w-[calc(100%-1.25rem)] truncate rounded-full bg-black/75 px-2.5 py-1 text-[11px] text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100">
             {caption}
           </figcaption>
         )}
