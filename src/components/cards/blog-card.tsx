@@ -30,12 +30,15 @@ export function BlogCard({ post }: { post: BlogPost }) {
             day: "numeric",
           })}
         </p>
-        <h3 className="mt-1 text-[14.5px] font-semibold text-ink-em">{post.title}</h3>
-        <p className="type-body mt-1 flex-1 text-ink-muted">{post.excerpt}</p>
+        <h3 className="mt-1 text-[18px] font-bold text-ink-em">{post.title}</h3>
+        <p className="type-body mt-1 flex-1 text-[13px] text-ink-muted">{post.excerpt}</p>
         {post.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {post.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="data-mono rounded-full border border-hairline px-2 py-0.5 text-ink-soft">
+              <span
+                key={tag}
+                className="data-mono rounded-full border border-hairline px-1.5 py-0.5 text-[10px] text-ink-soft"
+              >
                 {tag}
               </span>
             ))}

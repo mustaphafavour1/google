@@ -54,20 +54,23 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
   return (
     <>
       <PageHeader
-        title="Work"
-        subtitle="Selected case studies — dashboards, apps, and systems designed end to end."
-        actions={
-          <span className="text-[16px] font-semibold text-primary-500">
-            {filtered.length} project{filtered.length === 1 ? "" : "s"}
-          </span>
+        title={
+          <>
+            Work
+            <span className="mx-2 text-ink-faint">·</span>
+            <span className="text-primary-500">
+              {filtered.length} project{filtered.length === 1 ? "" : "s"}
+            </span>
+          </>
         }
+        subtitle="Selected case studies — dashboards, apps, and systems designed end to end."
       />
 
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <select
           value={industry}
           onChange={handleFilterChange(setIndustry)}
-          className="h-8 rounded-md border border-border bg-surface px-2 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+          className="h-8 rounded-md border border-border bg-surface pl-2 pr-7 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
         >
           {industries.map((i) => (
             <option key={i} value={i}>
@@ -78,7 +81,7 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
         <select
           value={tag}
           onChange={handleFilterChange(setTag)}
-          className="h-8 rounded-md border border-border bg-surface px-2 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+          className="h-8 rounded-md border border-border bg-surface pl-2 pr-7 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
         >
           {tags.map((t) => (
             <option key={t} value={t}>
@@ -89,7 +92,7 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
-          className="h-8 rounded-md border border-border bg-surface px-2 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+          className="h-8 rounded-md border border-border bg-surface pl-2 pr-7 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
         >
           {Object.entries(SORTS).map(([key, { label }]) => (
             <option key={key} value={key}>

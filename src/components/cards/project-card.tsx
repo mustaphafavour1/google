@@ -34,7 +34,7 @@ export function ProjectCard({ project }: { project: Project }) {
         />
       )}
       <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        <h3 className="text-[14px] font-semibold leading-tight text-white">{project.name}</h3>
+        <h3 className="text-[28px] font-semibold leading-tight text-white">{project.name}</h3>
         <p className="mt-0.5 truncate text-[10px] text-white/85">{project.oneLiner}</p>
       </div>
     </Link>

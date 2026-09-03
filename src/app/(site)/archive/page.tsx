@@ -31,19 +31,22 @@ export default async function ArchivePage() {
               rel="noopener noreferrer"
               className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-[0_4px_16px_rgb(15_23_42_/_0.08)]"
             >
-              {entry.image ? (
-                // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
-                <img src={entry.image} alt="" className="h-40 w-full object-cover" />
-              ) : (
-                <div
-                  className="relative flex h-40 w-full shrink-0 items-end p-4"
-                  style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
-                >
-                  <span className="type-display text-white/90">{entry.year}</span>
-                </div>
-              )}
+              <div className="relative h-40 w-full shrink-0 overflow-hidden">
+                {entry.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+                  <img src={entry.image} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div
+                    className="h-full w-full"
+                    style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
+                  />
+                )}
+                <span className="absolute bottom-2.5 left-2.5 rounded-full bg-black/75 px-2.5 py-1 text-[11px] font-semibold text-white">
+                  {entry.year}
+                </span>
+              </div>
               <div className="flex flex-1 flex-col p-5">
-                <p className="type-body flex-1 text-ink-muted">{entry.description}</p>
+                <p className="type-body flex-1 text-[13px] text-ink-muted">{entry.description}</p>
                 <span className="mt-4 flex shrink-0 items-center gap-1 text-[12px] font-medium text-primary-500 transition-all group-hover:gap-1.5">
                   Visit
                   <ExternalLink size={12} />

@@ -7,7 +7,7 @@ import { Lightbox } from "@/components/ui/lightbox";
 import { useLightbox } from "@/components/ui/use-lightbox";
 import { EmptyState } from "@/components/ui/empty-state";
 import { shuffle, type GalleryItem } from "@/lib/gallery";
-import { cn } from "@/lib/utils";
+import { cn, sanityImageAspectRatio } from "@/lib/utils";
 
 export function GalleryGrid({ items }: { items: GalleryItem[] }) {
   const [order, setOrder] = useState<"ordered" | "random">("ordered");
@@ -83,7 +83,12 @@ function GalleryTile({ item }: { item: GalleryItem }) {
       >
         {item.kind === "image" && (
           // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
-          <img src={item.src} alt={item.caption ?? ""} className="w-full" />
+          <img
+            src={item.src}
+            alt={item.caption ?? ""}
+            className="w-full"
+            style={{ aspectRatio: sanityImageAspectRatio(item.src) }}
+          />
         )}
         {item.kind === "video-file" && (
           <video src={item.src} muted loop autoPlay playsInline className="w-full" />
