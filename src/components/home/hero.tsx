@@ -47,7 +47,7 @@ export function Hero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="mt-2 max-w-xl text-[28px] font-semibold leading-[1.15] text-ink-soft"
+          className="mt-2 max-w-xl text-[28px] font-semibold leading-[1.15] text-ink-soft dark:text-primary-300"
         >
           {hero.titleUnderText}
         </motion.p>
@@ -57,7 +57,7 @@ export function Hero({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="type-body mt-5 max-w-xl text-[16px] font-bold leading-relaxed text-ink-muted"
+        className="type-body mt-5 max-w-xl text-[16px] font-bold leading-relaxed text-ink-muted dark:text-primary-300"
       >
         {jdVariant?.introNote || hero.subtitle}
       </motion.p>

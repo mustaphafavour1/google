@@ -36,7 +36,7 @@ export default async function HomePage({
 
   return (
     <div>
-      <LandingSection id="hero" className="pt-0">
+      <LandingSection id="hero" className="pt-0 sm:pt-0">
         <Hero profile={profile} hero={landing.hero} jdVariant={jdVariant} />
       </LandingSection>
 

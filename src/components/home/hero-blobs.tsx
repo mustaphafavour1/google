@@ -54,7 +54,7 @@ export function HeroBlobs() {
           initial={{ x: 0, y: 0 }}
           animate={{ x: [0, blob.moveX, 0], y: [0, blob.moveY, 0] }}
           transition={{ duration: blob.duration, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute rounded-full opacity-40 blur-3xl dark:opacity-50"
+          className="absolute rounded-full opacity-40 blur-[120px] dark:opacity-50"
           style={{
             width: blob.size,
             height: blob.size,
