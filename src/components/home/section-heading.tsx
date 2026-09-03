@@ -34,18 +34,20 @@ export function SectionHeading({
       transition={{ duration: 0.45 }}
       className={cn("mb-10 max-w-2xl", align === "center" && "mx-auto text-center", className)}
     >
-      <p className="type-eyebrow mb-2.5">{eyebrow}</p>
-      <h2 className="text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight text-ink-em">
+      <p className="type-eyebrow mb-3">{eyebrow}</p>
+      <h2 className="text-[clamp(1.875rem,4vw,2.75rem)] font-bold leading-tight tracking-tight text-ink-em">
         {typeof title === "string" ? (
           title
         ) : (
           <>
             <span className="block">{title.bold}</span>
-            <span className="block font-medium text-ink-soft">{title.soft}</span>
+            <span className="block font-semibold text-ink-soft">{title.soft}</span>
           </>
         )}
       </h2>
-      {subtitle && <p className="type-body mt-3 text-ink-muted">{subtitle}</p>}
+      {subtitle && (
+        <p className="type-body mt-3.5 text-[17px] font-medium leading-relaxed text-ink-muted">{subtitle}</p>
+      )}
     </motion.div>
   );
 }

@@ -21,8 +21,8 @@ export function LandingSection({
   containerClassName?: string;
 }) {
   return (
-    <section id={id} className={cn("scroll-mt-20 py-20 sm:py-28", backgrounds[background], className)}>
-      <div className={cn("mx-auto max-w-[1200px] px-[4%]", containerClassName)}>{children}</div>
+    <section id={id} className={cn("scroll-mt-20 py-28 sm:py-36", backgrounds[background], className)}>
+      <div className={cn("mx-auto w-full px-[4%]", containerClassName)}>{children}</div>
     </section>
   );
 }
