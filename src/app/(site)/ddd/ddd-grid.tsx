@@ -33,6 +33,7 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
     setPage(1);
   }
 
+  const totalPages = Math.ceil(displayEntries.length / PAGE_SIZE);
   const start = (page - 1) * PAGE_SIZE;
   const pageEntries = displayEntries.slice(start, start + PAGE_SIZE);
 
@@ -41,10 +42,16 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function advancePageForAutoScroll() {
+    setPage((p) => (p % totalPages) + 1);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    return true;
+  }
+
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-surface p-3">
-        <AutoScrollControl />
+        <AutoScrollControl onReachBottom={advancePageForAutoScroll} />
         <div className="flex items-center gap-1 rounded-md border border-hairline p-1">
           <button
             type="button"

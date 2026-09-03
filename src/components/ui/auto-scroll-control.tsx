@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const SPEEDS = [0.5, 1, 1.5, 2, 3] as const;
 const BASE_PX_PER_SECOND = 108;
 
-export function AutoScrollControl() {
+export function AutoScrollControl({ onReachBottom }: { onReachBottom?: () => boolean }) {
   const [active, setActive] = useState(false);
   const [speed, setSpeed] = useState<(typeof SPEEDS)[number]>(1);
   const frameRef = useRef<number | null>(null);
@@ -27,8 +27,12 @@ export function AutoScrollControl() {
       const atBottom =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       if (atBottom) {
-        setActive(false);
-        return;
+        const advanced = onReachBottom?.() ?? false;
+        if (!advanced) {
+          setActive(false);
+          return;
+        }
+        lastTsRef.current = null;
       }
       frameRef.current = requestAnimationFrame(tick);
     }
@@ -38,7 +42,7 @@ export function AutoScrollControl() {
       lastTsRef.current = null;
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, [active, speed]);
+  }, [active, speed, onReachBottom]);
 
   useEffect(() => {
     if (!active) return;
