@@ -1,28 +1,54 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
 import { ClapButton } from "@/components/case-study/clap-button";
 import { CommentBox } from "@/components/case-study/comment-box";
 import { cn } from "@/lib/utils";
-import { GridSquaresBackground } from "./grid-squares-background";
+import { useScrollInView } from "@/lib/use-scroll-in-view";
+import { GridSquaresBackground, GRID_SQUARE_SIZE } from "./grid-squares-background";
+
+const TARGET_BOX_WIDTH = 384;
 
 export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
   const { openForm } = useContactForm();
+  const outerRef = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState({ width: TARGET_BOX_WIDTH, marginLeft: 0 });
+  const { ref: contentRef, inView } = useScrollInView("-100px");
+
+  useEffect(() => {
+    const outer = outerRef.current;
+    if (!outer) return;
+
+    function snapToGrid() {
+      const cs = getComputedStyle(outer!);
+      const paddingLeft = parseFloat(cs.paddingLeft);
+      const gridSpaceWidth = outer!.clientWidth;
+      const width = Math.round(TARGET_BOX_WIDTH / GRID_SQUARE_SIZE) * GRID_SQUARE_SIZE;
+      const idealOffset = (gridSpaceWidth - width) / 2;
+      const snappedOffset = Math.round(idealOffset / GRID_SQUARE_SIZE) * GRID_SQUARE_SIZE;
+      setBox({ width, marginLeft: snappedOffset - paddingLeft });
+    }
+
+    snapToGrid();
+    const observer = new ResizeObserver(snapToGrid);
+    observer.observe(outer);
+    return () => observer.disconnect();
+  }, []);
 
   function scrollToComments() {
     document.getElementById("drop-a-message")?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   return (
-    <div className="relative overflow-hidden px-4 py-14 sm:px-8">
+    <div ref={outerRef} className="relative overflow-hidden px-4 py-14 sm:px-8">
       <GridSquaresBackground />
 
       <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
+        ref={contentRef}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
         transition={{ duration: 0.5 }}
         className="relative mx-auto flex max-w-xl flex-col items-center text-center"
       >
@@ -61,7 +87,8 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
 
       <div
         id="drop-a-message"
-        className="relative mx-auto mt-12 w-full max-w-sm scroll-mt-24 bg-surface p-5"
+        className="relative mt-12 scroll-mt-24 bg-surface p-5"
+        style={{ width: box.width, marginLeft: box.marginLeft }}
       >
         <div className="flex items-center justify-between">
           <p className="type-eyebrow">Leave a thought</p>

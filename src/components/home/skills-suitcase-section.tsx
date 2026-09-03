@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
+import { useScrollInView } from "@/lib/use-scroll-in-view";
 import type { SkillGroup } from "@/lib/types";
 
 export function SkillsSuitcaseSection({ groups }: { groups: SkillGroup[] }) {
   const { openForm } = useContactForm();
+  const { ref, inView } = useScrollInView("-60px");
 
   return (
     <div className="flex flex-col items-center">
@@ -15,13 +17,11 @@ export function SkillsSuitcaseSection({ groups }: { groups: SkillGroup[] }) {
         <div className="absolute -top-7 left-1/2 h-9 w-32 -translate-x-1/2 rounded-t-2xl border-[10px] border-b-0 border-primary-200 bg-transparent" />
 
         <div className="relative flex h-[46vh] max-h-[440px] min-h-[320px] w-full flex-col overflow-hidden rounded-3xl border-[8px] border-primary-200 bg-gradient-to-br from-surface to-surface-muted shadow-[0_24px_60px_rgb(35_25_15_/_0.14)]">
-          <div className="flex-1 overflow-y-auto px-6 py-8 sm:px-9">
+          <div ref={ref} className="flex-1 overflow-y-auto px-6 py-8 sm:px-9">
             {groups.map((group, i) => (
               <motion.div
                 key={group._id}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 className={i > 0 ? "mt-5 border-t border-hairline pt-5" : ""}
               >

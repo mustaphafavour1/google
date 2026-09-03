@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useScrollInView } from "@/lib/use-scroll-in-view";
 
 /**
  * The site's one headline mechanism (bold assertive line + softer qualifying
@@ -26,11 +27,12 @@ export function SectionHeading({
   align?: "left" | "center";
   className?: string;
 }) {
+  const { ref, inView } = useScrollInView("-80px");
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      ref={ref}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
       transition={{ duration: 0.45 }}
       className={cn("mb-10 max-w-2xl", align === "center" && "mx-auto text-center", className)}
     >

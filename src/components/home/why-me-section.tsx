@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Gem, Palette, Layers3, ShieldCheck } from "lucide-react";
 import { useContactForm } from "@/components/contact/contact-form-context";
+import { useScrollInView } from "@/lib/use-scroll-in-view";
 
 const CARDS = [
   {
@@ -42,6 +43,7 @@ const ICON_FADE_MASK = "linear-gradient(to bottom, transparent, black 75%)";
 
 export function WhyMeSection() {
   const { openForm } = useContactForm();
+  const { ref, inView } = useScrollInView("-80px");
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 px-4 py-16 text-white sm:px-8">
@@ -55,16 +57,14 @@ export function WhyMeSection() {
         </p>
       </div>
 
-      <div className="relative mx-auto mt-10 grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-4">
+      <div ref={ref} className="relative mx-auto mt-10 grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-4">
         {CARDS.map((card, i) => (
           <motion.div
             key={card.title}
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
             transition={{ delay: i * 0.08, duration: 0.5 }}
             style={{ borderRadius: CARD_RADIUS }}
-            className="group relative aspect-square overflow-hidden border-2 border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
+            className="group relative aspect-square overflow-hidden bg-white/10 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
           >
             <div
               aria-hidden="true"
@@ -76,7 +76,7 @@ export function WhyMeSection() {
               className="pointer-events-none absolute -right-3 -top-3 rotate-[18deg] text-white opacity-0 transition-all duration-500 group-hover:rotate-[8deg] group-hover:opacity-[0.16]"
               style={{ maskImage: ICON_FADE_MASK, WebkitMaskImage: ICON_FADE_MASK }}
             />
-            <div className="relative flex h-full flex-col justify-start">
+            <div className="relative flex h-full flex-col justify-center">
               <h3 className="text-[20px] font-bold text-white">{card.title}</h3>
               <p className="type-body mt-1.5 text-white/80">{card.subtitle}</p>
             </div>

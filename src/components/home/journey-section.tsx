@@ -5,11 +5,13 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
+import { useScrollInView } from "@/lib/use-scroll-in-view";
 import type { JourneyMilestone } from "@/lib/types";
 
 const VB_WIDTH = 1000;
 const VB_HEIGHT = 320;
 const TOP_PADDING_PCT = 12;
+const RIGHT_PADDING_PCT = 6;
 const BASELINE_PCT = 92;
 const YEARS_WITH_JAN = new Set(["2019", "2025"]);
 const TILTS = [-3, 2, -2, 3, -3, 2, -2, 3];
@@ -40,12 +42,14 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
   const arrowUpId = `journey-arrow-up-${useId()}`;
   const arrowRightId = `journey-arrow-right-${useId()}`;
   const { openForm } = useContactForm();
+  const { ref: chartRef, inView } = useScrollInView<HTMLDivElement>("-100px");
 
   if (milestones.length === 0) return null;
 
   const points = milestones.map((_, i) => {
     const yPercent = BASELINE_PCT - (impactPercent(i, milestones.length) / 100) * (BASELINE_PCT - TOP_PADDING_PCT);
-    return toXY((i / (milestones.length - 1 || 1)) * 100, yPercent);
+    const xPercent = (i / (milestones.length - 1 || 1)) * (100 - RIGHT_PADDING_PCT);
+    return toXY(xPercent, yPercent);
   });
 
   const linePath = buildSmoothPath(points);
@@ -55,7 +59,7 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
 
   return (
     <div>
-      <div className="relative mx-auto aspect-[1000/430] w-full max-w-4xl">
+      <div ref={chartRef} className="relative mx-auto aspect-[1000/430] w-full max-w-4xl">
         <div
           className="absolute left-0 whitespace-nowrap text-center text-[10px] font-semibold uppercase tracking-wide text-ink-faint"
           style={{ top: `${(topY / VB_HEIGHT) * 100}%`, transform: "translate(-10%, -140%)" }}
@@ -75,8 +79,12 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
               <stop offset="0%" stopColor="var(--color-primary-500)" stopOpacity="0.55" />
               <stop offset="100%" stopColor="var(--color-primary-500)" stopOpacity="0" />
             </linearGradient>
-            <marker id={arrowUpId} markerWidth="8" markerHeight="8" refX="4" refY="1" orient="auto">
-              <path d="M 0,7 L 4,0 L 8,7 Z" fill="var(--color-ink-faint)" />
+            {/* orient="auto" rotates a marker so its own +x direction aligns
+                with the path's direction at that endpoint — the shape must
+                therefore be authored pointing right, never pre-rotated to
+                the desired on-screen direction, or the rotation compounds. */}
+            <marker id={arrowUpId} markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+              <path d="M 0,0 L 6,3 L 0,6 Z" fill="var(--color-ink-faint)" />
             </marker>
             <marker id={arrowRightId} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
               <path d="M 0,0 L 8,4 L 0,8 Z" fill="var(--color-ink-faint)" />
@@ -118,9 +126,7 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
             stroke="var(--color-primary-500)"
             strokeWidth="1.5"
             strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
+            animate={{ pathLength: inView ? 1 : 0 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
           />
         </svg>
@@ -136,9 +142,7 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
             <div key={`${milestone.year}-${i}`} className="absolute" style={{ left: `${xPercent}%`, top: `${yPercent}%` }}>
               <span className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-500" />
               <motion.div
-                initial={{ opacity: 0, y: above ? 8 : -8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: above ? 8 : -8 }}
                 transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
                 className="absolute w-[6.5rem] max-w-[9rem] -translate-x-1/2 rounded-md border border-hairline bg-surface px-1.5 py-1 text-[9px] leading-snug text-ink-soft shadow-[0_4px_10px_rgb(35_25_15_/_0.08)] sm:w-28"
                 style={{
@@ -153,9 +157,13 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
           );
         })}
 
-        <div className="absolute inset-x-0 bottom-[-1.6rem] flex justify-between px-1">
+        <div className="absolute inset-x-0 bottom-[-1.6rem]">
           {milestones.map((milestone, i) => (
-            <span key={`axis-${milestone.year}-${i}`} className="type-meta text-[9px]">
+            <span
+              key={`axis-${milestone.year}-${i}`}
+              className="type-meta absolute -translate-x-1/2 whitespace-nowrap text-[9px]"
+              style={{ left: `${(points[i].x / VB_WIDTH) * 100}%` }}
+            >
               {YEARS_WITH_JAN.has(milestone.year) ? `Jan. ${milestone.year}` : milestone.year}
             </span>
           ))}

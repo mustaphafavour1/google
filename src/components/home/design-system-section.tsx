@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { useScrollInView } from "@/lib/use-scroll-in-view";
 import type { Project } from "@/lib/types";
 
 const DESIGN_SYSTEM_URL = "https://designsystem.headfavour.com";
@@ -28,19 +29,20 @@ export function DesignSystemSection({ projects }: { projects: Project[] }) {
   }, [aiProjects.length]);
 
   const active = aiProjects[index];
+  const { ref, inView } = useScrollInView("-100px");
 
   return (
     <div>
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
+        ref={ref}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
         transition={{ duration: 0.5 }}
         className="mx-auto max-w-2xl text-center"
       >
         <h2 className="text-[clamp(1.875rem,4vw,2.75rem)] font-bold leading-tight tracking-tight text-ink-em">
           <span className="block">With me, AI-built ≠ Slop.</span>
-          <span className="block">With Me, AI-built = Speed + Quality.</span>
+          <span className="block">With Me, AI-built =</span>
+          <span className="block">Speed + Quality.</span>
         </h2>
       </motion.div>
 

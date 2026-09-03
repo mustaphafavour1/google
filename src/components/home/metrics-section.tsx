@@ -6,6 +6,7 @@ import { Download } from "lucide-react";
 import { CountUpValue } from "@/components/cards/count-up-value";
 import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { buttonVariants } from "@/components/ui/button";
+import { useScrollInView } from "@/lib/use-scroll-in-view";
 import { GridSquaresBackground, GRID_SQUARE_SIZE } from "./grid-squares-background";
 import type { SiteMetric } from "@/lib/types";
 
@@ -44,6 +45,7 @@ export function MetricsSection({
   }, [metrics.length, hovered]);
 
   const hasPlaceholder = metrics.some((m) => m.isPlaceholder);
+  const { ref: cardsRef, inView } = useScrollInView("-80px");
 
   return (
     <div className="relative overflow-hidden px-4 py-8 sm:px-8">
@@ -58,7 +60,11 @@ export function MetricsSection({
         </p>
       </div>
 
-      <div className="relative mx-auto mt-6 flex flex-wrap justify-center" style={{ gap: CARD_GAP }}>
+      <div
+        ref={cardsRef}
+        className="relative mx-auto mt-6 flex flex-wrap justify-center"
+        style={{ gap: CARD_GAP }}
+      >
         {metrics.map((metric, i) => {
           const fill = hovered === i ? 100 : hovered !== null ? 0 : activeIndex === i ? fillPercent : 0;
           return (
@@ -69,9 +75,7 @@ export function MetricsSection({
               onMouseLeave={() => setHovered(null)}
               onFocus={() => setHovered(i)}
               onBlur={() => setHovered(null)}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
               transition={{ delay: i * 0.08, duration: 0.5 }}
               style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
               className="flex flex-col items-center justify-center"
@@ -105,7 +109,7 @@ export function MetricsSection({
         </p>
       )}
 
-      <div className="relative mt-4 flex justify-center">
+      <div className="relative mt-10 flex justify-center">
         {resumeUrl && (
           <ResumeGateButton className={buttonVariants({ size: "lg" })}>
             <Download size={15} />
