@@ -18,7 +18,7 @@ const CYCLE_MS = 4000;
  */
 const DISCIPLINE_PROJECT_SLUG: Record<string, string> = {
   "UI/UX": "probity",
-  "Web Development": "ample-market",
+  "Web Development": "didii-ai",
   Branding: "the-bonito-spa",
   "Campaigns & Marketing": "flutterbytes-conference-2025",
 };
@@ -103,7 +103,7 @@ export function WorkingTogetherSection({
           })}
         </div>
 
-        <div className="border-t border-hairline pt-4">
+        <div className="pt-4">
           <Button variant="outline" href="/process">
             See The Process in Full
             <ArrowRight size={14} />
@@ -114,8 +114,8 @@ export function WorkingTogetherSection({
       <div className="flex aspect-square w-full gap-2 overflow-hidden rounded-2xl">
         {items.map((item, i) => {
           const project = projects.find((p) => p.slug === DISCIPLINE_PROJECT_SLUG[item.discipline]);
-          const coverSrc = project && (project.coverGifUrl ?? project.coverImage);
           const isActive = i === activeIndex;
+          const coverSrc = project && (isActive ? project.coverGifUrl ?? project.coverImage : project.coverImage);
           return (
             <motion.div
               key={item.discipline}
