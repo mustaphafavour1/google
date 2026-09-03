@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -40,87 +40,99 @@ export function WorkingTogetherSection({
   }, [items.length, hovered]);
 
   const activeIndex = hovered ?? cycle;
-  const active = items[activeIndex];
-  const activeSlug = active ? DISCIPLINE_PROJECT_SLUG[active.discipline] : undefined;
-  const activeProject = projects.find((p) => p.slug === activeSlug);
-  const coverSrc = activeProject && (activeProject.coverGifUrl ?? activeProject.coverImage);
+  const activePercent = items.length > 1 ? (activeIndex / (items.length - 1)) * 100 : 50;
+  const lo = Math.max(0, activePercent - 22);
+  const hi = Math.min(100, activePercent + 22);
+  const lineBackground = `linear-gradient(to bottom, var(--color-hairline) 0%, var(--color-hairline) ${lo}%, var(--color-primary-500) ${activePercent}%, var(--color-hairline) ${hi}%, var(--color-hairline) 100%)`;
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12 lg:items-center">
-      <div className="relative flex flex-col">
-        <div className="absolute bottom-4 left-[9px] top-4 w-px bg-hairline" aria-hidden="true" />
-        {items.map((item, i) => (
-          <button
-            key={item.discipline}
-            type="button"
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)}
-            onFocus={() => setHovered(i)}
-            onBlur={() => setHovered(null)}
-            aria-pressed={i === activeIndex}
-            className="relative flex gap-5 py-4 text-left first:pt-0 last:pb-0"
-          >
-            <span
-              className={cn(
-                "relative z-10 mt-1 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 bg-surface transition-colors",
-                i === activeIndex ? "border-primary-500" : "border-hairline",
-              )}
-            >
-              <span
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full transition-colors",
-                  i === activeIndex ? "bg-primary-500" : "bg-hairline",
-                )}
-              />
-            </span>
-            <div>
-              <h3
-                className={cn(
-                  "text-[17px] font-bold transition-colors",
-                  i === activeIndex ? "text-ink-em" : "text-ink-soft",
-                )}
+    <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch lg:gap-12">
+      <div className="flex h-full flex-col">
+        <div className="relative flex flex-1 flex-col justify-around">
+          <div
+            className="absolute bottom-4 left-[9px] top-4 w-px"
+            style={{ background: lineBackground }}
+            aria-hidden="true"
+          />
+          {items.map((item, i) => {
+            const isActive = i === activeIndex;
+            return (
+              <button
+                key={item.discipline}
+                type="button"
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+                onFocus={() => setHovered(i)}
+                onBlur={() => setHovered(null)}
+                aria-pressed={isActive}
+                className="relative flex min-h-[6.5rem] gap-5 text-left"
               >
-                {item.discipline}
-              </h3>
-              <AnimatePresence>
-                {i === activeIndex && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="type-body mt-1.5 max-w-xl overflow-hidden text-ink-muted"
+                <span
+                  className={cn(
+                    "relative z-10 mt-1 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 bg-surface transition-colors",
+                    isActive ? "border-primary-500" : "border-hairline",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "h-1.5 w-1.5 rounded-full transition-colors",
+                      isActive ? "bg-primary-500" : "bg-hairline",
+                    )}
+                  />
+                </span>
+                <div>
+                  <h3
+                    className={cn(
+                      "text-[19px] font-bold transition-colors",
+                      isActive ? "text-ink-em" : "text-ink-soft",
+                    )}
+                  >
+                    {item.discipline}
+                  </h3>
+                  <p
+                    className={cn(
+                      "type-body mt-1.5 max-w-xl text-ink-muted transition-opacity duration-300",
+                      isActive ? "opacity-100" : "opacity-0",
+                    )}
                   >
                     {item.description}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
-          </button>
-        ))}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="border-t border-hairline pt-4">
+          <Button variant="outline" href="/process">
+            See The Process in Full
+            <ArrowRight size={14} />
+          </Button>
+        </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeSlug ?? activeIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
-          className="aspect-square w-full overflow-hidden rounded-2xl border border-hairline bg-surface-muted"
-        >
-          {coverSrc && (
-            // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
-            <img src={coverSrc} alt="" className="h-full w-full object-cover" />
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="lg:col-span-2">
-        <Button variant="outline" href="/process">
-          See The Process in Full
-          <ArrowRight size={14} />
-        </Button>
+      <div className="flex aspect-square w-full gap-2 overflow-hidden rounded-2xl">
+        {items.map((item, i) => {
+          const project = projects.find((p) => p.slug === DISCIPLINE_PROJECT_SLUG[item.discipline]);
+          const coverSrc = project && (project.coverGifUrl ?? project.coverImage);
+          const isActive = i === activeIndex;
+          return (
+            <motion.div
+              key={item.discipline}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              animate={{ flexGrow: isActive ? 10 : 1 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              style={{ flexBasis: 0 }}
+              className="relative h-full min-w-0 cursor-pointer overflow-hidden border border-hairline bg-surface-muted first:rounded-l-2xl last:rounded-r-2xl"
+            >
+              {coverSrc && (
+                // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+                <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
+              )}
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

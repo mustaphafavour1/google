@@ -72,21 +72,21 @@ export function DesignSystemSection({ projects }: { projects: Project[] }) {
             There&rsquo;s this portfolio, a design system, and several outstanding websites &amp; apps
             to prove it.
           </p>
-          <p className="type-body mt-4 text-ink-muted">
+          <p className="type-body mt-6 text-ink-muted">
             Check out my personal Taste and Spec document in the design system (194 detailed website
             sections included).
           </p>
-          <div className="mt-6 flex flex-col gap-5">
+          <div className="mt-9 flex flex-col gap-5">
             {LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[16px] font-semibold text-ink-em underline decoration-primary-500 decoration-2 underline-offset-2 transition-colors hover:text-primary-500"
+                className="inline-flex items-center gap-1.5 text-[24px] font-semibold text-ink-em underline decoration-primary-500 decoration-2 underline-offset-2 transition-colors hover:text-primary-500"
               >
                 {link.label}
-                <ArrowUpRight size={15} />
+                <ArrowUpRight size={20} />
               </a>
             ))}
           </div>

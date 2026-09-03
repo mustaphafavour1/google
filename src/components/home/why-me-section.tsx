@@ -27,13 +27,18 @@ const CARDS = [
   },
 ];
 
+const CARD_RADIUS = "16px";
+
 const GRADIENT_BORDER_STYLE = {
   background: "linear-gradient(135deg, white, #c0c0c0 50%, white)",
   WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
   WebkitMaskComposite: "xor",
   maskComposite: "exclude",
-  padding: 1.5,
+  padding: 2,
+  borderRadius: CARD_RADIUS,
 } as const;
+
+const ICON_FADE_MASK = "linear-gradient(to bottom, transparent, black 75%)";
 
 export function WhyMeSection() {
   const { openForm } = useContactForm();
@@ -58,19 +63,21 @@ export function WhyMeSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ delay: i * 0.08, duration: 0.5 }}
-            className="group relative aspect-square overflow-hidden rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
+            style={{ borderRadius: CARD_RADIUS }}
+            className="group relative aspect-square overflow-hidden border-2 border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
           >
             <div
               aria-hidden="true"
-              className="absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-50"
+              className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-50"
               style={GRADIENT_BORDER_STYLE}
             />
             <card.icon
-              size={72}
-              className="pointer-events-none absolute -right-3 -top-3 rotate-[18deg] text-white opacity-0 transition-all duration-500 group-hover:rotate-[8deg] group-hover:opacity-[0.14]"
+              size={144}
+              className="pointer-events-none absolute -right-3 -top-3 rotate-[18deg] text-white opacity-0 transition-all duration-500 group-hover:rotate-[8deg] group-hover:opacity-[0.16]"
+              style={{ maskImage: ICON_FADE_MASK, WebkitMaskImage: ICON_FADE_MASK }}
             />
-            <div className="relative flex h-full flex-col justify-end">
-              <h3 className="text-[17px] font-bold text-white">{card.title}</h3>
+            <div className="relative flex h-full flex-col justify-start">
+              <h3 className="text-[20px] font-bold text-white">{card.title}</h3>
               <p className="type-body mt-1.5 text-white/80">{card.subtitle}</p>
             </div>
           </motion.div>

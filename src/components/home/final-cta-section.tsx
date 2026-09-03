@@ -5,6 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
 import { ClapButton } from "@/components/case-study/clap-button";
 import { CommentBox } from "@/components/case-study/comment-box";
+import { cn } from "@/lib/utils";
 import { GridSquaresBackground } from "./grid-squares-background";
 
 export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
@@ -15,7 +16,7 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-hairline px-4 py-14 sm:px-8">
+    <div className="relative overflow-hidden px-4 py-14 sm:px-8">
       <GridSquaresBackground />
 
       <motion.div
@@ -48,7 +49,10 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
           <button
             type="button"
             onClick={scrollToComments}
-            className={buttonVariants({ variant: "outline", size: "lg" })}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "border-primary-500 text-primary-500 hover:bg-primary-tint hover:text-primary-600",
+            )}
           >
             Drop a message
           </button>
@@ -57,7 +61,7 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
 
       <div
         id="drop-a-message"
-        className="relative mx-auto mt-12 w-full max-w-sm scroll-mt-24 rounded-xl border border-hairline bg-surface p-5 shadow-[0_2px_10px_rgb(35_25_15_/_0.06)]"
+        className="relative mx-auto mt-12 w-full max-w-sm scroll-mt-24 bg-surface p-5"
       >
         <div className="flex items-center justify-between">
           <p className="type-eyebrow">Leave a thought</p>
