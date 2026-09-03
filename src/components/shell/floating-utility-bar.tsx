@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Search, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AccessibilityMenu } from "./accessibility-menu";
+import { GlobalAutoScroll } from "./global-auto-scroll";
 import { SearchOverlay } from "./search-overlay";
 import type { Project, SiteSettings } from "@/lib/types";
 
@@ -85,6 +86,7 @@ export function FloatingUtilityBar({
           {searchOpen ? <X size={15} /> : <Search size={15} />}
         </button>
         <AccessibilityMenu className="bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur" />
+        <GlobalAutoScroll />
         <ThemeToggle className="bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur" />
       </div>
 
