@@ -212,8 +212,16 @@ export type SkillGroup = {
   pills: string[];
 };
 
+export type DesignSuperpower = {
+  _id: string;
+  title: string;
+  subtitle: string;
+  order: number;
+};
+
 export type ProcessDiscipline =
   | "Overall"
+  | "AI-workflow"
   | "UI/UX"
   | "Web Development"
   | "Branding"

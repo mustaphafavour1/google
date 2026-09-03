@@ -2,6 +2,31 @@ import type { ProcessTrack } from "@/lib/types";
 
 export const processTracks: ProcessTrack[] = [
   {
+    _id: "process-overall",
+    discipline: "Overall",
+    summary: "Each type of design project has slightly different processes but overall, this is what they all look like.",
+    phases: [
+      { label: "Understand", description: "A discovery call comes first — I map the problem, research the context, and align on what the project is truly about before anything is designed." },
+      { label: "Define", description: "I sharpen the brief into a clear proposal: deliverables, timeline, budget, and success criteria — all documented so we're fully aligned before work begins." },
+      { label: "Explore", description: "I explore multiple directions quickly — concepts, user flows, wireframes — then share them early to get your perspective and course-correct if needed." },
+      { label: "Refine", description: "The strongest direction moves forward. I blend business considerations and technical realities with design thinking, asking questions until the work is as strong as it can be." },
+      { label: "Progress", description: "I share regular updates — what's done, what's in progress, what's next — so you're never left wondering and we stay aligned throughout." },
+      { label: "Deliver", description: "Once you've confirmed the work is complete and satisfactory, I package everything needed for handoff — and stay available in case anything else comes up." },
+    ],
+  },
+  {
+    _id: "process-ai-workflow",
+    discipline: "AI-workflow",
+    summary: "Placeholder — Favour will refine this. How AI actually sits inside the process above, not bolted onto it.",
+    phases: [
+      { label: "Scope with AI in mind", description: "Placeholder — Favour will refine this. Decide upfront what's a good fit for AI-assisted drafting versus what needs a human hand from the start." },
+      { label: "Draft fast", description: "Placeholder — Favour will refine this. Use AI to get a first pass of screens, copy, or code in front of everyone quickly, so the real conversation starts sooner." },
+      { label: "Review & direct", description: "Placeholder — Favour will refine this. Every AI-drafted output gets a real design review — taste, judgment, and edits are still mine, not the model's." },
+      { label: "Iterate in the loop", description: "Placeholder — Favour will refine this. Fold AI back into revisions rather than starting over, so speed compounds instead of resetting each round." },
+      { label: "Ship with the same bar", description: "Placeholder — Favour will refine this. The output is held to the same quality bar as fully hand-built work before it ships — AI-assisted is never a lower standard." },
+    ],
+  },
+  {
     _id: "process-ui-ux",
     discipline: "UI/UX",
     summary:
