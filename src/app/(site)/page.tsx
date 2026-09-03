@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import { Hero } from "@/components/home/hero";
 import { LandingSection } from "@/components/home/landing-section";
 import { SectionHeading } from "@/components/home/section-heading";
@@ -11,7 +10,6 @@ import { SkillsSuitcaseSection } from "@/components/home/skills-suitcase-section
 import { WorkingTogetherSection } from "@/components/home/working-together-section";
 import { DesignSystemSection } from "@/components/home/design-system-section";
 import { FinalCtaSection } from "@/components/home/final-cta-section";
-import { Button } from "@/components/ui/button";
 import {
   getProjects,
   getSiteSettings,
@@ -63,12 +61,6 @@ export default async function HomePage({
           subtitle="Recent projects to see how good it gets; yours will be better of course. A new project is always better than the last one."
         />
         <SelectedWorkShowcase projects={shippedProjects} />
-        <div className="mt-8">
-          <Button variant="outline" href="/projects">
-            View All Projects
-            <ArrowRight size={14} />
-          </Button>
-        </div>
       </LandingSection>
 
       <LandingSection id="why-me">
