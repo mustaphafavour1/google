@@ -22,7 +22,7 @@ export function LandingSection({
 }) {
   return (
     <section id={id} className={cn("scroll-mt-20 py-28 sm:py-36", backgrounds[background], className)}>
-      <div className={cn("mx-auto w-full px-[4%]", containerClassName)}>{children}</div>
+      <div className={cn("mx-auto w-full px-4 sm:px-6 lg:px-10", containerClassName)}>{children}</div>
     </section>
   );
 }

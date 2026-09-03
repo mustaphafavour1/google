@@ -22,7 +22,7 @@ export function Hero({
     <div className="relative flex min-h-[95vh] flex-col items-center justify-center px-4 py-6 text-center">
       <HeroBlobs />
 
-      {jdVariant ? (
+      {jdVariant && (
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -31,14 +31,6 @@ export function Hero({
           <Sparkles size={12} />
           Tailored for {jdVariant.companyName}
         </motion.div>
-      ) : (
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="type-eyebrow mb-4"
-        >
-          Product designer · Lagos, Nigeria
-        </motion.p>
       )}
 
       <motion.h1
@@ -55,7 +47,7 @@ export function Hero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="mt-2 max-w-xl text-[clamp(1.7875rem,calc(4.6vw_-_0.3125rem),3.1875rem)] font-semibold leading-[1.15] text-ink-soft"
+          className="mt-2 max-w-xl text-[28px] font-semibold leading-[1.15] text-ink-soft"
         >
           {hero.titleUnderText}
         </motion.p>

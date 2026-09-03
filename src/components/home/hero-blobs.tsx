@@ -20,25 +20,32 @@ const BLOBS: Blob[] = [
   { color: "#4fd67a", size: 280, top: "32%", left: "40%", duration: 24, moveX: 45, moveY: 45 },
 ];
 
-const EDGE_FADE_MASK =
-  "radial-gradient(ellipse 75% 75% at 50% 50%, black 55%, transparent 100%)";
+// Only the left/right/bottom edges fade — the hero is the first section on
+// the page (nothing above it to blend into), so its top edge stays fully
+// opaque and touches the true top of the page instead of appearing to
+// float below a faded margin.
+const EDGE_FADE_MASK = [
+  "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+  "linear-gradient(to bottom, black, black 80%, transparent)",
+].join(", ");
 
 /**
  * Extremely slow, extremely blurred colour circles behind the hero copy —
  * decorative sparkle, not a focal element, so they're pointer-events-none
- * and sit behind the text at all times. The whole layer (white base +
- * blobs) fades out toward its own edges via a radial mask, so the hero's
- * white panel blends into the page background instead of ending in a
- * hard rectangle.
+ * and sit behind the text at all times. The base panel is theme-aware
+ * (light: white, dark: the surface token) so it doesn't render as a stark
+ * white rectangle when the rest of the page is dark.
  */
 export function HeroBlobs() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-white"
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-white dark:bg-surface"
       style={{
         maskImage: EDGE_FADE_MASK,
         WebkitMaskImage: EDGE_FADE_MASK,
+        maskComposite: "intersect",
+        WebkitMaskComposite: "source-in",
       }}
     >
       {BLOBS.map((blob, i) => (
@@ -47,14 +54,13 @@ export function HeroBlobs() {
           initial={{ x: 0, y: 0 }}
           animate={{ x: [0, blob.moveX, 0], y: [0, blob.moveY, 0] }}
           transition={{ duration: blob.duration, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute rounded-full blur-3xl"
+          className="absolute rounded-full opacity-40 blur-3xl dark:opacity-50"
           style={{
             width: blob.size,
             height: blob.size,
             top: blob.top,
             left: blob.left,
             backgroundColor: blob.color,
-            opacity: 0.4,
           }}
         />
       ))}
