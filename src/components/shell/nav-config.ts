@@ -21,7 +21,7 @@ export const primaryNav: NavItem[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
   { label: "Gallery", href: "/gallery", icon: Images },
-  { label: "Process", href: "/process", icon: Workflow },
+  { label: "Process + Skills", href: "/process", icon: Workflow },
   { label: "Blog", href: "/blog", icon: Newspaper },
   { label: "DDD", href: "/ddd", icon: Lightbulb },
   { label: "Profile", href: "/profile", icon: User },
@@ -37,7 +37,7 @@ export const mobileTabs: NavItem[] = [
 ];
 
 export const moreSheetItems: NavItem[] = [
-  { label: "Process", href: "/process", icon: Workflow },
+  { label: "Process + Skills", href: "/process", icon: Workflow },
   { label: "Blog", href: "/blog", icon: Newspaper },
   { label: "DDD", href: "/ddd", icon: Lightbulb },
   { label: "For Fun", href: "/playground", icon: Rocket },
