@@ -16,21 +16,21 @@ export default async function ProfilePage() {
 
   return (
     <PageContainer>
-      <div className="flex flex-col gap-10 lg:flex-row">
-        <div className="min-w-0 flex-1 lg:max-w-2xl">
-          <div className="flex flex-wrap items-center gap-4">
-            <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[20px] font-semibold text-primary-tint-text">
-              {initials(profile.name)}
-            </span>
-            <div>
-              <h1 className="type-display">{profile.name}</h1>
-              <p className="type-body mt-1 text-ink-muted">
-                {profile.title} · {profile.location}
-              </p>
-            </div>
-          </div>
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[20px] font-semibold text-primary-tint-text">
+          {initials(profile.name)}
+        </span>
+        <div>
+          <h1 className="type-display">{profile.name}</h1>
+          <p className="type-body mt-1 text-ink-muted">
+            {profile.title} · {profile.location}
+          </p>
+        </div>
+      </div>
 
-          <div className="mt-9 grid gap-5 sm:grid-cols-2">
+      <div className="mt-[6.75rem] flex flex-col gap-10 lg:flex-row">
+        <div className="min-w-0 flex-1 lg:max-w-2xl">
+          <div className="grid gap-5 sm:grid-cols-2">
             <div className="card p-6">
               <p className="type-eyebrow mb-4">Contact</p>
               <a
@@ -85,7 +85,7 @@ export default async function ProfilePage() {
             </div>
           </div>
 
-          <section className="mt-9">
+          <section className="mt-[6.75rem]">
             <p className="type-eyebrow mb-4">Outside the design system</p>
             <div className="grid gap-4 sm:grid-cols-2">
               {hobbies.map((hobby) => (
@@ -104,7 +104,12 @@ export default async function ProfilePage() {
             </div>
           </section>
 
-          <section id="products" className="mt-9 scroll-mt-24 border-t border-hairline pt-9">
+          <section id="about" className="mt-[6.75rem] scroll-mt-24 border-t border-hairline pt-[6.75rem]">
+            <p className="type-eyebrow mb-4">About</p>
+            <AboutTabs about={about} />
+          </section>
+
+          <section id="products" className="mt-[6.75rem] scroll-mt-24 border-t border-hairline pt-[6.75rem]">
             <p className="type-eyebrow mb-4">Products</p>
             {products.length === 0 ? (
               <EmptyState
@@ -119,11 +124,6 @@ export default async function ProfilePage() {
                 ))}
               </div>
             )}
-          </section>
-
-          <section id="about" className="mt-9 scroll-mt-24 border-t border-hairline pt-9">
-            <p className="type-eyebrow mb-4">About</p>
-            <AboutTabs about={about} />
           </section>
         </div>
 

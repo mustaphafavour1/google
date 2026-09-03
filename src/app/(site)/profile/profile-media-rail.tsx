@@ -11,10 +11,23 @@ const ROTATE_MS = 5000;
 
 export function ProfileMediaRail({ items }: { items: ProfileMediaItem[] }) {
   const [index, setIndex] = useState(0);
+  // A monotonically increasing counter, decoupled from `index` (which
+  // wraps around) — used as the AnimatePresence key/z-index so a newly
+  // slid-in item always stacks above the one it's covering, even across
+  // the wrap from the last item back to the first.
+  const [tick, setTick] = useState(0);
+
+  function goTo(next: number) {
+    setIndex(next);
+    setTick((t) => t + 1);
+  }
 
   useEffect(() => {
     if (items.length <= 1) return;
-    const timer = setInterval(() => setIndex((i) => (i + 1) % items.length), ROTATE_MS);
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % items.length);
+      setTick((t) => t + 1);
+    }, ROTATE_MS);
     return () => clearInterval(timer);
   }, [items.length]);
 
@@ -34,14 +47,14 @@ export function ProfileMediaRail({ items }: { items: ProfileMediaItem[] }) {
 
   return (
     <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-hairline bg-surface-muted">
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false}>
         <motion.div
-          key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          key={tick}
+          initial={{ x: "100%" }}
+          animate={{ x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
+          exit={{ transition: { duration: 0.5 } }}
           className="absolute inset-0"
+          style={{ zIndex: tick }}
         >
           {current.video ? (
             <video
@@ -70,7 +83,7 @@ export function ProfileMediaRail({ items }: { items: ProfileMediaItem[] }) {
             <button
               key={i}
               type="button"
-              onClick={() => setIndex(i)}
+              onClick={() => goTo(i)}
               aria-label={`Show media ${i + 1}`}
               aria-current={i === index}
               className={cn(
