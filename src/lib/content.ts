@@ -6,6 +6,7 @@ import {
   allProcessTracksQuery,
   allSkillsQuery,
   allSkillGroupsQuery,
+  allDesignSuperpowersQuery,
   allProductsQuery,
   allPortfolioArchiveQuery,
   allBackgroundPatternsQuery,
@@ -21,6 +22,7 @@ import { projects as projectsFallback, getProjectBySlug as getProjectBySlugFallb
 import { processTracks as processTracksFallback } from "@/lib/data/process";
 import { skills as skillsFallback } from "@/lib/data/skills";
 import { skillGroups as skillGroupsFallback } from "@/lib/data/skill-groups";
+import { designSuperpowersFallback } from "@/lib/data/design-superpowers";
 import { siteSettingsFallback } from "@/lib/data/site";
 import { getJobApplicationBySlug as getJobApplicationBySlugFallback } from "@/lib/data/job-applications";
 import { portfolioArchiveFallback } from "@/lib/data/portfolio-archive";
@@ -31,6 +33,7 @@ import type {
   ProcessTrack,
   Skill,
   SkillGroup,
+  DesignSuperpower,
   Product,
   SiteSettings,
   PortfolioArchiveEntry,
@@ -133,6 +136,11 @@ export async function getSkills(): Promise<Skill[]> {
 export async function getSkillGroups(): Promise<SkillGroup[]> {
   const result = await sanityFetch<SkillGroup[]>(allSkillGroupsQuery);
   return result && result.length > 0 ? result : skillGroupsFallback;
+}
+
+export async function getDesignSuperpowers(): Promise<DesignSuperpower[]> {
+  const result = await sanityFetch<DesignSuperpower[]>(allDesignSuperpowersQuery);
+  return result && result.length > 0 ? result : designSuperpowersFallback;
 }
 
 /**

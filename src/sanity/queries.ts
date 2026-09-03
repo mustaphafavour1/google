@@ -101,6 +101,15 @@ export const allSkillGroupsQuery = /* groq */ `
   }
 `;
 
+export const allDesignSuperpowersQuery = /* groq */ `
+  *[_type == "designSuperpower"] | order(order asc) {
+    _id,
+    title,
+    subtitle,
+    order
+  }
+`;
+
 export const siteSettingsQuery = /* groq */ `
   *[_id == "siteSettings"][0]{
     profile,

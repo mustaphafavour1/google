@@ -15,6 +15,7 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("processTrack").title("Process tracks"),
       S.documentTypeListItem("skill").title("Skills"),
       S.documentTypeListItem("skillGroup").title("Skill groups (landing page)"),
+      S.documentTypeListItem("designSuperpower").title("Design superpowers"),
       S.divider(),
       S.documentTypeListItem("blogPost").title("Blog posts"),
       S.documentTypeListItem("dddWeek").title("Daily Design Dose"),
