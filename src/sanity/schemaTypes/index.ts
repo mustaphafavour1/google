@@ -11,7 +11,7 @@ import { jobApplicationVariant } from "./documents/jobApplicationVariant";
 import { portfolioArchive } from "./documents/portfolioArchive";
 import { backgroundPattern } from "./documents/backgroundPattern";
 import { blogPost } from "./documents/blogPost";
-import { dddEntry } from "./documents/dddEntry";
+import { dddWeek } from "./documents/dddWeek";
 
 import { heroBlock } from "./objects/blocks/heroBlock";
 import { metricsRowBlock } from "./objects/blocks/metricsRowBlock";
@@ -46,7 +46,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   portfolioArchive,
   backgroundPattern,
   blogPost,
-  dddEntry,
+  dddWeek,
   // Page-builder blocks
   heroBlock,
   metricsRowBlock,

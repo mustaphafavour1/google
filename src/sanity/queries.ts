@@ -203,13 +203,14 @@ export const blogPostBySlugQuery = /* groq */ `
   }
 `;
 
-export const allDddEntriesQuery = /* groq */ `
-  *[_type == "dddEntry"] | order(day asc, date asc) {
-    _id,
-    "image": image.asset->url,
-    day,
-    date,
-    caption
+export const allDddWeeksQuery = /* groq */ `
+  *[_type == "dddWeek"] | order(week asc) {
+    week,
+    images[] {
+      "key": _key,
+      "image": image.asset->url,
+      caption
+    }
   }
 `;
 

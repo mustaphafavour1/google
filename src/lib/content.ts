@@ -11,7 +11,7 @@ import {
   allBackgroundPatternsQuery,
   allBlogPostsQuery,
   blogPostBySlugQuery,
-  allDddEntriesQuery,
+  allDddWeeksQuery,
   jobApplicationVariantBySlugQuery,
   portfolioPasswordQuery,
   projectBySlugQuery,
@@ -160,9 +160,26 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefi
   return result ?? undefined;
 }
 
+type DddWeek = {
+  week: number;
+  images: { key: string; image: string; caption?: string }[];
+};
+
+/**
+ * DDD is authored week-by-week in Studio (one document per week, images
+ * uploaded together) but consumed as a flat list everywhere on the site —
+ * flatten here, once, rather than teaching every caller about weeks.
+ */
 export async function getDddEntries(): Promise<DddEntry[]> {
-  const result = await sanityFetch<DddEntry[]>(allDddEntriesQuery);
-  return result ?? [];
+  const result = await sanityFetch<DddWeek[]>(allDddWeeksQuery);
+  if (!result) return [];
+  let day = 0;
+  return result.flatMap((week) =>
+    week.images.map((img) => {
+      day += 1;
+      return { _id: `${week.week}-${img.key}`, image: img.image, day, caption: img.caption };
+    }),
+  );
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
