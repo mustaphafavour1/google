@@ -18,7 +18,7 @@ export type NavItem = {
 };
 
 export const primaryNav: NavItem[] = [
-  { label: "Overview", href: "/", icon: Home },
+  { label: "Home", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
   { label: "Gallery", href: "/gallery", icon: Images },
   { label: "Process", href: "/process", icon: Workflow },
@@ -30,7 +30,7 @@ export const primaryNav: NavItem[] = [
 ];
 
 export const mobileTabs: NavItem[] = [
-  { label: "Overview", href: "/", icon: Home },
+  { label: "Home", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
   { label: "Gallery", href: "/gallery", icon: Images },
   { label: "Profile", href: "/profile", icon: User },

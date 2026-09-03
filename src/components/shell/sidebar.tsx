@@ -33,7 +33,7 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
                   href={item.href}
                   aria-label={item.label}
                   className={cn(
-                    "flex flex-col items-center gap-1 rounded-lg px-1 py-2.5 text-center transition-colors",
+                    "flex flex-col items-center gap-1 rounded-md px-1 py-2.5 text-center transition-colors",
                     active
                       ? "bg-primary-tint font-semibold text-primary-tint-text"
                       : "text-ink-soft hover:bg-surface-muted hover:text-ink-strong",
