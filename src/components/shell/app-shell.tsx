@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { BackgroundPattern as BackgroundPatternT, Project, SiteSettings } from "@/lib/types";
 import { Sidebar } from "./sidebar";
+import { BackButton } from "./back-button";
 import { FloatingUtilityBar } from "./floating-utility-bar";
 import { MobileHeader } from "./mobile-header";
 import { PageTransition } from "./page-transition";
@@ -39,7 +40,11 @@ export function AppShell({
       <div className="flex min-h-screen">
         <BackgroundPattern patterns={backgroundPatterns} />
         <RocketTrailCanvas />
-        <Sidebar profile={siteSettings.profile} />
+        <Sidebar profile={siteSettings.profile} profileMedia={siteSettings.profileMedia} />
+        <BackButton
+          showLabel
+          className="fixed left-[5.5rem] top-4 z-30 hidden bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur lg:flex"
+        />
         <FloatingUtilityBar projects={projects} siteSettings={siteSettings} />
         <div className="flex min-w-0 flex-1 flex-col">
           <MobileHeader />

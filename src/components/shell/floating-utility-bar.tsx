@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Search, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AccessibilityMenu } from "./accessibility-menu";
-import { BackButton } from "./back-button";
 import { SearchOverlay } from "./search-overlay";
 import type { Project, SiteSettings } from "@/lib/types";
 
@@ -46,31 +45,37 @@ export function FloatingUtilityBar({
   return (
     <>
       <div className="fixed right-4 top-4 z-30 hidden items-center gap-2 lg:flex">
-        <BackButton className={UTILITY_BTN} />
         <AnimatePresence>
           {searchOpen && (
-            <motion.input
-              ref={inputRef}
+            <motion.div
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 220, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Escape") close();
-                if (event.key === "Enter") runSearch();
-              }}
-              placeholder="Search the site…"
-              className="h-9 rounded-md border border-border bg-surface/95 px-3 text-[13px] text-ink-strong shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] outline-none placeholder:text-ink-muted"
-            />
+              className="relative h-9"
+            >
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") close();
+                  if (event.key === "Enter") runSearch();
+                }}
+                placeholder="Search the site…"
+                className="h-9 w-full rounded-md border border-border bg-surface/95 px-3 pr-9 text-[13px] text-ink-strong shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] outline-none placeholder:text-ink-muted"
+              />
+              <button
+                type="button"
+                onClick={runSearch}
+                aria-label="Run search"
+                className="absolute inset-y-0 right-1 my-auto flex h-7 w-7 items-center justify-center rounded-md text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong"
+              >
+                <ArrowRight size={14} />
+              </button>
+            </motion.div>
           )}
         </AnimatePresence>
-        {searchOpen && (
-          <button type="button" onClick={runSearch} aria-label="Run search" className={UTILITY_BTN}>
-            <ArrowRight size={15} />
-          </button>
-        )}
         <button
           type="button"
           onClick={toggleSearch}

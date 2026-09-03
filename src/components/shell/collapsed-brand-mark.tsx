@@ -36,11 +36,11 @@ export function CollapsedBrandMark({ phrases }: { phrases: string[] }) {
           initial="hidden"
           animate="visible"
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          className="flex -rotate-90 items-center whitespace-nowrap font-brand text-[18px] leading-none text-primary-500"
+          className="flex -rotate-90 items-center whitespace-nowrap font-brand text-[27px] leading-none text-primary-500"
         >
           {text.split("").map((char, i) => (
             <motion.span key={i} variants={letter} transition={{ duration: 0.25 }}>
-              {char === " " ? " " : char}
+              {char === " " ? <span className="inline-block w-[0.35em]" /> : char}
             </motion.span>
           ))}
         </motion.div>

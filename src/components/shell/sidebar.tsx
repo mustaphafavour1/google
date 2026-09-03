@@ -10,8 +10,15 @@ import type { SiteSettings } from "@/lib/types";
 
 const SIDEBAR_W = "4.5rem";
 
-export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
+export function Sidebar({
+  profile,
+  profileMedia,
+}: {
+  profile: SiteSettings["profile"];
+  profileMedia: SiteSettings["profileMedia"];
+}) {
   const pathname = usePathname();
+  const avatarPhoto = profileMedia.find((item) => item.image)?.image;
 
   return (
     <aside
@@ -19,7 +26,7 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
       className="sticky top-0 hidden h-screen shrink-0 flex-col overflow-hidden border-r border-hairline bg-surface lg:flex"
     >
       <div className="flex h-(--header-h) shrink-0 items-center justify-center border-b border-hairline px-2">
-        <Logo compact name={profile.name} title={profile.title} />
+        <Logo compact name={profile.name} title={profile.title} photoUrl={avatarPhoto} />
       </div>
 
       <nav aria-label="Primary" className="shrink-0 overflow-y-auto px-2 py-4">
@@ -58,9 +65,14 @@ export function Sidebar({ profile }: { profile: SiteSettings["profile"] }) {
           aria-label={`${profile.name} — Profile`}
           className="flex items-center justify-center"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[11px] font-semibold text-primary-tint-text">
-            {initials(profile.name)}
-          </span>
+          {avatarPhoto ? (
+            // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+            <img src={avatarPhoto} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
+          ) : (
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[11px] font-semibold text-primary-tint-text">
+              {initials(profile.name)}
+            </span>
+          )}
         </Link>
       </div>
     </aside>
