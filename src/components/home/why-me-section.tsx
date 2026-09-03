@@ -27,22 +27,30 @@ const CARDS = [
   },
 ];
 
+const GRADIENT_BORDER_STYLE = {
+  background: "linear-gradient(135deg, white, #c0c0c0 50%, white)",
+  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+  WebkitMaskComposite: "xor",
+  maskComposite: "exclude",
+  padding: 1.5,
+} as const;
+
 export function WhyMeSection() {
   const { openForm } = useContactForm();
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 px-4 py-12 text-white sm:px-8">
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 px-4 py-16 text-white sm:px-8">
       <div className="relative mx-auto max-w-2xl text-center">
         <p className="type-eyebrow mb-2.5 text-white/70">Why me</p>
-        <h2 className="text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight text-white">
+        <h2 className="text-[clamp(1.875rem,4vw,2.75rem)] font-bold leading-tight tracking-tight text-white">
           A Rare Synergy of Quality for You
         </h2>
-        <p className="type-body mt-3 text-white/75">
+        <p className="mt-3.5 text-[17px] font-medium leading-relaxed text-white/80">
           Some of the rare things I offer that makes me the best-fit.
         </p>
       </div>
 
-      <div className="relative mx-auto mt-9 grid max-w-4xl gap-4 sm:grid-cols-2">
+      <div className="relative mx-auto mt-10 grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-4">
         {CARDS.map((card, i) => (
           <motion.div
             key={card.title}
@@ -50,14 +58,19 @@ export function WhyMeSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ delay: i * 0.08, duration: 0.5 }}
-            className="group relative overflow-hidden rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
+            className="group relative aspect-square overflow-hidden rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1"
           >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-50"
+              style={GRADIENT_BORDER_STYLE}
+            />
             <card.icon
               size={72}
               className="pointer-events-none absolute -right-3 -top-3 rotate-[18deg] text-white opacity-0 transition-all duration-500 group-hover:rotate-[8deg] group-hover:opacity-[0.14]"
             />
-            <div className="relative">
-              <h3 className="text-[14.5px] font-semibold text-white">{card.title}</h3>
+            <div className="relative flex h-full flex-col justify-end">
+              <h3 className="text-[17px] font-bold text-white">{card.title}</h3>
               <p className="type-body mt-1.5 text-white/80">{card.subtitle}</p>
             </div>
           </motion.div>
@@ -68,7 +81,7 @@ export function WhyMeSection() {
         <button
           type="button"
           onClick={openForm}
-          className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md bg-white px-5 text-[14px] font-medium text-primary-600 transition-colors hover:bg-white/90"
+          className="inline-flex h-12 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md bg-white px-6 text-[15.5px] font-semibold text-primary-600 transition-colors hover:bg-white/90"
         >
           Let&rsquo;s discuss
           <ArrowRight size={15} />

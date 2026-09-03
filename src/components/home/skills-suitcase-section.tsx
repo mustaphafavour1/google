@@ -11,10 +11,10 @@ export function SkillsSuitcaseSection({ groups }: { groups: SkillGroup[] }) {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative mx-auto w-full max-w-[600px]">
-        <div className="absolute -top-3 left-1/2 h-3 w-24 -translate-x-1/2 rounded-t-lg border border-b-0 border-hairline bg-surface-muted" />
+      <div className="relative mx-auto w-full max-w-[760px]">
+        <div className="absolute -top-7 left-1/2 h-9 w-32 -translate-x-1/2 rounded-t-2xl border-[5px] border-b-0 border-hairline/80 bg-transparent" />
 
-        <div className="relative flex h-[58vh] max-h-[540px] min-h-[380px] w-full flex-col overflow-hidden rounded-3xl border border-hairline bg-gradient-to-br from-surface to-surface-muted shadow-[0_24px_60px_rgb(35_25_15_/_0.14)]">
+        <div className="relative flex h-[46vh] max-h-[440px] min-h-[320px] w-full flex-col overflow-hidden rounded-3xl border-[4px] border-hairline/80 bg-gradient-to-br from-surface to-surface-muted shadow-[0_24px_60px_rgb(35_25_15_/_0.14)]">
           <div className="flex-1 overflow-y-auto px-6 py-8 sm:px-9">
             {groups.map((group, i) => (
               <motion.div
@@ -43,11 +43,11 @@ export function SkillsSuitcaseSection({ groups }: { groups: SkillGroup[] }) {
       </div>
 
       <div className="mt-9 flex flex-wrap justify-center gap-2.5">
-        <Button variant="outline" href="/skills">
+        <Button variant="outline" size="lg" href="/skills">
           See the Full Skill Set
           <ArrowRight size={14} />
         </Button>
-        <button type="button" onClick={openForm} className={buttonVariants({})}>
+        <button type="button" onClick={openForm} className={buttonVariants({ size: "lg" })}>
           Let&rsquo;s discuss
         </button>
       </div>

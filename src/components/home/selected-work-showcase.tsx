@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/types";
 
@@ -25,24 +26,38 @@ export function SelectedWorkShowcase({ projects }: { projects: Project[] }) {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-12">
-      <div className="flex flex-col">
+      <div className="flex min-w-0 flex-col">
         {projects.map((project, i) => (
-          <button
+          <div
             key={project._id}
-            type="button"
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)}
-            onFocus={() => setHovered(i)}
-            onBlur={() => setHovered(null)}
-            aria-pressed={i === activeIndex}
             className={cn(
-              "border-t border-hairline py-4 text-left transition-colors first:border-t-0 first:pt-0",
-              i === activeIndex ? "text-ink-em" : "text-ink-soft",
+              "flex min-w-0 items-center justify-between gap-3 border-t border-hairline py-4 first:border-t-0 first:pt-0",
             )}
           >
-            <p className="text-[15px] font-semibold transition-colors">{project.name}</p>
-            <p className="type-body mt-1 truncate text-ink-muted">{project.oneLiner}</p>
-          </button>
+            <button
+              type="button"
+              onClick={() => setHovered(i)}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              onFocus={() => setHovered(i)}
+              onBlur={() => setHovered(null)}
+              aria-pressed={i === activeIndex}
+              className={cn(
+                "min-w-0 flex-1 text-left transition-colors",
+                i === activeIndex ? "text-ink-em" : "text-ink-soft",
+              )}
+            >
+              <p className="text-[15px] font-semibold transition-colors">{project.name}</p>
+              <p className="type-body mt-1 truncate text-ink-muted">{project.oneLiner}</p>
+            </button>
+            <Link
+              href={`/projects/${project.slug}`}
+              aria-label={`Open ${project.name} case study`}
+              className="shrink-0 rounded-md p-1.5 text-ink-faint transition-colors hover:bg-surface-muted hover:text-primary-500"
+            >
+              <ArrowUpRight size={16} />
+            </Link>
+          </div>
         ))}
       </div>
 

@@ -20,14 +20,27 @@ const BLOBS: Blob[] = [
   { color: "#4fd67a", size: 280, top: "32%", left: "40%", duration: 24, moveX: 45, moveY: 45 },
 ];
 
+const EDGE_FADE_MASK =
+  "radial-gradient(ellipse 75% 75% at 50% 50%, black 55%, transparent 100%)";
+
 /**
  * Extremely slow, extremely blurred colour circles behind the hero copy —
  * decorative sparkle, not a focal element, so they're pointer-events-none
- * and sit behind the text at all times.
+ * and sit behind the text at all times. The whole layer (white base +
+ * blobs) fades out toward its own edges via a radial mask, so the hero's
+ * white panel blends into the page background instead of ending in a
+ * hard rectangle.
  */
 export function HeroBlobs() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-white">
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-white"
+      style={{
+        maskImage: EDGE_FADE_MASK,
+        WebkitMaskImage: EDGE_FADE_MASK,
+      }}
+    >
       {BLOBS.map((blob, i) => (
         <motion.div
           key={i}

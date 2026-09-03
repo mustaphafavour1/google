@@ -16,7 +16,7 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-hairline px-4 py-14 sm:px-8">
-      <GridSquaresBackground className="opacity-60" />
+      <GridSquaresBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 14 }}
@@ -55,8 +55,11 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
         </div>
       </motion.div>
 
-      <div id="drop-a-message" className="relative mx-auto mt-12 w-full max-w-sm scroll-mt-24">
-        <div className="flex items-center justify-between border-t border-hairline pt-6">
+      <div
+        id="drop-a-message"
+        className="relative mx-auto mt-12 w-full max-w-sm scroll-mt-24 rounded-xl border border-hairline bg-surface p-5 shadow-[0_2px_10px_rgb(35_25_15_/_0.06)]"
+      >
+        <div className="flex items-center justify-between">
           <p className="type-eyebrow">Leave a thought</p>
           <ClapButton slug="landing-page" initialClaps={initialClaps} />
         </div>

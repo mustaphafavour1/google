@@ -38,12 +38,10 @@ export function DesignSystemSection({ projects }: { projects: Project[] }) {
         transition={{ duration: 0.5 }}
         className="mx-auto max-w-2xl text-center"
       >
-        <h2 className="text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight text-ink-em">
-          With me, AI-built ≠ Slop. With Me, AI-built = Speed + Quality.
+        <h2 className="text-[clamp(1.875rem,4vw,2.75rem)] font-bold leading-tight tracking-tight text-ink-em">
+          <span className="block">With me, AI-built ≠ Slop.</span>
+          <span className="block">With Me, AI-built = Speed + Quality.</span>
         </h2>
-        <p className="type-body mt-3 text-ink-muted">
-          There&rsquo;s this portfolio, a design system, and several outstanding websites &amp; apps to prove it.
-        </p>
       </motion.div>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 sm:items-stretch">
@@ -69,22 +67,26 @@ export function DesignSystemSection({ projects }: { projects: Project[] }) {
           )}
         </div>
 
-        <div className="flex aspect-[4/3] w-full flex-col justify-center rounded-2xl border border-hairline bg-surface p-6 sm:p-7">
-          <p className="type-body text-ink-muted">
+        <div className="flex aspect-[4/3] w-full flex-col justify-center p-6 sm:p-7">
+          <p className="type-body text-[17px] font-medium leading-relaxed text-ink-muted">
+            There&rsquo;s this portfolio, a design system, and several outstanding websites &amp; apps
+            to prove it.
+          </p>
+          <p className="type-body mt-4 text-ink-muted">
             Check out my personal Taste and Spec document in the design system (194 detailed website
             sections included).
           </p>
-          <div className="mt-5 flex flex-col gap-3">
+          <div className="mt-6 flex flex-col gap-5">
             {LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-ink-em underline decoration-primary-500 decoration-2 underline-offset-2 transition-colors hover:text-primary-500"
+                className="inline-flex items-center gap-1.5 text-[16px] font-semibold text-ink-em underline decoration-primary-500 decoration-2 underline-offset-2 transition-colors hover:text-primary-500"
               >
                 {link.label}
-                <ArrowUpRight size={14} />
+                <ArrowUpRight size={15} />
               </a>
             ))}
           </div>

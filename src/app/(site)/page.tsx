@@ -38,11 +38,11 @@ export default async function HomePage({
 
   return (
     <div>
-      <LandingSection id="hero" className="pb-16 pt-10 sm:pb-20 sm:pt-14">
+      <LandingSection id="hero" className="pt-0">
         <Hero profile={profile} hero={landing.hero} jdVariant={jdVariant} />
       </LandingSection>
 
-      <LandingSection id="metrics" className="py-14 sm:py-16">
+      <LandingSection id="metrics">
         <MetricsSection metrics={siteMetrics} resumeUrl={contact.resumeUrl} visitorMetrics={<VisitorMetrics />} />
       </LandingSection>
 
@@ -91,14 +91,14 @@ export default async function HomePage({
           title="Working with me is always a pleasant experience"
           subtitle="For the various design work or needs, I have processes, values and work ethics that makes it all smooth and enjoyable."
         />
-        <WorkingTogetherSection items={landing.workingTogetherItems} />
+        <WorkingTogetherSection items={landing.workingTogetherItems} projects={projects} />
       </LandingSection>
 
       <LandingSection id="design-system">
         <DesignSystemSection projects={projects} />
       </LandingSection>
 
-      <LandingSection id="contact">
+      <LandingSection id="contact" className="pb-0">
         <FinalCtaSection initialClaps={landingClaps} />
       </LandingSection>
     </div>

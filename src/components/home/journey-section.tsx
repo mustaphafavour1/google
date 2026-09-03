@@ -47,7 +47,9 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
   });
 
   const linePath = buildSmoothPath(points);
-  const areaPath = `${linePath} L ${points[points.length - 1].x},${(BASELINE_PCT / 100) * VB_HEIGHT} L ${points[0].x},${(BASELINE_PCT / 100) * VB_HEIGHT} Z`;
+  const baselineY = (BASELINE_PCT / 100) * VB_HEIGHT;
+  const topY = (TOP_PADDING_PCT / 100) * VB_HEIGHT;
+  const areaPath = `${linePath} L ${points[points.length - 1].x},${baselineY} L ${points[0].x},${baselineY} Z`;
 
   return (
     <div>
@@ -68,6 +70,33 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
               <stop offset="100%" stopColor="var(--color-primary-500)" stopOpacity="0" />
             </linearGradient>
           </defs>
+          {points.map((point, i) => (
+            <line
+              key={`grid-${i}`}
+              x1={point.x}
+              y1={topY}
+              x2={point.x}
+              y2={baselineY}
+              stroke="var(--color-hairline)"
+              strokeWidth="1"
+            />
+          ))}
+          <line
+            x1={points[0].x}
+            y1={topY}
+            x2={points[0].x}
+            y2={baselineY}
+            stroke="var(--color-ink-faint)"
+            strokeWidth="1.5"
+          />
+          <line
+            x1={points[0].x}
+            y1={baselineY}
+            x2={points[points.length - 1].x}
+            y2={baselineY}
+            stroke="var(--color-ink-faint)"
+            strokeWidth="1.5"
+          />
           <path d={areaPath} fill={`url(#${gradientId})`} />
           <motion.path
             d={linePath}

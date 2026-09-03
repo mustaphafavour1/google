@@ -19,7 +19,7 @@ export function Hero({
   const { openForm } = useContactForm();
 
   return (
-    <div className="relative flex flex-col items-center px-4 py-6 text-center">
+    <div className="relative flex min-h-[95vh] flex-col items-center justify-center px-4 py-6 text-center">
       <HeroBlobs />
 
       {jdVariant ? (
@@ -45,7 +45,7 @@ export function Hero({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="max-w-3xl text-[clamp(2.1rem,4.6vw,3.5rem)] font-semibold leading-[1.08] tracking-tight text-ink-em"
+        className="max-w-3xl text-[clamp(2.1rem,4.6vw,3.5rem)] font-extrabold leading-[1.08] tracking-tight text-ink-em"
       >
         {jdVariant ? <>Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.</> : hero.title}
       </motion.h1>
@@ -55,7 +55,7 @@ export function Hero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="mt-2 max-w-xl text-[15px] leading-relaxed text-ink-soft"
+          className="mt-2 max-w-xl text-[clamp(1.7875rem,calc(4.6vw_-_0.3125rem),3.1875rem)] font-semibold leading-[1.15] text-ink-soft"
         >
           {hero.titleUnderText}
         </motion.p>
@@ -65,7 +65,7 @@ export function Hero({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="type-body mt-5 max-w-xl text-[16px] leading-relaxed text-ink-muted"
+        className="type-body mt-5 max-w-xl text-[16px] font-bold leading-relaxed text-ink-muted"
       >
         {jdVariant?.introNote || hero.subtitle}
       </motion.p>
@@ -86,7 +86,12 @@ export function Hero({
               {hero.ctaPrimaryLabel}
               <ArrowRight size={15} />
             </button>
-            <Button variant="outline" size="lg" href="#work">
+            <Button
+              variant="outline"
+              size="lg"
+              href="#work"
+              className="border-primary-500 text-primary-500 hover:bg-primary-tint hover:text-primary-600"
+            >
               {hero.ctaSecondaryLabel}
             </Button>
           </>

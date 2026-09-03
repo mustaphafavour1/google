@@ -6,11 +6,14 @@ import { Download } from "lucide-react";
 import { CountUpValue } from "@/components/cards/count-up-value";
 import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { buttonVariants } from "@/components/ui/button";
-import { GridSquaresBackground } from "./grid-squares-background";
+import { GridSquaresBackground, GRID_SQUARE_SIZE } from "./grid-squares-background";
 import { cn } from "@/lib/utils";
 import type { SiteMetric } from "@/lib/types";
 
 const CYCLE_MS = 1800;
+const CARD_WIDTH = GRID_SQUARE_SIZE * 16;
+const CARD_HEIGHT = GRID_SQUARE_SIZE * 10;
+const CARD_GAP = GRID_SQUARE_SIZE;
 
 export function MetricsSection({
   metrics,
@@ -34,20 +37,19 @@ export function MetricsSection({
   const hasPlaceholder = metrics.some((m) => m.isPlaceholder);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-hairline px-4 py-12 sm:px-8">
-      <GridSquaresBackground className="opacity-60" />
+    <div className="relative overflow-hidden rounded-2xl border border-hairline px-4 py-16 sm:px-8">
+      <GridSquaresBackground />
 
       <div className="relative mx-auto max-w-2xl text-center">
-        <p className="type-eyebrow mb-2.5">Live numbers</p>
-        <h2 className="text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight text-ink-em">
+        <h2 className="text-[clamp(1.875rem,4vw,2.75rem)] font-bold leading-tight tracking-tight text-ink-em">
           Meet The Metrics
         </h2>
-        <p className="type-body mt-3 text-ink-muted">
+        <p className="type-body mt-3.5 text-[17px] font-medium leading-relaxed text-ink-muted">
           Highlight of the most important figures of my design journey.
         </p>
       </div>
 
-      <div className="relative mx-auto mt-9 flex max-w-3xl flex-wrap justify-center divide-x divide-hairline">
+      <div className="relative mx-auto mt-10 flex flex-wrap justify-center" style={{ gap: CARD_GAP }}>
         {metrics.map((metric, i) => (
           <motion.button
             key={metric.key}
@@ -60,18 +62,19 @@ export function MetricsSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ delay: i * 0.08, duration: 0.5 }}
-            className="min-w-[7rem] flex-1 px-5 py-2 text-center"
+            style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+            className="flex flex-col items-center justify-center rounded-lg border border-hairline bg-surface shadow-[0_2px_10px_rgb(35_25_15_/_0.06)]"
           >
             <p
               className={cn(
-                "text-[clamp(1.75rem,3.5vw,2.5rem)] font-semibold leading-none tracking-tight transition-colors duration-500",
+                "text-[clamp(2.25rem,4.5vw,3.25rem)] font-extrabold leading-none tracking-tight transition-colors duration-500",
                 i === activeIndex ? "text-primary-500" : "text-ink-faint",
               )}
             >
               <CountUpValue value={metric.value} />
               {metric.isPlaceholder && <span className="ml-0.5 text-ink-faint">*</span>}
             </p>
-            <p className="type-meta mt-2">{metric.label}</p>
+            <p className="type-meta mt-2 text-[13px] font-medium">{metric.label}</p>
           </motion.button>
         ))}
       </div>
