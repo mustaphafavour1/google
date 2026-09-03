@@ -79,7 +79,7 @@ function GalleryTile({ item }: { item: GalleryItem }) {
       <button
         type="button"
         onClick={lightbox.show}
-        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-lg border border-hairline shadow-sm transition-transform hover:z-10 hover:scale-[1.03] hover:shadow-lg"
+        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-[9.2px] border border-hairline transition-transform hover:z-10 hover:scale-[1.03]"
       >
         {item.kind === "image" && (
           // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const SPEEDS = [0.5, 1, 1.5, 2] as const;
+const SPEEDS = [0.5, 1, 1.5, 2, 3] as const;
 const BASE_PX_PER_SECOND = 108;
 
 export function AutoScrollControl() {

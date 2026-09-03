@@ -38,7 +38,7 @@ export function CommentBox({ projectName }: { projectName: string }) {
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Your name (optional)"
-            className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted"
+            className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
           />
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
