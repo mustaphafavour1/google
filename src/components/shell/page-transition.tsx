@@ -30,7 +30,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
         key={pathname}
         initial={{ x: direction === "back" ? -56 : 56, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        exit={{ y: -24, opacity: 0 }}
+        exit={{ opacity: 0 }}
         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}
