@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MonitorPlay, Pause, Play } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { AUTO_SCROLL_SPEEDS, setAutoScrollActive, setAutoScrollSpeed, useAutoScrollState } from "@/lib/auto-scroll-store";
 import { primaryNav, isNavItemActive } from "./nav-config";
 import { cn } from "@/lib/utils";
 
-const SPEEDS = [0.5, 1, 1.5, 2, 3] as const;
 const BASE_PX_PER_SECOND = 108;
 // Gives PageTransition's slide + the new route's data fetch time to settle
 // before resuming the scroll tick, so it doesn't measure a stale page height.
@@ -22,8 +22,7 @@ const SETTLE_MS = 650;
  * component would reset every time it navigates itself away.
  */
 export function GlobalAutoScroll() {
-  const [active, setActive] = useState(false);
-  const [speed, setSpeed] = useState<(typeof SPEEDS)[number]>(1);
+  const { active, speed } = useAutoScrollState();
   const pathname = usePathname();
   const router = useRouter();
   const frameRef = useRef<number | null>(null);
@@ -76,7 +75,7 @@ export function GlobalAutoScroll() {
   useEffect(() => {
     if (!active) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setActive(false);
+      if (e.key === "Escape") setAutoScrollActive(false);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -112,7 +111,7 @@ export function GlobalAutoScroll() {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setActive((v) => !v)}
+            onClick={() => setAutoScrollActive(!active)}
             aria-pressed={active}
             aria-label={active ? "Pause site tour" : "Start site tour"}
             className={cn(
@@ -125,11 +124,11 @@ export function GlobalAutoScroll() {
             {active ? <Pause size={11} /> : <Play size={11} fill="currentColor" />}
           </button>
           <div className="flex gap-1">
-            {SPEEDS.map((s) => (
+            {AUTO_SCROLL_SPEEDS.map((s) => (
               <button
                 key={s}
                 type="button"
-                onClick={() => setSpeed(s)}
+                onClick={() => setAutoScrollSpeed(s)}
                 aria-pressed={speed === s}
                 className={cn(
                   "rounded-md px-1.5 py-1 text-[11px] font-medium transition-colors",

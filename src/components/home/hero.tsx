@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronDown, MonitorPlay, Sparkles } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
+import { setAutoScrollActive } from "@/lib/auto-scroll-store";
 import { HeroBlobs } from "./hero-blobs";
 import type { JobApplicationVariant, SiteSettings } from "@/lib/types";
 
@@ -47,7 +48,7 @@ export function Hero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="mt-2 max-w-xl text-[28px] font-semibold leading-[1.15] text-ink-soft dark:text-primary-300"
+          className="mt-2 max-w-xl font-brand text-[32px] leading-[1.15] text-ink-soft dark:text-primary-300"
         >
           {hero.titleUnderText}
         </motion.p>
@@ -89,6 +90,26 @@ export function Hero({
           </>
         )}
       </motion.div>
+
+      {!jdVariant && (
+        <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-8 sm:bottom-8">
+          <a
+            href="#work"
+            className="flex flex-col items-center gap-1 text-[11px] font-medium text-ink-soft transition-colors hover:text-ink-strong"
+          >
+            Scroll to see more
+            <ChevronDown size={14} className="animate-bounce" />
+          </a>
+          <button
+            type="button"
+            onClick={() => setAutoScrollActive(true)}
+            className="flex flex-col items-center gap-1 text-[11px] font-medium text-ink-soft transition-colors hover:text-ink-strong"
+          >
+            Auto-scroll
+            <MonitorPlay size={14} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

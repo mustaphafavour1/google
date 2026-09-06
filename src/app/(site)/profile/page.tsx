@@ -1,4 +1,4 @@
-import { ArrowUpRight, Download, Globe, Mail, Package } from "lucide-react";
+import { ArrowUpRight, FileText, Globe, Mail, Package } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { initials } from "@/components/shell/logo";
 import { ResumeGateButton } from "@/components/resume/resume-gate-button";
@@ -13,13 +13,19 @@ import { ContactTriggerButton } from "./contact-trigger-button";
 export default async function ProfilePage() {
   const [siteSettings, products] = await Promise.all([getSiteSettings(), getProducts()]);
   const { profile, contact, hobbies, about, profileMedia } = siteSettings;
+  const avatarPhoto = profileMedia.find((item) => item.image)?.image;
 
   return (
     <PageContainer>
       <div className="flex flex-wrap items-center gap-4">
-        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[20px] font-semibold text-primary-tint-text">
-          {initials(profile.name)}
-        </span>
+        {avatarPhoto ? (
+          // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
+          <img src={avatarPhoto} alt="" className="h-16 w-16 shrink-0 rounded-full object-cover" />
+        ) : (
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-tint text-[20px] font-semibold text-primary-tint-text">
+            {initials(profile.name)}
+          </span>
+        )}
         <div>
           <h1 className="type-display">{profile.name}</h1>
           <p className="type-body mt-1 text-ink-muted">
@@ -76,8 +82,8 @@ export default async function ProfilePage() {
               </div>
               {contact.resumeUrl ? (
                 <ResumeGateButton className="mt-5 inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white transition-colors hover:bg-primary-600">
-                  <Download size={14} />
-                  Download resume
+                  <FileText size={14} />
+                  Open Resume
                 </ResumeGateButton>
               ) : (
                 <p className="type-meta mt-5">Not uploaded yet — check back soon.</p>

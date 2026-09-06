@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { CSSProperties } from "react";
 
 type Blob = {
   color: string;
+  darkColor: string;
   size: number;
   top: string;
   left: string;
@@ -13,11 +15,11 @@ type Blob = {
 };
 
 const BLOBS: Blob[] = [
-  { color: "#4c8bf5", size: 380, top: "8%", left: "6%", duration: 26, moveX: 60, moveY: 40 },
-  { color: "#eee75a", size: 320, top: "58%", left: "2%", duration: 32, moveX: 50, moveY: -50 },
-  { color: "#ffd23f", size: 300, top: "4%", left: "62%", duration: 29, moveX: -50, moveY: 55 },
-  { color: "#ff9f43", size: 340, top: "62%", left: "68%", duration: 35, moveX: -60, moveY: -35 },
-  { color: "#4fd67a", size: 280, top: "32%", left: "40%", duration: 24, moveX: 45, moveY: 45 },
+  { color: "#4c8bf5", darkColor: "#0f1a30", size: 380, top: "8%", left: "6%", duration: 26, moveX: 60, moveY: 40 },
+  { color: "#eee75a", darkColor: "#211f0a", size: 320, top: "58%", left: "2%", duration: 32, moveX: 50, moveY: -50 },
+  { color: "#ffd23f", darkColor: "#241c07", size: 300, top: "4%", left: "62%", duration: 29, moveX: -50, moveY: 55 },
+  { color: "#ff9f43", darkColor: "#241705", size: 340, top: "62%", left: "68%", duration: 35, moveX: -60, moveY: -35 },
+  { color: "#4fd67a", darkColor: "#0e2117", size: 280, top: "32%", left: "40%", duration: 24, moveX: 45, moveY: 45 },
 ];
 
 // Only the left/right/bottom edges fade — the hero is the first section on
@@ -54,14 +56,17 @@ export function HeroBlobs() {
           initial={{ x: 0, y: 0 }}
           animate={{ x: [0, blob.moveX, 0], y: [0, blob.moveY, 0] }}
           transition={{ duration: blob.duration, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute rounded-full opacity-40 blur-[120px] dark:opacity-50"
-          style={{
-            width: blob.size,
-            height: blob.size,
-            top: blob.top,
-            left: blob.left,
-            backgroundColor: blob.color,
-          }}
+          className="absolute rounded-full opacity-40 blur-[120px] [background-color:var(--blob-color)] dark:[background-color:var(--blob-dark-color)]"
+          style={
+            {
+              width: blob.size,
+              height: blob.size,
+              top: blob.top,
+              left: blob.left,
+              "--blob-color": blob.color,
+              "--blob-dark-color": blob.darkColor,
+            } as CSSProperties
+          }
         />
       ))}
     </div>
