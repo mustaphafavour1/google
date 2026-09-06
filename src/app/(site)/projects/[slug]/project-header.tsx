@@ -1,15 +1,19 @@
 import { ArrowUpRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ProjectSummaryPanel } from "./project-summary-panel";
 import type { Project } from "@/lib/types";
 
-export function ProjectHeader({ project }: { project: Project }) {
+export function ProjectHeader({ project, contactEmail }: { project: Project; contactEmail: string }) {
   const coverSrc = project.coverImage;
 
   return (
     <div className="mb-10">
       <span className="type-eyebrow text-ink-muted">{project.industry}</span>
-      <h1 className="type-display mt-1 text-ink-em">{project.name}</h1>
+      <div className="mt-1 flex flex-wrap items-center gap-3">
+        <h1 className="type-display text-ink-em">{project.name}</h1>
+        <ProjectSummaryPanel project={project} contactEmail={contactEmail} />
+      </div>
       <p className="mt-2 max-w-2xl text-[14px] text-ink-soft sm:text-[15px]">{project.oneLiner}</p>
 
       <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-3">

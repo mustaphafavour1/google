@@ -90,7 +90,7 @@ export default async function ProjectDetailPage({
             All projects
           </Link>
 
-          <ProjectHeader project={project} />
+          <ProjectHeader project={project} contactEmail={siteSettings.contact.email} />
 
           <ProjectBlocks blocks={project.blocks} project={project} />
 
@@ -108,7 +108,7 @@ export default async function ProjectDetailPage({
               <p className="type-label mb-3">More case studies</p>
               <div className="grid grid-cols-2 gap-3">
                 {moreCaseStudies.map((p) => (
-                  <div key={p.slug} className="h-40 sm:h-[180px]">
+                  <div key={p.slug} className="aspect-[4/3]">
                     <ProjectCard project={p} />
                   </div>
                 ))}
@@ -118,9 +118,9 @@ export default async function ProjectDetailPage({
         </div>
 
         <aside className="sticky top-[calc(var(--header-h)+1.5rem)] hidden h-max max-h-[calc(100vh-var(--header-h)-3rem)] w-52 shrink-0 flex-col gap-6 overflow-y-auto xl:flex">
-          <CaseStudyToc items={tocItems} />
-          <CaseStudyMiniMetrics project={project} />
           <AutoScrollControl />
+          <CaseStudyMiniMetrics project={project} />
+          <CaseStudyToc items={tocItems} />
           <FaveAiMini mode="designer" config={faveAiConfig} fallbackEmail={siteSettings.contact.email} />
         </aside>
       </div>
