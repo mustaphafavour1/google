@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Images, ListOrdered, Play, Shuffle } from "lucide-react";
 import { AutoScrollControl } from "@/components/ui/auto-scroll-control";
 import { Lightbox } from "@/components/ui/lightbox";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { useLightbox } from "@/components/ui/use-lightbox";
 import { EmptyState } from "@/components/ui/empty-state";
 import { shuffle, type GalleryItem } from "@/lib/gallery";
@@ -109,10 +110,7 @@ function GalleryTile({ item }: { item: GalleryItem }) {
 
       {lightbox.open && (
         <Lightbox label={item.caption} onClose={lightbox.hide}>
-          {item.kind === "image" && (
-            // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
-            <img src={item.src} alt={item.caption ?? ""} className="max-h-full max-w-full object-contain" />
-          )}
+          {item.kind === "image" && <LightboxImage src={item.src} alt={item.caption ?? ""} />}
           {item.kind === "video-file" && (
             <video src={item.src} controls autoPlay className="max-h-[80vh] max-w-full" />
           )}

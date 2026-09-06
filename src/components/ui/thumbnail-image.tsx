@@ -2,6 +2,7 @@
 
 import { useLightbox } from "./use-lightbox";
 import { Lightbox } from "./lightbox";
+import { LightboxImage } from "./lightbox-image";
 import { cn } from "@/lib/utils";
 
 export function ThumbnailImage({
@@ -32,8 +33,7 @@ export function ThumbnailImage({
 
       {lightbox.open && (
         <Lightbox label={alt} onClose={lightbox.hide}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
-          <img src={src} alt={alt} className="max-h-full max-w-full object-contain" />
+          <LightboxImage src={src} alt={alt} />
         </Lightbox>
       )}
     </>

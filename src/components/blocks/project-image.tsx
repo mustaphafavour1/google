@@ -2,6 +2,7 @@
 
 import { useLightbox } from "@/components/ui/use-lightbox";
 import { Lightbox } from "@/components/ui/lightbox";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 
 export function ProjectImage({ src, caption }: { src: string; caption?: string }) {
   const lightbox = useLightbox();
@@ -22,8 +23,7 @@ export function ProjectImage({ src, caption }: { src: string; caption?: string }
 
       {lightbox.open && (
         <Lightbox label={caption} onClose={lightbox.hide}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
-          <img src={src} alt={caption ?? ""} className="max-h-full max-w-full object-contain" />
+          <LightboxImage src={src} alt={caption ?? ""} />
         </Lightbox>
       )}
     </>

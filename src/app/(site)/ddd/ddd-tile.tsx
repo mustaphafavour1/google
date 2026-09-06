@@ -2,6 +2,7 @@
 
 import { useLightbox } from "@/components/ui/use-lightbox";
 import { Lightbox } from "@/components/ui/lightbox";
+import { LightboxImage } from "@/components/ui/lightbox-image";
 import { formatDddDate } from "@/lib/utils";
 import type { DddEntry } from "@/lib/types";
 
@@ -27,8 +28,7 @@ export function DddTile({ entry }: { entry: DddEntry }) {
 
       {lightbox.open && (
         <Lightbox label={label} onClose={lightbox.hide}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
-          <img src={entry.image} alt={label ?? ""} className="max-h-full max-w-full object-contain" />
+          <LightboxImage src={entry.image} alt={label ?? ""} />
         </Lightbox>
       )}
     </div>
