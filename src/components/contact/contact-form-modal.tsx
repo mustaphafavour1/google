@@ -1,19 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Check, Send, X } from "lucide-react";
+import { AlertCircle, Check, Send, X } from "lucide-react";
 import { useContactForm } from "./contact-form-context";
-
-const FORM_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdpsQgMKSp0daAm_opx1IxNkyXxn9jHVJ96WELPnQD5nRSk9A/formResponse";
-const ENTRY = {
-  name: "entry.875926583",
-  email: "entry.485278952",
-  phone: "entry.298588619",
-  category: "entry.501439978",
-  message: "entry.552349922",
-};
-const FRAME_NAME = "hidden-contact-frame";
 
 const CATEGORIES = ["Enquiry", "Job hire", "Gig", "Collaboration", "Consultation", "Others"];
 
@@ -22,23 +11,42 @@ const EMPTY_FORM = { name: "", email: "", phone: "", category: CATEGORIES[0], me
 export function ContactFormModal() {
   const { open, closeForm } = useContactForm();
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
 
   function update(key: keyof typeof form, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  function handleSubmit(_event: FormEvent<HTMLFormElement>) {
-    // Submission proceeds into the hidden iframe below — no redirect, no
-    // visible Google Forms response page. The iframe stays mounted
-    // regardless of `submitted` so unmounting it here can't race with
-    // (and cancel) the in-flight navigation it's carrying.
-    setSubmitted(true);
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await response.json().catch(() => ({ ok: false }));
+      if (!response.ok || !data.ok) {
+        setError(data.error ?? "Couldn't send that — try again in a moment.");
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Couldn't send that — check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function close() {
     closeForm();
     setSubmitted(false);
+    setError(null);
     setForm(EMPTY_FORM);
   }
 
@@ -82,16 +90,9 @@ export function ContactFormModal() {
             <p className="type-body text-ink-muted">I&rsquo;ll get back to you soon.</p>
           </div>
         ) : (
-          <form
-            action={FORM_URL}
-            method="POST"
-            target={FRAME_NAME}
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-3"
-          >
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <input
               type="text"
-              name={ENTRY.name}
               value={form.name}
               onChange={(event) => update("name", event.target.value)}
               placeholder="Your name"
@@ -100,7 +101,6 @@ export function ContactFormModal() {
             />
             <input
               type="email"
-              name={ENTRY.email}
               value={form.email}
               onChange={(event) => update("email", event.target.value)}
               placeholder="Email address"
@@ -109,14 +109,12 @@ export function ContactFormModal() {
             />
             <input
               type="tel"
-              name={ENTRY.phone}
               value={form.phone}
               onChange={(event) => update("phone", event.target.value)}
               placeholder="Phone number (optional)"
               className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
             />
             <select
-              name={ENTRY.category}
               value={form.category}
               onChange={(event) => update("category", event.target.value)}
               className="h-10 rounded-md border border-border bg-surface px-3 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
@@ -128,7 +126,6 @@ export function ContactFormModal() {
               ))}
             </select>
             <textarea
-              name={ENTRY.message}
               value={form.message}
               onChange={(event) => update("message", event.target.value)}
               placeholder="Your message"
@@ -136,22 +133,22 @@ export function ContactFormModal() {
               rows={4}
               className="resize-none rounded-md border border-border bg-transparent px-3 py-2 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
             />
+            {error && (
+              <p className="flex items-center gap-1.5 text-[12px] text-danger">
+                <AlertCircle size={13} className="shrink-0" />
+                {error}
+              </p>
+            )}
             <button
               type="submit"
-              className="mt-1 inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white transition-colors hover:bg-primary-600"
+              disabled={submitting}
+              className="mt-1 inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Send size={13} />
-              Send message
+              {submitting ? "Sending…" : "Send message"}
             </button>
           </form>
         )}
-        <iframe
-          name={FRAME_NAME}
-          title="Contact submission target"
-          aria-hidden="true"
-          tabIndex={-1}
-          className="hidden"
-        />
       </div>
     </div>
   );

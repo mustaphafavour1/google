@@ -19,6 +19,7 @@ type SiteMetrics = {
 type MetricsGlobal = typeof globalThis & {
   __portfolioSiteMetrics?: SiteMetrics;
   __portfolioClapCounts?: Map<string, number>;
+  __portfolioRateLimits?: Map<string, number[]>;
 };
 
 const g = globalThis as MetricsGlobal;
@@ -29,6 +30,7 @@ const site: SiteMetrics = (g.__portfolioSiteMetrics ??= {
 });
 
 const clapCounts: Map<string, number> = (g.__portfolioClapCounts ??= new Map());
+const rateLimitLog: Map<string, number[]> = (g.__portfolioRateLimits ??= new Map());
 
 export function recordVisit(visitorHash: string, country: string | null): void {
   site.uniqueVisitorHashes.add(visitorHash);
@@ -54,4 +56,17 @@ export function addClap(slug: string): number {
 
 export function getClaps(slug: string): number {
   return clapCounts.get(slug) ?? 0;
+}
+
+/** Sliding-window rate limit — true if `key` is still under `maxRequests` within the last `windowMs`. */
+export function checkRateLimit(key: string, maxRequests: number, windowMs: number): boolean {
+  const now = Date.now();
+  const recent = (rateLimitLog.get(key) ?? []).filter((t) => now - t < windowMs);
+  if (recent.length >= maxRequests) {
+    rateLimitLog.set(key, recent);
+    return false;
+  }
+  recent.push(now);
+  rateLimitLog.set(key, recent);
+  return true;
 }
