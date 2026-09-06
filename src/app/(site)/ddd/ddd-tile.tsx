@@ -2,19 +2,19 @@
 
 import { useLightbox } from "@/components/ui/use-lightbox";
 import { Lightbox } from "@/components/ui/lightbox";
-import { tiltForKey } from "@/lib/utils";
+import { formatDddDate } from "@/lib/utils";
 import type { DddEntry } from "@/lib/types";
 
 export function DddTile({ entry }: { entry: DddEntry }) {
   const lightbox = useLightbox();
-  const label = entry.day ? `Day ${entry.day}` : entry.caption;
+  const label = (entry.date && formatDddDate(entry.date)) || entry.caption || (entry.day ? `Day ${entry.day}` : undefined);
 
   return (
-    <div className="mb-4 break-inside-avoid" style={{ transform: `rotate(${tiltForKey(entry._id)}deg)` }}>
+    <div>
       <button
         type="button"
         onClick={lightbox.show}
-        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-lg border border-hairline shadow-sm transition-transform hover:z-10 hover:scale-[1.03] hover:rotate-0 hover:shadow-lg"
+        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-lg border border-hairline shadow-sm transition-transform hover:z-10 hover:scale-[1.03] hover:shadow-lg"
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
         <img src={entry.image} alt={label ?? ""} className="w-full" />

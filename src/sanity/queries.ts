@@ -133,7 +133,8 @@ export const siteSettingsQuery = /* groq */ `
       note,
       "image": image.asset->url
     },
-    analyticsAggregate
+    analyticsAggregate,
+    dddSubtitle
   }
 `;
 
@@ -218,7 +219,8 @@ export const allDddWeeksQuery = /* groq */ `
     images[] {
       "key": _key,
       "image": image.asset->url,
-      caption
+      caption,
+      date
     }
   }
 `;

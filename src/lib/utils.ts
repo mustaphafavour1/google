@@ -25,11 +25,11 @@ export function sanityImageAspectRatio(url: string): number | undefined {
   return Number(match[1]) / Number(match[2]);
 }
 
-/** Deterministic ~-2..2deg tilt per key, so scattered-photo grids are stable across server/client renders. */
-export function tiltForKey(key: string): number {
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) {
-    hash = (hash * 31 + key.charCodeAt(i)) | 0;
-  }
-  return (Math.abs(hash) % 400) / 100 - 2;
+/** Sanity's `date` type stores plain "YYYY-MM-DD" — parse as local time (not UTC) so the displayed day never shifts by one. */
+export function formatDddDate(date: string): string {
+  return new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }

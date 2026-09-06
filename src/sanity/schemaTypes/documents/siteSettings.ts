@@ -12,6 +12,7 @@ export const siteSettings = defineType({
     { name: "contact", title: "Contact" },
     { name: "hobbies", title: "Hobbies" },
     { name: "analytics", title: "Analytics aggregates" },
+    { name: "ddd", title: "Daily Design Dose" },
   ],
   fields: [
     defineField({
@@ -234,6 +235,14 @@ export const siteSettings = defineType({
           preview: { select: { title: "label", subtitle: "note", media: "image" } },
         }),
       ],
+    }),
+    defineField({
+      name: "dddSubtitle",
+      title: "Subtitle (shown under the \"Daily Design Dose\" heading)",
+      type: "text",
+      rows: 2,
+      group: "ddd",
+      initialValue: "365 days of design tips, one a day — May 2024 to May 2025.",
     }),
     defineField({
       name: "analyticsAggregate",

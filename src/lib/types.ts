@@ -319,6 +319,7 @@ export type SiteSettings = {
     projectTypeBreakdown: { type: string; count: number }[];
     projectsOverTime: { year: string; count: number }[];
   };
+  dddSubtitle: string;
 };
 
 // ---- Background patterns --------------------------------------------------------

@@ -127,4 +127,5 @@ export const siteSettingsFallback: SiteSettings = {
       { year: "2026", count: 6 },
     ],
   },
+  dddSubtitle: "365 days of design tips, one a day — May 2024 to May 2025.",
 };

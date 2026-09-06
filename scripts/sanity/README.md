@@ -55,7 +55,42 @@ the new schema's `scale`, `accent`, or `projectType` fields, or rebuild the
 `richText` block — open Studio (`/studio`) after migrating and fill those in
 per project.
 
-## 4. Move "how I work" and "about me" content by hand
+## 4. Bulk-seed Daily Design Dose from a folder of images
+
+Studio only lets you add images to a DDD batch one at a time, which doesn't
+scale to hundreds of files. `seed-ddd.ts` reads a whole folder at once
+instead.
+
+**Name your files so the date is unambiguous** — `2024-05-14.png` (or
+`2024_05_14.png`) is the safest pattern; `May 14 2024.png` and
+`05-14-2024.png` (month-day-year) also work. Don't use a two-digit year or a
+bare `day-month` order — the script refuses to guess between them, on
+purpose, since this DDD run spans May 2024 *and* May 2025 and a wrong guess
+would silently misfile a real post under the wrong year.
+
+Create a write token once: [sanity.io/manage](https://sanity.io/manage) ->
+your project -> API -> Tokens -> Add API token -> **Editor** permission is
+enough. `NEXT_PUBLIC_SANITY_PROJECT_ID`/`NEXT_PUBLIC_SANITY_DATASET` are
+picked up from `.env.local` automatically if it's already set up; the token
+isn't (never put a write token in `.env.local` — it's bundled into the
+client build).
+
+```bash
+# 1. Dry run first — prints every filename's parsed date and the batches
+#    it would create. Uploads and writes nothing.
+SANITY_WRITE_TOKEN=xxxx npm run sanity:seed-ddd -- ./path/to/folder
+
+# 2. Once the dates look right, actually upload and create the documents.
+SANITY_WRITE_TOKEN=xxxx npm run sanity:seed-ddd -- ./path/to/folder --write
+```
+
+Images are grouped into batches of 50 by default (`--batch-size=100` to
+change it), continuing the batch numbering from whatever's already live so
+you can run this again later with a new folder of images without
+colliding. Re-running against the *same* folder skips any date that's
+already seeded automatically — pass `--force` to re-seed anyway.
+
+## 5. Move "how I work" and "about me" content by hand
 
 There's no script for `processTrack` or `siteSettings.about` — and honestly,
 you don't want one. There's likely one about doc and a handful of process

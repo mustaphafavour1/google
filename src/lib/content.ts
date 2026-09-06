@@ -170,13 +170,15 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefi
 
 type DddWeek = {
   week: number;
-  images: { key: string; image: string; caption?: string }[];
+  images: { key: string; image: string; caption?: string; date?: string }[];
 };
 
 /**
- * DDD is authored week-by-week in Studio (one document per week, images
- * uploaded together) but consumed as a flat list everywhere on the site —
- * flatten here, once, rather than teaching every caller about weeks.
+ * DDD is authored in upload batches in Studio (one document per batch,
+ * images uploaded together) but consumed as a flat list everywhere on the
+ * site — flatten here, once, rather than teaching every caller about
+ * batches. `day` stays as a fallback label for any image saved before the
+ * per-image `date` field existed.
  */
 export async function getDddEntries(): Promise<DddEntry[]> {
   const result = await sanityFetch<DddWeek[]>(allDddWeeksQuery);
@@ -185,7 +187,7 @@ export async function getDddEntries(): Promise<DddEntry[]> {
   return result.flatMap((week) =>
     week.images.map((img) => {
       day += 1;
-      return { _id: `${week.week}-${img.key}`, image: img.image, day, caption: img.caption };
+      return { _id: `${week.week}-${img.key}`, image: img.image, day, date: img.date, caption: img.caption };
     }),
   );
 }
@@ -204,6 +206,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       workingTogetherItems:
         result.landing?.workingTogetherItems ?? siteSettingsFallback.landing.workingTogetherItems,
     },
+    dddSubtitle: result.dddSubtitle ?? siteSettingsFallback.dddSubtitle,
   };
 }
 
