@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Search, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AccessibilityMenu } from "./accessibility-menu";
 import { GlobalAutoScroll } from "./global-auto-scroll";
 import { SearchOverlay } from "./search-overlay";
@@ -77,14 +78,19 @@ export function FloatingUtilityBar({
             </motion.div>
           )}
         </AnimatePresence>
-        <button
-          type="button"
-          onClick={toggleSearch}
-          aria-label={searchOpen ? "Close search" : "Search the site"}
-          className={UTILITY_BTN}
-        >
-          {searchOpen ? <X size={15} /> : <Search size={15} />}
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={toggleSearch}
+              aria-label={searchOpen ? "Close search" : "Search the site"}
+              className={UTILITY_BTN}
+            >
+              {searchOpen ? <X size={15} /> : <Search size={15} />}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>{searchOpen ? "Close search" : "Search"}</TooltipContent>
+        </Tooltip>
         <AccessibilityMenu className="bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur" />
         <GlobalAutoScroll />
         <ThemeToggle className="bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur" />

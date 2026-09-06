@@ -3,6 +3,7 @@
 import { Accessibility, Captions, Volume2 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { soundPreference, captionsPreference } from "@/lib/persistent-toggle";
 import { cn } from "@/lib/utils";
 
@@ -12,18 +13,23 @@ export function AccessibilityMenu({ className }: { className?: string }) {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          aria-label="Accessibility settings"
-          className={cn(
-            "inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong",
-            className,
-          )}
-        >
-          <Accessibility size={16} />
-        </button>
-      </PopoverTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              aria-label="Accessibility settings"
+              className={cn(
+                "inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-ink-soft transition-colors hover:bg-surface-muted hover:text-ink-strong",
+                className,
+              )}
+            >
+              <Accessibility size={16} />
+            </button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Accessibility</TooltipContent>
+      </Tooltip>
       <PopoverContent aria-label="Accessibility settings">
         <p className="type-eyebrow mb-3">Accessibility</p>
         <div className="flex flex-col gap-4">

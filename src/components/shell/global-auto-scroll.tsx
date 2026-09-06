@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { MonitorPlay, Pause, Play } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { primaryNav, isNavItemActive } from "./nav-config";
 import { cn } from "@/lib/utils";
 
@@ -83,21 +84,26 @@ export function GlobalAutoScroll() {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          aria-label="Auto-scroll the whole site"
-          aria-pressed={active}
-          className={cn(
-            "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur transition-colors",
-            active
-              ? "border-primary-500 text-primary-500"
-              : "border-border text-ink-soft hover:bg-surface-muted hover:text-ink-strong",
-          )}
-        >
-          <MonitorPlay size={16} />
-        </button>
-      </PopoverTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              aria-label="Auto-scroll the whole site"
+              aria-pressed={active}
+              className={cn(
+                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur transition-colors",
+                active
+                  ? "border-primary-500 text-primary-500"
+                  : "border-border text-ink-soft hover:bg-surface-muted hover:text-ink-strong",
+              )}
+            >
+              <MonitorPlay size={16} />
+            </button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Site tour</TooltipContent>
+      </Tooltip>
       <PopoverContent aria-label="Site tour auto-scroll">
         <p className="type-eyebrow mb-1">Site tour</p>
         <p className="mb-3 text-[11.5px] leading-snug text-ink-muted">
