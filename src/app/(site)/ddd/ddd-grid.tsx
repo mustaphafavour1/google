@@ -1,18 +1,29 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { CalendarDays, CalendarRange, Images, LayoutGrid, ListOrdered, Shuffle } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import {
+  CalendarDays,
+  CalendarRange,
+  GalleryHorizontal,
+  Images,
+  LayoutGrid,
+  ListOrdered,
+  Shuffle,
+} from "lucide-react";
 import { AutoScrollControl } from "@/components/ui/auto-scroll-control";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Pagination } from "@/components/ui/pagination";
 import { DddTile } from "./ddd-tile";
+import { DddSlideView } from "./ddd-slide-view";
 import { shuffle } from "@/lib/gallery";
 import { cn } from "@/lib/utils";
 import type { DddEntry } from "@/lib/types";
 
 const PAGE_SIZE = 40;
+const SLIDE_DURATION_S = 4;
 
 type ViewMode = "all" | "weekly" | "monthly";
+type LayoutMode = "grid" | "slide";
 
 type Bucket = { key: string; label: string; entries: DddEntry[] };
 
@@ -21,6 +32,12 @@ function startOfWeek(date: Date): Date {
   d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() - d.getDay());
   return d;
+}
+
+function chunk<T>(items: T[], size: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < items.length; i += size) result.push(items.slice(i, i + size));
+  return result;
 }
 
 function buildBuckets(entries: DddEntry[], unit: "week" | "month"): Bucket[] {
@@ -57,7 +74,10 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState<"ordered" | "random">("ordered");
   const [view, setView] = useState<ViewMode>("all");
+  const [layout, setLayout] = useState<LayoutMode>("grid");
   const [shuffled, setShuffled] = useState<DddEntry[] | null>(null);
+  const [pairIndex, setPairIndex] = useState(0);
+  const slideElapsedRef = useRef(0);
 
   const baseEntries = order === "random" ? (shuffled ?? entries) : entries;
 
@@ -65,6 +85,18 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
     () => (view === "all" ? null : buildBuckets(baseEntries, view === "weekly" ? "week" : "month")),
     [baseEntries, view],
   );
+
+  const totalPages =
+    view === "all" ? Math.max(1, Math.ceil(baseEntries.length / PAGE_SIZE)) : Math.max(1, (buckets ?? []).length);
+  const pageEntries = useMemo(
+    () =>
+      view === "all"
+        ? baseEntries.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE)
+        : (buckets?.[page - 1]?.entries ?? []),
+    [view, baseEntries, page, buckets],
+  );
+  const pageLabel = view !== "all" ? buckets?.[page - 1]?.label : null;
+  const pairs = useMemo(() => chunk(pageEntries, 2), [pageEntries]);
 
   if (entries.length === 0) {
     return (
@@ -80,36 +112,57 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
     setOrder(mode);
     if (mode === "random") setShuffled(shuffle(entries));
     setPage(1);
+    setPairIndex(0);
   }
 
   function setViewMode(mode: ViewMode) {
     setView(mode);
     setPage(1);
+    setPairIndex(0);
   }
 
-  const totalPages =
-    view === "all" ? Math.max(1, Math.ceil(baseEntries.length / PAGE_SIZE)) : Math.max(1, buckets!.length);
-  const pageEntries =
-    view === "all"
-      ? baseEntries.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE)
-      : (buckets![page - 1]?.entries ?? []);
-  const pageLabel = view !== "all" ? buckets![page - 1]?.label : null;
+  function setLayoutMode(mode: LayoutMode) {
+    setLayout(mode);
+    setPairIndex(0);
+    slideElapsedRef.current = 0;
+  }
 
   function changePage(next: number) {
     setPage(next);
+    setPairIndex(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function advancePageForAutoScroll() {
     setPage((p) => (p % totalPages) + 1);
+    setPairIndex(0);
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "instant" }));
     return true;
+  }
+
+  function navigateSlide(delta: 1 | -1) {
+    setPairIndex((i) => (i + delta + pairs.length) % pairs.length);
+  }
+
+  function handleSlideAutoTick(scaledDeltaSeconds: number) {
+    slideElapsedRef.current += scaledDeltaSeconds;
+    if (slideElapsedRef.current < SLIDE_DURATION_S) return;
+    slideElapsedRef.current = 0;
+    setPairIndex((i) => {
+      if (i + 1 < pairs.length) return i + 1;
+      advancePageForAutoScroll();
+      return 0;
+    });
   }
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-surface p-3">
-        <AutoScrollControl onReachBottom={advancePageForAutoScroll} />
+        {layout === "slide" ? (
+          <AutoScrollControl mode="manual" onTick={handleSlideAutoTick} />
+        ) : (
+          <AutoScrollControl onReachBottom={advancePageForAutoScroll} />
+        )}
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1 rounded-md border border-hairline p-1">
             <button
@@ -176,16 +229,49 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
               Monthly
             </button>
           </div>
+
+          <div className="flex items-center gap-1 rounded-md border border-hairline p-1">
+            <button
+              type="button"
+              onClick={() => setLayoutMode("grid")}
+              aria-pressed={layout === "grid"}
+              aria-label="Grid layout"
+              className={cn(
+                "flex items-center gap-1.5 rounded px-2.5 py-1.5 text-[12px] font-medium transition-colors",
+                layout === "grid" ? "bg-primary-tint text-primary-tint-text" : "text-ink-soft hover:text-ink-strong",
+              )}
+            >
+              <LayoutGrid size={13} />
+              Grid
+            </button>
+            <button
+              type="button"
+              onClick={() => setLayoutMode("slide")}
+              aria-pressed={layout === "slide"}
+              aria-label="Slide layout"
+              className={cn(
+                "flex items-center gap-1.5 rounded px-2.5 py-1.5 text-[12px] font-medium transition-colors",
+                layout === "slide" ? "bg-primary-tint text-primary-tint-text" : "text-ink-soft hover:text-ink-strong",
+              )}
+            >
+              <GalleryHorizontal size={13} />
+              Slide
+            </button>
+          </div>
         </div>
       </div>
 
       {pageLabel && <p className="type-eyebrow mb-3">{pageLabel}</p>}
 
-      <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {pageEntries.map((entry) => (
-          <DddTile key={entry._id} entry={entry} />
-        ))}
-      </div>
+      {layout === "grid" ? (
+        <div className="grid grid-cols-2 items-start gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {pageEntries.map((entry) => (
+            <DddTile key={entry._id} entry={entry} />
+          ))}
+        </div>
+      ) : (
+        <DddSlideView pairs={pairs} index={pairIndex} onNavigate={navigateSlide} />
+      )}
 
       <div className="mt-8">
         <Pagination

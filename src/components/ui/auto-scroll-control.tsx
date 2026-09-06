@@ -7,7 +7,16 @@ import { cn } from "@/lib/utils";
 const SPEEDS = [0.5, 1, 1.5, 2, 3] as const;
 const BASE_PX_PER_SECOND = 108;
 
-export function AutoScrollControl({ onReachBottom }: { onReachBottom?: () => boolean }) {
+export function AutoScrollControl({
+  onReachBottom,
+  mode = "page",
+  onTick,
+}: {
+  onReachBottom?: () => boolean;
+  /** "manual" hands every tick's elapsed time (scaled by speed) to onTick instead of scrolling the window — for views (like DDD's slide layout) that advance themselves rather than via page scroll. */
+  mode?: "page" | "manual";
+  onTick?: (scaledDeltaSeconds: number) => void;
+}) {
   const [active, setActive] = useState(false);
   const [speed, setSpeed] = useState<(typeof SPEEDS)[number]>(1);
   const frameRef = useRef<number | null>(null);
@@ -21,6 +30,12 @@ export function AutoScrollControl({ onReachBottom }: { onReachBottom?: () => boo
       if (lastTsRef.current === null) lastTsRef.current = ts;
       const dt = (ts - lastTsRef.current) / 1000;
       lastTsRef.current = ts;
+
+      if (mode === "manual") {
+        onTick?.(dt * speed);
+        frameRef.current = requestAnimationFrame(tick);
+        return;
+      }
 
       window.scrollTo({ top: window.scrollY + BASE_PX_PER_SECOND * speed * dt, behavior: "instant" });
 
@@ -42,7 +57,7 @@ export function AutoScrollControl({ onReachBottom }: { onReachBottom?: () => boo
       lastTsRef.current = null;
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, [active, speed, onReachBottom]);
+  }, [active, speed, onReachBottom, mode, onTick]);
 
   useEffect(() => {
     if (!active) return;
