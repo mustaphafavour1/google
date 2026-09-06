@@ -10,19 +10,22 @@
  *
  * Dry-run by default — parses and prints the plan, uploads and writes
  * nothing. Pass --write to actually upload images and create documents.
- * Already-seeded dates are skipped automatically (pass --force to re-seed
- * them anyway).
+ * Files already seeded (by filename, not date — some days from ~Jan 2025
+ * have two images) are skipped automatically; pass --force to re-seed
+ * them anyway.
  *
  * Usage:
  *   SANITY_WRITE_TOKEN=xxxx npx tsx scripts/sanity/seed-ddd.ts ./my-folder
  *   SANITY_WRITE_TOKEN=xxxx npx tsx scripts/sanity/seed-ddd.ts ./my-folder --write
  *   npm run sanity:seed-ddd -- ./my-folder --write
  *
- * NEXT_PUBLIC_SANITY_PROJECT_ID / NEXT_PUBLIC_SANITY_DATASET are read from
- * .env.local automatically if present. SANITY_WRITE_TOKEN is not — create
- * one at sanity.io/manage -> your project -> API -> Tokens -> Add API
- * token ("Editor" permission is enough) and pass it inline as shown above.
- * See scripts/sanity/README.md for the full walkthrough.
+ * NEXT_PUBLIC_SANITY_PROJECT_ID / NEXT_PUBLIC_SANITY_DATASET default to this
+ * portfolio's own live project (rycezmf9 / production) — override via env
+ * var or .env.local only if that ever changes. SANITY_WRITE_TOKEN has no
+ * default — create one at sanity.io/manage -> your project -> API ->
+ * Tokens -> Add API token ("Editor" permission is enough) and pass it
+ * inline as shown above. See scripts/sanity/README.md for the full
+ * walkthrough.
  */
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { extname, join } from "node:path";
@@ -132,21 +135,25 @@ async function main() {
   console.log(`Parsed ${parsed.length} file(s):`);
   for (const p of parsed) console.log(`  ${p.date}  <-  ${p.file}`);
 
-  const projectId = requireEnv("NEXT_PUBLIC_SANITY_PROJECT_ID");
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "rycezmf9";
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
   const token = requireEnv("SANITY_WRITE_TOKEN");
   const client = createClient({ projectId, dataset, apiVersion: "2025-01-01", token, useCdn: false });
 
-  const existing = await client.fetch<{ week: number; dates: string[] }[]>(
-    `*[_type == "dddWeek"]{ week, "dates": images[].date }`,
+  // Dedup keys on the source filename, not the date — from ~Jan 2025, some
+  // days have two images (a cover + a main image, named with a trailing
+  // letter like 2025-01-15b), so two different files can share a date on
+  // purpose and both need to seed.
+  const existing = await client.fetch<{ week: number; filenames: string[] }[]>(
+    `*[_type == "dddWeek"]{ week, "filenames": images[].sourceFilename }`,
   );
-  const existingDates = new Set(existing.flatMap((w) => w.dates || []));
+  const existingFilenames = new Set(existing.flatMap((w) => w.filenames || []));
   const maxWeek = existing.reduce((max, w) => Math.max(max, w.week ?? 0), 0);
 
-  const toSeed = force ? parsed : parsed.filter((p) => !existingDates.has(p.date));
+  const toSeed = force ? parsed : parsed.filter((p) => !existingFilenames.has(p.file));
   const skipped = parsed.length - toSeed.length;
   if (skipped > 0) {
-    console.log(`\nSkipping ${skipped} file(s) whose date is already seeded (pass --force to re-seed anyway).`);
+    console.log(`\nSkipping ${skipped} file(s) already seeded by name (pass --force to re-seed anyway).`);
   }
 
   if (toSeed.length === 0) {
@@ -183,6 +190,7 @@ async function main() {
         _key: asset._id.replace(/[^a-zA-Z0-9]/g, "").slice(-24),
         image: { _type: "image", asset: { _type: "reference", _ref: asset._id } },
         date: item.date,
+        sourceFilename: item.file,
       });
     }
     const week = maxWeek + 1 + b;

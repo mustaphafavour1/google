@@ -70,10 +70,12 @@ would silently misfile a real post under the wrong year.
 
 Create a write token once: [sanity.io/manage](https://sanity.io/manage) ->
 your project -> API -> Tokens -> Add API token -> **Editor** permission is
-enough. `NEXT_PUBLIC_SANITY_PROJECT_ID`/`NEXT_PUBLIC_SANITY_DATASET` are
-picked up from `.env.local` automatically if it's already set up; the token
-isn't (never put a write token in `.env.local` — it's bundled into the
-client build).
+enough. `NEXT_PUBLIC_SANITY_PROJECT_ID`/`NEXT_PUBLIC_SANITY_DATASET` default
+to this project's own live project (`rycezmf9` / `production`) directly in
+the script, so you don't need a local `.env.local` at all just to run this —
+only `SANITY_WRITE_TOKEN` is required (never put a write token in
+`.env.local` — it's bundled into the client build, so it has to stay
+inline on the command line like this).
 
 ```bash
 # 1. Dry run first — prints every filename's parsed date and the batches
@@ -87,8 +89,10 @@ SANITY_WRITE_TOKEN=xxxx npm run sanity:seed-ddd -- ./path/to/folder --write
 Images are grouped into batches of 50 by default (`--batch-size=100` to
 change it), continuing the batch numbering from whatever's already live so
 you can run this again later with a new folder of images without
-colliding. Re-running against the *same* folder skips any date that's
-already seeded automatically — pass `--force` to re-seed anyway.
+colliding. Re-running against the *same* folder skips any filename that's
+already seeded automatically — pass `--force` to re-seed anyway. (Dedup is
+by filename, not date, on purpose — some days have two images, a cover and
+a main image, and both need to seed even though they share a date.)
 
 ## 5. Move "how I work" and "about me" content by hand
 

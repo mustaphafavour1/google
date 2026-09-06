@@ -32,6 +32,12 @@ export const dddWeek = defineType({
               validation: (r) => r.required(),
             }),
             defineField({ name: "caption", type: "string" }),
+            defineField({
+              name: "sourceFilename",
+              type: "string",
+              hidden: true,
+              description: "Internal bookkeeping for scripts/sanity/seed-ddd.ts — not shown here on purpose.",
+            }),
           ],
           preview: { select: { title: "date", subtitle: "caption", media: "image" } },
         }),
