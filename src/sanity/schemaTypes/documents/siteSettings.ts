@@ -202,9 +202,34 @@ export const siteSettings = defineType({
         defineField({ name: "email", type: "string", validation: (r) => r.required().email() }),
         defineField({
           name: "resumeFile",
-          title: "Resume (PDF)",
+          title: "Resume (PDF) — legacy single file",
           type: "file",
           options: { accept: ".pdf" },
+          description: "Only used as a fallback \"General\" version when no entries are added below.",
+        }),
+        defineField({
+          name: "resumeVariants",
+          title: "Résumé versions",
+          type: "array",
+          description:
+            "Add one or more named versions (General, Fintech, Healthtech, Non-profits, Events, etc). Falls back to the single file above if left empty.",
+          of: [
+            defineArrayMember({
+              type: "object",
+              name: "resumeVariant",
+              fields: [
+                defineField({ name: "label", type: "string", validation: (r) => r.required() }),
+                defineField({
+                  name: "file",
+                  title: "PDF",
+                  type: "file",
+                  options: { accept: ".pdf" },
+                  validation: (r) => r.required(),
+                }),
+              ],
+              preview: { select: { title: "label" } },
+            }),
+          ],
         }),
         defineField({
           name: "portfolioPassword",

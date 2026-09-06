@@ -1,4 +1,4 @@
-import { getProjectsAiContext, getProcessTracks, getSiteSettings } from "@/lib/content";
+import { getProjectsAiContext, getProcessTracks, getSiteSettings, getAiContext } from "@/lib/content";
 import type { ChatMode } from "@/lib/chatbot-content";
 
 const MODE_INSTRUCTIONS: Record<ChatMode, string> = {
@@ -17,10 +17,11 @@ const MODE_INSTRUCTIONS: Record<ChatMode, string> = {
  * entry regardless of which mode the visitor picked.
  */
 export async function buildFaveAiKnowledgeBase(): Promise<string> {
-  const [siteSettings, projects, processTracks] = await Promise.all([
+  const [siteSettings, projects, processTracks, aiContext] = await Promise.all([
     getSiteSettings(),
     getProjectsAiContext(),
     getProcessTracks(),
+    getAiContext(),
   ]);
   const { profile, about, contact } = siteSettings;
 
@@ -62,9 +63,14 @@ ${projectSections}
 
 ## Process by discipline
 ${processSections}
-
+${
+  aiContext.entries.length > 0
+    ? `\n## Additional context\n${aiContext.entries.map((e) => `### ${e.name}\n${e.content}`).join("\n\n")}\n`
+    : ""
+}
 ---
-Style: 2-4 sentences per answer unless the question genuinely needs more. Plain text, no markdown headers in your replies. If something isn't covered above, say you don't have that detail rather than guessing, and suggest the visitor use the Contact page for anything you can't answer.`;
+Style: be concise and direct. Answer exactly what was asked and nothing else — don't volunteer extra background, don't list unrelated projects or facts "just in case", and don't restate the question. 1-3 sentences for most answers; go longer only when the question explicitly asks for detail (e.g. "walk me through the process"). Plain text, no markdown headers in your replies. If something isn't covered above, say you don't have that detail rather than guessing, and suggest the visitor use the Contact page for anything you can't answer.
+${aiContext.guidelines ? `\nAdditional rules from Favour:\n${aiContext.guidelines}` : ""}`;
 }
 
 export function buildModeInstruction(mode: ChatMode): string {

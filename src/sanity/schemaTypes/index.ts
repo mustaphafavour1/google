@@ -13,6 +13,8 @@ import { portfolioArchive } from "./documents/portfolioArchive";
 import { backgroundPattern } from "./documents/backgroundPattern";
 import { blogPost } from "./documents/blogPost";
 import { dddWeek } from "./documents/dddWeek";
+import { aiContextEntry } from "./documents/aiContextEntry";
+import { aiGuidelines } from "./documents/aiGuidelines";
 
 import { heroBlock } from "./objects/blocks/heroBlock";
 import { metricsRowBlock } from "./objects/blocks/metricsRowBlock";
@@ -49,6 +51,8 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   backgroundPattern,
   blogPost,
   dddWeek,
+  aiContextEntry,
+  aiGuidelines,
   // Page-builder blocks
   heroBlock,
   metricsRowBlock,

@@ -94,6 +94,7 @@ export const siteSettingsFallback: SiteSettings = {
   contact: {
     email: "mustaphafavour1@gmail.com",
     resumeUrl: "/resume.pdf",
+    resumeVariants: [],
     website: { label: "headfavour.com", href: "https://headfavour.com" },
     socials: [
       { label: "LinkedIn", href: "#" },

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
-import { Download } from "lucide-react";
+import { FileText } from "lucide-react";
 import { CountUpValue } from "@/components/cards/count-up-value";
 import { ResumeGateButton } from "@/components/resume/resume-gate-button";
 import { buttonVariants } from "@/components/ui/button";
@@ -112,7 +112,7 @@ export function MetricsSection({
       <div className="relative mt-10 flex justify-center">
         {resumeUrl && (
           <ResumeGateButton className={buttonVariants({ size: "lg" })}>
-            <Download size={15} />
+            <FileText size={15} />
             View My CV
           </ResumeGateButton>
         )}

@@ -13,6 +13,8 @@ import {
   allBlogPostsQuery,
   blogPostBySlugQuery,
   allDddWeeksQuery,
+  allAiContextEntriesQuery,
+  aiGuidelinesQuery,
   jobApplicationVariantBySlugQuery,
   portfolioPasswordQuery,
   projectBySlugQuery,
@@ -40,6 +42,7 @@ import type {
   BackgroundPattern,
   BlogPost,
   DddEntry,
+  AiContextEntry,
 } from "@/lib/types";
 
 const REVALIDATE_SECONDS = 60;
@@ -192,6 +195,14 @@ export async function getDddEntries(): Promise<DddEntry[]> {
   );
 }
 
+export async function getAiContext(): Promise<{ entries: AiContextEntry[]; guidelines: string | null }> {
+  const [entries, guidelinesDoc] = await Promise.all([
+    sanityFetch<AiContextEntry[]>(allAiContextEntriesQuery),
+    sanityFetch<{ rules: string | null } | null>(aiGuidelinesQuery),
+  ]);
+  return { entries: entries ?? [], guidelines: guidelinesDoc?.rules ?? null };
+}
+
 export async function getSiteSettings(): Promise<SiteSettings> {
   const result = await sanityFetch<SiteSettings | null>(siteSettingsQuery);
   if (!result) return siteSettingsFallback;
@@ -200,6 +211,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     profile: { ...result.profile, brandTextRotation: result.profile.brandTextRotation ?? ["Favour M."] },
     featuredProjects: (result.featuredProjects ?? []).map(withProjectDefaults),
     profileMedia: result.profileMedia ?? [],
+    contact: { ...result.contact, resumeVariants: result.contact.resumeVariants ?? [] },
     landing: {
       hero: { ...siteSettingsFallback.landing.hero, ...result.landing?.hero },
       journeyMilestones: result.landing?.journeyMilestones ?? siteSettingsFallback.landing.journeyMilestones,

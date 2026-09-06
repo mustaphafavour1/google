@@ -26,10 +26,11 @@ export async function POST(request: Request) {
     return Response.json({ error: "Incorrect password." }, { status: 401 });
   }
 
-  const url = siteSettings.contact.resumeUrl;
-  if (!url) {
+  const { resumeVariants, resumeUrl } = siteSettings.contact;
+  const variants = resumeVariants.length > 0 ? resumeVariants : resumeUrl ? [{ label: "General", url: resumeUrl }] : [];
+  if (variants.length === 0) {
     return Response.json({ error: "No résumé is set up yet." }, { status: 404 });
   }
 
-  return Response.json({ url });
+  return Response.json({ variants });
 }

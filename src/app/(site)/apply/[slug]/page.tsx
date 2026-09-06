@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { Download, Mail, Sparkles } from "lucide-react";
+import { FileText, Mail, Sparkles } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { ProjectCard } from "@/components/cards/project-card";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -54,8 +54,8 @@ export default async function JobApplicationVariantPage({
           </Button>
           {contact.resumeUrl && (
             <ResumeGateButton className={buttonVariants({ variant: "outline" })}>
-              <Download size={14} />
-              Download resume
+              <FileText size={14} />
+              Open Resume
             </ResumeGateButton>
           )}
         </div>

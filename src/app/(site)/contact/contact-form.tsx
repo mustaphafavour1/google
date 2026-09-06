@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
-import { Download, Mail, Send } from "lucide-react";
+import { FileText, Mail, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DoodleArrow } from "@/components/doodles/doodle-arrow";
 import { Handwritten } from "@/components/doodles/handwritten";
@@ -84,7 +84,7 @@ export function ContactForm({ contact }: { contact: SiteSettings["contact"] }) {
             </a>
             {contact.resumeUrl && (
               <ResumeGateButton className="flex items-center gap-1.5 text-[12.5px] font-medium text-ink-strong hover:text-primary-500">
-                <Download size={13} />
+                <FileText size={13} />
                 Resume
               </ResumeGateButton>
             )}

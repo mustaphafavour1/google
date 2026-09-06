@@ -20,6 +20,22 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("blogPost").title("Blog posts"),
       S.documentTypeListItem("dddWeek").title("Daily Design Dose"),
       S.divider(),
+      S.listItem()
+        .title("AI Context")
+        .id("aiContext")
+        .child(
+          S.list()
+            .title("AI Context")
+            .items([
+              S.listItem()
+                .title("Guidelines")
+                .id("aiGuidelines")
+                .child(S.document().schemaType("aiGuidelines").documentId("aiGuidelines")),
+              S.divider(),
+              S.documentTypeListItem("aiContextEntry").title("Context entries"),
+            ]),
+        ),
+      S.divider(),
       S.documentTypeListItem("jobApplicationVariant").title("Job applications"),
       S.documentTypeListItem("portfolioArchive").title("Portfolio archive"),
       S.documentTypeListItem("backgroundPattern").title("Background patterns"),

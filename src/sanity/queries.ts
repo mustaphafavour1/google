@@ -125,6 +125,7 @@ export const siteSettingsQuery = /* groq */ `
     contact{
       email,
       "resumeUrl": resumeFile.asset->url,
+      "resumeVariants": resumeVariants[]{ label, "url": file.asset->url },
       website,
       socials
     },
@@ -223,6 +224,14 @@ export const allDddWeeksQuery = /* groq */ `
       date
     }
   }
+`;
+
+export const allAiContextEntriesQuery = /* groq */ `
+  *[_type == "aiContextEntry"] | order(_createdAt asc) { name, content }
+`;
+
+export const aiGuidelinesQuery = /* groq */ `
+  *[_id == "aiGuidelines"][0]{ rules }
 `;
 
 export const allPortfolioArchiveQuery = /* groq */ `

@@ -44,7 +44,8 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return Response.json({ error: "FaveAI isn't configured yet — ANTHROPIC_API_KEY is unset." }, { status: 503 });
+    console.error("FaveAI request failed: ANTHROPIC_API_KEY is unset.");
+    return Response.json({ error: "Currently not available — kindly try again later." }, { status: 503 });
   }
 
   const knowledgeBase = await buildFaveAiKnowledgeBase();
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("FaveAI request setup failed:", err);
-    return Response.json({ error: "FaveAI couldn't start a response." }, { status: 502 });
+    return Response.json({ error: "Currently not available — kindly try again later." }, { status: 502 });
   }
 
   const encoder = new TextEncoder();
@@ -82,7 +83,14 @@ export async function POST(request: Request) {
         }
       } catch (err) {
         console.error("FaveAI stream error:", err);
-        controller.enqueue(encoder.encode("\n\n(Something went wrong on my end — try again in a moment.)"));
+        const isCapacityError = err instanceof Anthropic.APIError && (err.status === 429 || err.status === 529);
+        controller.enqueue(
+          encoder.encode(
+            isCapacityError
+              ? "Currently not available — kindly try again later."
+              : "\n\n(Something went wrong on my end — try again in a moment.)",
+          ),
+        );
       } finally {
         controller.close();
       }

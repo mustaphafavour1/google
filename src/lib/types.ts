@@ -311,6 +311,7 @@ export type SiteSettings = {
   contact: {
     email: string;
     resumeUrl?: string;
+    resumeVariants: { label: string; url: string }[];
     website: SocialLink;
     socials: SocialLink[];
   };
@@ -320,6 +321,13 @@ export type SiteSettings = {
     projectsOverTime: { year: string; count: number }[];
   };
   dddSubtitle: string;
+};
+
+// ---- AI context ------------------------------------------------------------------
+
+export type AiContextEntry = {
+  name: string;
+  content: string;
 };
 
 // ---- Background patterns --------------------------------------------------------
