@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot, Orbit as OrbitIcon, Send, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
 import { buildChatModes, type ChatMode } from "@/lib/chatbot-content";
 import { ChatMessageText } from "./chat-message-text";
@@ -33,7 +32,6 @@ export function ChatWidget({
   ]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const soundEnabled = soundPreference.useValue();
   const listRef = useRef<HTMLDivElement>(null);
   const hasUserMessage = messages.some((m) => m.role === "user");
 
@@ -53,7 +51,7 @@ export function ChatWidget({
     setMessages([...history, { role: "bot", text: "" }]);
     setInput("");
     setIsStreaming(true);
-    if (soundEnabled) playChime();
+    playChime();
 
     function setReply(text: string) {
       setMessages((prev) => {

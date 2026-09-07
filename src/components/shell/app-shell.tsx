@@ -13,6 +13,7 @@ import { CommandPalette } from "./command-palette";
 import { BackgroundPattern } from "./background-pattern";
 import { PrivacyBanner } from "./privacy-banner";
 import { RocketTrailCanvas } from "./rocket-trail-canvas";
+import { GlobalReadAloud } from "./global-read-aloud";
 import { ChatWidget } from "@/components/chat/chat-widget";
 import { ContactFormProvider } from "@/components/contact/contact-form-context";
 import { ContactFormModal } from "@/components/contact/contact-form-modal";
@@ -43,6 +44,7 @@ export function AppShell({
       <div className="flex min-h-screen">
         <BackgroundPattern patterns={backgroundPatterns} />
         <RocketTrailCanvas />
+        <GlobalReadAloud />
         <Sidebar profile={siteSettings.profile} profileMedia={siteSettings.profileMedia} />
         <BackButton
           showLabel

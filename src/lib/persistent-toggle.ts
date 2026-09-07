@@ -36,6 +36,6 @@ export function createPersistentToggle(key: string, defaultValue: boolean) {
   return { useValue, set };
 }
 
-export const soundPreference = createPersistentToggle("a11y-ui-sound-enabled", false);
+export const readAloudPreference = createPersistentToggle("a11y-read-aloud-enabled", false);
 export const captionsPreference = createPersistentToggle("a11y-video-captions-enabled", true);
 export const privacyBannerDismissed = createPersistentToggle("privacy-banner-dismissed", false);

@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Check, Lightbulb, PartyPopper, RotateCcw, SkipForward } from "lucide-react";
-import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +37,6 @@ export function WordPlayGame() {
   const [solved, setSolved] = useState(false);
   const [solvedCount, setSolvedCount] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const soundOn = soundPreference.useValue();
 
   const q = QUESTIONS[index];
   const hintsLeft = MAX_HINTS - hintsUsed;
@@ -62,10 +60,10 @@ export function WordPlayGame() {
     if (guess === q.answer) {
       setSolved(true);
       setSolvedCount((c) => c + 1);
-      if (soundOn) playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
+      playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
     } else {
       setWrong(true);
-      if (soundOn) playTone({ frequency: 160, duration: 0.15 });
+      playTone({ frequency: 160, duration: 0.15 });
       setTimeout(() => setWrong(false), 400);
     }
   }

@@ -4,11 +4,11 @@ import { Accessibility, Captions, Volume2 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { soundPreference, captionsPreference } from "@/lib/persistent-toggle";
+import { readAloudPreference, captionsPreference } from "@/lib/persistent-toggle";
 import { cn } from "@/lib/utils";
 
 export function AccessibilityMenu({ className }: { className?: string }) {
-  const soundEnabled = soundPreference.useValue();
+  const readAloudEnabled = readAloudPreference.useValue();
   const captionsEnabled = captionsPreference.useValue();
 
   return (
@@ -37,14 +37,16 @@ export function AccessibilityMenu({ className }: { className?: string }) {
             <span className="flex items-center gap-2.5">
               <Volume2 size={16} className="shrink-0 text-ink-soft" />
               <span>
-                <span className="block text-[13px] font-medium text-ink-strong">UI sounds</span>
-                <span className="block text-[11.5px] text-ink-muted">Soft feedback on interactions</span>
+                <span className="block text-[13px] font-medium text-ink-strong">Read aloud</span>
+                <span className="block text-[11.5px] text-ink-muted">
+                  Reads hovered text and image captions aloud
+                </span>
               </span>
             </span>
             <Switch
-              checked={soundEnabled}
-              onCheckedChange={soundPreference.set}
-              aria-label="Toggle UI sounds"
+              checked={readAloudEnabled}
+              onCheckedChange={readAloudPreference.set}
+              aria-label="Toggle read aloud on hover"
             />
           </label>
           <label className="flex cursor-pointer items-center justify-between gap-3">

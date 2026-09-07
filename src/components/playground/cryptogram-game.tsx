@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Lightbulb, PartyPopper, SkipForward } from "lucide-react";
-import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
 import { LETTER_ICONS } from "@/lib/letter-icons";
@@ -62,7 +61,6 @@ function CryptogramPuzzle({
   const [hintsUsed, setHintsUsed] = useState(0);
   const [wrongIndex, setWrongIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const soundOn = soundPreference.useValue();
 
   const words = quote.text.split(" ");
   const wordIndices: number[][] = [];
@@ -100,13 +98,11 @@ function CryptogramPuzzle({
       setCursor(nextCursor);
       setWrongIndex(null);
 
-      if (soundOn) {
-        if (nextCursor === -1) playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
-        else playTone({ frequency: 480, duration: 0.1 });
-      }
+      if (nextCursor === -1) playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
+      else playTone({ frequency: 480, duration: 0.1 });
     } else {
       setWrongIndex(cursor);
-      if (soundOn) playTone({ frequency: 160, duration: 0.15 });
+      playTone({ frequency: 160, duration: 0.15 });
       setTimeout(() => setWrongIndex((w) => (w === cursor ? null : w)), 400);
     }
   }

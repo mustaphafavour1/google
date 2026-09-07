@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Shuffle, PartyPopper } from "lucide-react";
-import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +36,6 @@ export function JigsawGame() {
   const [ready, setReady] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
   const [moves, setMoves] = useState(0);
-  const soundOn = soundPreference.useValue();
 
   useEffect(() => {
     // Randomizing during render would run once on the server and again on
@@ -75,7 +73,7 @@ export function JigsawGame() {
     setMoves((m) => m + 1);
 
     const justSolved = next.every((piece, i) => piece === i);
-    if (soundOn) playTone(justSolved ? { frequency: 440, toFrequency: 880, duration: 0.35 } : { frequency: 320, duration: 0.08 });
+    playTone(justSolved ? { frequency: 440, toFrequency: 880, duration: 0.35 } : { frequency: 320, duration: 0.08 });
   }
 
   return (

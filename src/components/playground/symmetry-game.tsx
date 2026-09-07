@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { RotateCw, Trash2, Sparkles } from "lucide-react";
-import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
 
@@ -71,7 +70,6 @@ export function SymmetryGame() {
   const [current, setCurrent] = useState<Offset[]>(SHAPES.O);
   const [pieceCount, setPieceCount] = useState(0);
   const [rejected, setRejected] = useState(false);
-  const soundOn = soundPreference.useValue();
 
   useEffect(() => {
     // Same reasoning as jigsaw-game.tsx: a random initial shape can't be
@@ -103,7 +101,7 @@ export function SymmetryGame() {
 
     if (!valid) {
       setRejected(true);
-      if (soundOn) playTone({ frequency: 160, duration: 0.12 });
+      playTone({ frequency: 160, duration: 0.12 });
       setTimeout(() => setRejected(false), 300);
       return;
     }
@@ -119,7 +117,7 @@ export function SymmetryGame() {
       const [r, c] = key.split(":").map(Number);
       return next.has(cellKey(r, COLS - 1 - c));
     });
-    if (soundOn) playTone(nowSymmetric ? { frequency: 440, toFrequency: 880, duration: 0.4 } : { frequency: 380, duration: 0.08 });
+    playTone(nowSymmetric ? { frequency: 440, toFrequency: 880, duration: 0.4 } : { frequency: 380, duration: 0.08 });
   }
 
   function clear() {
