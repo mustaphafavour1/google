@@ -20,7 +20,7 @@ export function formatCompactCurrency(amount: number, currency = "USD"): string 
 
 /** Sanity CDN image URLs encode the asset's original {width}x{height} in the filename — parsing it lets callers reserve layout space before the image loads, instead of the box jumping to size once it decodes. */
 export function sanityImageAspectRatio(url: string): number | undefined {
-  const match = /-(\d+)x(\d+)\.\w+$/.exec(url);
+  const match = /-(\d+)x(\d+)\.\w+(?:\?.*)?$/.exec(url);
   if (!match) return undefined;
   return Number(match[1]) / Number(match[2]);
 }

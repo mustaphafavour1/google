@@ -4,7 +4,7 @@ export const projectFields = /* groq */ `
   "slug": slug.current,
   oneLiner,
   "industry": industry->name,
-  "coverImage": coverImage.asset->url,
+  "coverImage": coverImage.asset->url + "?auto=format",
   "coverGifUrl": coverGif.asset->url,
   tags,
   projectType,
@@ -24,19 +24,19 @@ export const projectFields = /* groq */ `
     ...,
     _type == "imageGallery" => {
       images[]{
-        "src": image.asset->url,
+        "src": image.asset->url + "?auto=format",
         caption,
         aspect
       }
     },
     _type == "fullBleedImage" => {
-      "image": image.asset->url,
+      "image": image.asset->url + "?auto=format",
       caption,
       aspect
     },
     _type == "imageGrid" => {
       items[]{
-        "image": image.asset->url,
+        "image": image.asset->url + "?auto=format",
         caption,
         span
       }
@@ -115,7 +115,7 @@ export const siteSettingsQuery = /* groq */ `
     profile,
     "featuredProjects": featuredProjects[@->showOnPortfolio != false]->{ ${projectFields} },
     "profileMedia": profileMedia[]{
-      "image": image.asset->url,
+      "image": image.asset->url + "?auto=format",
       "video": video.asset->url,
       caption
     },
@@ -132,7 +132,7 @@ export const siteSettingsQuery = /* groq */ `
     "hobbies": hobbies[]{
       label,
       note,
-      "image": image.asset->url
+      "image": image.asset->url + "?auto=format"
     },
     analyticsAggregate,
     dddSubtitle
@@ -180,7 +180,7 @@ export const allProductsQuery = /* groq */ `
   *[_type == "product"] | order(_createdAt asc) {
     _id,
     name,
-    "coverImage": coverImage.asset->url,
+    "coverImage": coverImage.asset->url + "?auto=format",
     description,
     link
   }
@@ -192,7 +192,7 @@ export const allBlogPostsQuery = /* groq */ `
     title,
     "slug": slug.current,
     excerpt,
-    "coverImage": coverImage.asset->url,
+    "coverImage": coverImage.asset->url + "?auto=format",
     publishedAt,
     tags
   }
@@ -204,12 +204,12 @@ export const blogPostBySlugQuery = /* groq */ `
     title,
     "slug": slug.current,
     excerpt,
-    "coverImage": coverImage.asset->url,
+    "coverImage": coverImage.asset->url + "?auto=format",
     publishedAt,
     tags,
     content[]{
       ...,
-      _type == "image" => { "url": asset->url }
+      _type == "image" => { "url": asset->url + "?auto=format" }
     }
   }
 `;
@@ -219,7 +219,7 @@ export const allDddWeeksQuery = /* groq */ `
     week,
     images[] {
       "key": _key,
-      "image": image.asset->url,
+      "image": image.asset->url + "?auto=format",
       caption,
       date
     }
@@ -239,7 +239,7 @@ export const allPortfolioArchiveQuery = /* groq */ `
     _id,
     year,
     url,
-    "image": image.asset->url,
+    "image": image.asset->url + "?auto=format",
     description
   }
 `;
