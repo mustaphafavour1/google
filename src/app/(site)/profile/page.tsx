@@ -80,7 +80,8 @@ export default async function ProfilePage() {
               <div>
                 <p className="type-eyebrow mb-2">Resume</p>
                 <p className="type-body text-ink-muted">
-                  The full story — roles, projects, and the shape of 7 years in product design.
+                  View my Resume to see my work experience and projects not included here due to
+                  NDA.
                 </p>
               </div>
               {contact.resumeUrl ? (
