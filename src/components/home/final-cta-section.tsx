@@ -95,7 +95,7 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
           <ClapButton slug="landing-page" initialClaps={initialClaps} />
         </div>
         <div className="mt-3">
-          <CommentBox projectName="the portfolio" />
+          <CommentBox projectName="the portfolio" placeholder="Leave a thought on this portfolio…" />
         </div>
       </div>
     </div>

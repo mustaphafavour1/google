@@ -3,7 +3,13 @@
 import { useState, type FormEvent } from "react";
 import { Check, Send, AlertCircle } from "lucide-react";
 
-export function CommentBox({ projectName }: { projectName: string }) {
+export function CommentBox({
+  projectName,
+  placeholder = "Leave a thought on this case study…",
+}: {
+  projectName: string;
+  placeholder?: string;
+}) {
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -57,7 +63,7 @@ export function CommentBox({ projectName }: { projectName: string }) {
           type="text"
           value={text}
           onChange={(event) => setText(event.target.value)}
-          placeholder="Leave a thought on this case study…"
+          placeholder={placeholder}
           required
           className="h-10 flex-1 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted"
         />
