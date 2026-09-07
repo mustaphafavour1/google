@@ -26,23 +26,23 @@ export function MetricsSection({
   visitorMetrics?: ReactNode;
 }) {
   const [hovered, setHovered] = useState<number | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [filledCount, setFilledCount] = useState(0);
   const [fillPercent, setFillPercent] = useState(0);
 
   useEffect(() => {
-    if (metrics.length === 0 || hovered !== null) return;
+    if (hovered !== null || filledCount >= metrics.length) return;
     const id = setInterval(() => {
       setFillPercent((prev) => {
         const next = prev + (TICK_MS / FILL_MS) * 100;
         if (next >= 100) {
-          setActiveIndex((i) => (i + 1) % metrics.length);
+          setFilledCount((c) => c + 1);
           return 0;
         }
         return next;
       });
     }, TICK_MS);
     return () => clearInterval(id);
-  }, [metrics.length, hovered]);
+  }, [metrics.length, hovered, filledCount]);
 
   const hasPlaceholder = metrics.some((m) => m.isPlaceholder);
   const { ref: cardsRef, inView } = useScrollInView("-80px");
@@ -66,7 +66,8 @@ export function MetricsSection({
         style={{ gap: CARD_GAP }}
       >
         {metrics.map((metric, i) => {
-          const fill = hovered === i ? 100 : hovered !== null ? 0 : activeIndex === i ? fillPercent : 0;
+          const fill =
+            hovered === i ? 100 : hovered !== null ? 0 : i < filledCount ? 100 : i === filledCount ? fillPercent : 0;
           return (
             <motion.button
               key={metric.key}
