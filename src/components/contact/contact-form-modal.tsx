@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { motion } from "framer-motion";
 import { AlertCircle, Calendar, Check, MessageSquare, Send, X } from "lucide-react";
 import { useContactForm } from "./contact-form-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -52,6 +53,16 @@ export function ContactFormModal() {
     setForm(EMPTY_FORM);
   }
 
+  useEffect(() => {
+    if (!open) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") close();
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -62,7 +73,9 @@ export function ContactFormModal() {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={close}
     >
-      <div
+      <motion.div
+        layout
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-xl"
         onClick={(event) => event.stopPropagation()}
       >
@@ -97,26 +110,27 @@ export function ContactFormModal() {
             </TabsList>
           </div>
 
-          {/* Both panels share the same explicit height (capped for short
-              viewports) so switching tabs never resizes the modal — Calendly's
-              embed needs real vertical room, so the form tab is sized to
-              match it (centered in the extra space) rather than the other
-              way around. */}
-          <TabsContent value="meeting" className="relative h-[min(650px,70vh)] overflow-y-auto px-2 pb-2 pt-2">
+          {/* Calendly gets a fixed height (just enough room for its picker,
+              capped for short viewports); the form tab sizes to its own
+              content instead of stretching to match. The two panels are
+              rarely the same height, so the outer card animates via
+              `motion.div layout` above, letting the modal resize smoothly
+              on tab switches instead of jumping or forcing a shared height. */}
+          <TabsContent value="meeting" className="relative h-[min(560px,65vh)] overflow-y-auto px-2 pb-2 pt-2">
             <CalendlyInlineWidget />
           </TabsContent>
 
           <TabsContent
             value="message"
-            className="flex h-[min(650px,70vh)] flex-col items-center justify-center overflow-y-auto px-6 pb-6 pt-4"
+            className="flex flex-col items-center overflow-y-auto px-6 pb-6 pt-4"
           >
             {submitted ? (
               <div className="flex flex-col items-center gap-2 py-6 text-center">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-success/15 text-success">
                   <Check size={18} />
                 </span>
-                <p className="text-[14px] font-medium text-ink-strong">Thanks — that&rsquo;s been sent.</p>
-                <p className="type-body text-ink-muted">I&rsquo;ll get back to you soon.</p>
+                <p className="text-[14px] font-medium text-ink-strong">Thank you for reaching out.</p>
+                <p className="type-body text-ink-muted">I&rsquo;d check your message and respond shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col gap-3">
@@ -180,7 +194,7 @@ export function ContactFormModal() {
             )}
           </TabsContent>
         </Tabs>
-      </div>
+      </motion.div>
     </div>
   );
 }

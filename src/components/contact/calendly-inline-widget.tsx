@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 const CALENDLY_URL = "https://calendly.com/mustaphafavour1/30min";
 const CALENDLY_SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
-const LOADER_DURATION_MS = 5000;
+const LOADER_DURATION_MS = 3000;
 
 declare global {
   interface Window {
