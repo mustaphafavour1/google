@@ -2,39 +2,47 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { LETTER_ICONS } from "@/lib/letter-icons";
+import { DESIGN_LETTER_ICONS, BUSINESS_LETTER_ICONS } from "@/lib/letter-icons";
 
 const REVEAL_STAGGER_MS = 65;
 const IDLE_INTERVAL_MS = 4000;
-
-type Mode = "icon" | "letter";
-type LetterState = { mode: Mode; manual: boolean };
+const ICON_STROKE = 1.5;
 
 function isLetter(ch: string): boolean {
   return /[a-zA-Z]/.test(ch);
 }
 
-function initialLetters(text: string): LetterState[] {
-  return Array.from(text).map((ch) => ({ mode: isLetter(ch) ? "icon" : "letter", manual: false }));
+function pickRandomExcluding(pool: number[], exclude: number | null): number {
+  const candidates = exclude === null ? pool : pool.filter((i) => i !== exclude);
+  const from = candidates.length > 0 ? candidates : pool;
+  return from[Math.floor(Math.random() * from.length)];
 }
 
 /**
- * Each letter starts as a design-icon "card", flips face-up to its real
- * letter on a staggered reveal, then stays clickable (flip back to icon and
- * back again). Once idle, one random non-manually-touched letter flips to
- * its icon every 4s and reverts on the next tick — a click "pins" a letter
- * so the idle cycle leaves it alone until clicked again.
+ * Each letter starts as a design/business-themed icon "card" (split at the
+ * title's first semicolon — text before it draws from the design set, text
+ * after from the business set) and flips face-up to its real letter in a
+ * staggered reveal on mount. After that, at most one letter shows as an
+ * icon at a time: every 4s idle it flips a random letter to its icon and
+ * back, and clicking any letter immediately makes it (or nothing, if it
+ * was already the one showing) the active icon, resetting that 4s clock.
  */
 export function HeroTitleFlip({ text }: { text: string }) {
   const chars = useMemo(() => Array.from(text), [text]);
   const letterIdxs = useMemo(
-    () => Array.from(text).map((ch, i) => (isLetter(ch) ? i : -1)).filter((i) => i !== -1),
-    [text],
+    () => chars.map((ch, i) => (isLetter(ch) ? i : -1)).filter((i) => i !== -1),
+    [chars],
   );
+  const splitAt = useMemo(() => {
+    const semi = text.indexOf(";");
+    return semi === -1 ? text.length : semi;
+  }, [text]);
 
-  const [letters, setLetters] = useState<LetterState[]>(() => initialLetters(text));
-  const [revealed, setRevealed] = useState(false);
-  const autoIndexRef = useRef<number | null>(null);
+  const [revealed, setRevealed] = useState<boolean[]>(() => chars.map(() => false));
+  const [revealDone, setRevealDone] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const activeIndexRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,12 +51,12 @@ export function HeroTitleFlip({ text }: { text: string }) {
       timeouts.push(
         setTimeout(() => {
           if (cancelled) return;
-          setLetters((prev) => {
+          setRevealed((prev) => {
             const next = [...prev];
-            next[idx] = { ...next[idx], mode: "letter" };
+            next[idx] = true;
             return next;
           });
-          if (order === letterIdxs.length - 1) setRevealed(true);
+          if (order === letterIdxs.length - 1) setRevealDone(true);
         }, order * REVEAL_STAGGER_MS),
       );
     });
@@ -61,35 +69,30 @@ export function HeroTitleFlip({ text }: { text: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!revealed || letterIdxs.length === 0) return;
-    const id = setInterval(() => {
-      setLetters((prev) => {
-        const next = [...prev];
-        const prevAuto = autoIndexRef.current;
-        if (prevAuto !== null && !next[prevAuto].manual) {
-          next[prevAuto] = { ...next[prevAuto], mode: "letter" };
-        }
-        const candidates = letterIdxs.filter((idx) => !next[idx].manual);
-        if (candidates.length === 0) {
-          autoIndexRef.current = null;
-          return next;
-        }
-        const pick = candidates[Math.floor(Math.random() * candidates.length)];
-        next[pick] = { ...next[pick], mode: "icon" };
-        autoIndexRef.current = pick;
-        return next;
-      });
+  function scheduleAutoFlip() {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      const next = pickRandomExcluding(letterIdxs, activeIndexRef.current);
+      activeIndexRef.current = next;
+      setActiveIndex(next);
+      scheduleAutoFlip();
     }, IDLE_INTERVAL_MS);
-    return () => clearInterval(id);
-  }, [revealed, letterIdxs]);
+  }
 
-  function toggleLetter(idx: number) {
-    setLetters((prev) => {
-      const next = [...prev];
-      next[idx] = { mode: next[idx].mode === "icon" ? "letter" : "icon", manual: true };
-      return next;
-    });
+  useEffect(() => {
+    if (!revealDone || letterIdxs.length === 0) return;
+    scheduleAutoFlip();
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealDone]);
+
+  function handleClick(idx: number) {
+    const next = activeIndexRef.current === idx ? null : idx;
+    activeIndexRef.current = next;
+    setActiveIndex(next);
+    if (revealDone) scheduleAutoFlip();
   }
 
   return (
@@ -98,30 +101,32 @@ export function HeroTitleFlip({ text }: { text: string }) {
       <span aria-hidden="true">
         {chars.map((ch, idx) => {
           if (!isLetter(ch)) return <span key={idx}>{ch}</span>;
-          const state = letters[idx];
-          const Icon = LETTER_ICONS[ch.toUpperCase()];
+
+          const showIcon = !revealed[idx] || activeIndex === idx;
+          const isUpper = ch === ch.toUpperCase();
+          const icons = idx < splitAt ? DESIGN_LETTER_ICONS : BUSINESS_LETTER_ICONS;
+          const Icon = icons[ch.toUpperCase()];
+          const iconSize = isUpper ? "0.62em" : "0.46em";
+
           return (
             <button
               key={idx}
               type="button"
               tabIndex={-1}
-              onClick={() => toggleLetter(idx)}
+              onClick={() => handleClick(idx)}
               className="relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline [perspective:400px]"
-              style={{ width: "0.66em", height: "1em" }}
             >
               <motion.span
-                className="absolute inset-0 [transform-style:preserve-3d]"
-                animate={{ rotateY: state.mode === "icon" ? 0 : 180 }}
+                className="relative inline-block [transform-style:preserve-3d]"
+                animate={{ rotateY: showIcon ? 180 : 0 }}
                 transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
               >
-                <span className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]">
-                  {Icon && <Icon className="h-[0.68em] w-[0.68em]" strokeWidth={2.25} />}
-                </span>
+                <span className="[backface-visibility:hidden]">{ch}</span>
                 <span
                   className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]"
                   style={{ transform: "rotateY(180deg)" }}
                 >
-                  {ch}
+                  {Icon && <Icon style={{ height: iconSize, width: iconSize }} strokeWidth={ICON_STROKE} />}
                 </span>
               </motion.span>
             </button>
