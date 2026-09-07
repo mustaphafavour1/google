@@ -2,10 +2,13 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { AlertCircle, Calendar, Check, MessageSquare, Send, X } from "lucide-react";
+import { AlertCircle, Calendar, Check, ChevronDown, MessageSquare, Send, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useContactForm } from "./contact-form-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CalendlyInlineWidget } from "./calendly-inline-widget";
+
+type TabValue = "meeting" | "message";
 
 const CATEGORIES = ["Enquiry", "Job hire", "Gig", "Collaboration", "Consultation", "Others"];
 
@@ -13,6 +16,7 @@ const EMPTY_FORM = { name: "", email: "", phone: "", category: CATEGORIES[0], me
 
 export function ContactFormModal() {
   const { open, closeForm } = useContactForm();
+  const [tab, setTab] = useState<TabValue>("meeting");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +52,7 @@ export function ContactFormModal() {
 
   function close() {
     closeForm();
+    setTab("meeting");
     setSubmitted(false);
     setError(null);
     setForm(EMPTY_FORM);
@@ -76,7 +81,14 @@ export function ContactFormModal() {
       <motion.div
         layout
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-xl"
+        className={cn(
+          "flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-xl",
+          // Meeting tab gets Calendly's usual width; the message tab shrinks
+          // to match the form itself instead of leaving it stranded in a
+          // wide card — the motion.div layout animation above carries the
+          // width change smoothly, same as it does for height.
+          tab === "message" ? "max-w-lg" : "max-w-2xl",
+        )}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex shrink-0 items-start justify-between gap-3 p-6 pb-0">
@@ -96,12 +108,16 @@ export function ContactFormModal() {
           </button>
         </div>
 
-        <Tabs defaultValue="message" className="flex min-h-0 flex-1 flex-col">
+        <Tabs
+          value={tab}
+          onValueChange={(value) => setTab(value as TabValue)}
+          className="flex min-h-0 flex-1 flex-col"
+        >
           <div className="shrink-0 px-6 pt-4">
             <TabsList>
               <TabsTrigger value="meeting" className="inline-flex items-center gap-1.5">
                 <Calendar size={13} />
-                Book a meeting
+                Book A Free Meeting
               </TabsTrigger>
               <TabsTrigger value="message" className="inline-flex items-center gap-1.5">
                 <MessageSquare size={13} />
@@ -157,17 +173,23 @@ export function ContactFormModal() {
                   placeholder="Phone number (optional)"
                   className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
                 />
-                <select
-                  value={form.category}
-                  onChange={(event) => update("category", event.target.value)}
-                  className="h-10 rounded-md border border-border bg-surface px-3 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
-                >
-                  {CATEGORIES.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={form.category}
+                    onChange={(event) => update("category", event.target.value)}
+                    className="h-10 w-full appearance-none rounded-md border border-border bg-surface pl-3 pr-8 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+                  >
+                    {CATEGORIES.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={13}
+                    className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-soft"
+                  />
+                </div>
                 <textarea
                   value={form.message}
                   onChange={(event) => update("message", event.target.value)}
