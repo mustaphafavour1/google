@@ -9,6 +9,7 @@ import { AccessibilityMenu } from "./accessibility-menu";
 import { GlobalAutoScroll } from "./global-auto-scroll";
 import { SearchOverlay } from "./search-overlay";
 import type { Project, SiteSettings } from "@/lib/types";
+import type { SearchIndex } from "@/lib/search-index";
 
 const UTILITY_BTN =
   "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface/95 text-ink-soft shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur transition-colors hover:bg-surface-muted hover:text-ink-strong";
@@ -16,9 +17,11 @@ const UTILITY_BTN =
 export function FloatingUtilityBar({
   projects,
   siteSettings,
+  searchIndex,
 }: {
   projects: Project[];
   siteSettings: SiteSettings;
+  searchIndex: SearchIndex;
 }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -102,6 +105,7 @@ export function FloatingUtilityBar({
         onClose={close}
         projects={projects}
         siteSettings={siteSettings}
+        searchIndex={searchIndex}
       />
     </>
   );

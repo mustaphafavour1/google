@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import type { BackgroundPattern as BackgroundPatternT, Project, SiteSettings } from "@/lib/types";
+import type { SearchIndex } from "@/lib/search-index";
 import { Sidebar } from "./sidebar";
 import { BackButton } from "./back-button";
 import { FloatingUtilityBar } from "./floating-utility-bar";
@@ -20,11 +21,13 @@ export function AppShell({
   siteSettings,
   projects,
   backgroundPatterns,
+  searchIndex,
   children,
 }: {
   siteSettings: SiteSettings;
   projects: Project[];
   backgroundPatterns: BackgroundPatternT[];
+  searchIndex: SearchIndex;
   children: ReactNode;
 }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -45,7 +48,7 @@ export function AppShell({
           showLabel
           className="fixed left-[5.5rem] top-4 z-30 hidden bg-surface/95 shadow-[0_4px_16px_rgb(35_25_15_/_0.08)] backdrop-blur lg:flex"
         />
-        <FloatingUtilityBar projects={projects} siteSettings={siteSettings} />
+        <FloatingUtilityBar projects={projects} siteSettings={siteSettings} searchIndex={searchIndex} />
         <div className="flex min-w-0 flex-1 flex-col">
           <MobileHeader />
           <main className="flex-1 pb-24 lg:pb-0">
@@ -53,7 +56,12 @@ export function AppShell({
           </main>
         </div>
         <BottomTabBar contact={siteSettings.contact} />
-        <CommandPalette projects={projects} open={paletteOpen} onOpenChange={setPaletteOpen} />
+        <CommandPalette
+          projects={projects}
+          searchIndex={searchIndex}
+          open={paletteOpen}
+          onOpenChange={setPaletteOpen}
+        />
         <PrivacyBanner />
         <ChatWidget siteSettings={siteSettings} projects={projects} />
         <ContactFormModal />
