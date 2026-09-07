@@ -287,6 +287,18 @@ export type WorkingTogetherItem = {
   description: string;
 };
 
+export type WhyMeCard = {
+  title: string;
+  subtitle: string;
+};
+
+export type WhyMeContent = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  cards: WhyMeCard[];
+};
+
 export type SiteSettings = {
   profile: {
     name: string;
@@ -309,6 +321,7 @@ export type SiteSettings = {
     };
     journeyMilestones: JourneyMilestone[];
     workingTogetherItems: WorkingTogetherItem[];
+    whyMe: WhyMeContent;
   };
   siteMetrics: SiteMetric[];
   about: {

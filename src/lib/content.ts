@@ -234,6 +234,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       journeyMilestones: result.landing?.journeyMilestones ?? siteSettingsFallback.landing.journeyMilestones,
       workingTogetherItems:
         result.landing?.workingTogetherItems ?? siteSettingsFallback.landing.workingTogetherItems,
+      whyMe: result.landing?.whyMe ?? siteSettingsFallback.landing.whyMe,
     },
     dddSubtitle: result.dddSubtitle ?? siteSettingsFallback.dddSubtitle,
   };

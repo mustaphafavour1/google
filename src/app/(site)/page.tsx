@@ -64,7 +64,7 @@ export default async function HomePage({
       </LandingSection>
 
       <LandingSection id="why-me">
-        <WhyMeSection />
+        <WhyMeSection content={landing.whyMe} />
       </LandingSection>
 
       <LandingSection id="skills">

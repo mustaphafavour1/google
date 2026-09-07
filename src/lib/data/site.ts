@@ -66,6 +66,30 @@ export const siteSettingsFallback: SiteSettings = {
           "Shipping a campaign across every format on a tight deadline could easily get chaotic, but I always ensure it stays organised and enjoyable for everyone involved, right up to launch.",
       },
     ],
+    whyMe: {
+      eyebrow: "Why me",
+      title: "A Rare Synergy of Quality for You",
+      subtitle: "Some of the rare things I offer that makes me the best-fit.",
+      cards: [
+        {
+          title: "Quality Design & Dev",
+          subtitle: "1 budget for both design & dev at high quality",
+        },
+        {
+          title: "Brand & Product",
+          subtitle: "One Senior hire to handle everything design.",
+        },
+        {
+          title: "Multi-Niche Depth",
+          subtitle: "Rare depth in Fintech, Govtech, healthtech, non-profits etc.",
+        },
+        {
+          title: "Reliability & Resourcefulness",
+          subtitle:
+            "The one quality everybody and companies I've worked with always mention is my reliability.",
+        },
+      ],
+    },
   },
   siteMetrics: [
     { key: "projects", label: "Projects delivered", value: "60+", isPlaceholder: true },

@@ -134,6 +134,45 @@ export const siteSettings = defineType({
           ],
         }),
         defineField({
+          name: "whyMe",
+          title: "Why me — section",
+          type: "object",
+          fields: [
+            defineField({ name: "eyebrow", type: "string", initialValue: "Why me" }),
+            defineField({
+              name: "title",
+              type: "string",
+              initialValue: "A Rare Synergy of Quality for You",
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: "subtitle",
+              type: "text",
+              rows: 2,
+              initialValue: "Some of the rare things I offer that makes me the best-fit.",
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: "cards",
+              title: "Cards",
+              type: "array",
+              description: "The icon per card follows card order and isn't editable here.",
+              of: [
+                defineArrayMember({
+                  type: "object",
+                  name: "whyMeCard",
+                  fields: [
+                    defineField({ name: "title", type: "string", validation: (r) => r.required() }),
+                    defineField({ name: "subtitle", type: "text", rows: 2, validation: (r) => r.required() }),
+                  ],
+                  preview: { select: { title: "title", subtitle: "subtitle" } },
+                }),
+              ],
+              validation: (r) => r.min(1),
+            }),
+          ],
+        }),
+        defineField({
           name: "workingTogetherItems",
           title: "Working together — per-discipline copy",
           type: "array",
