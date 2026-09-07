@@ -5,7 +5,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { MonitorPlay, Pause, Play } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { AUTO_SCROLL_SPEEDS, setAutoScrollActive, setAutoScrollSpeed, useAutoScrollState } from "@/lib/auto-scroll-store";
+import {
+  AUTO_SCROLL_SPEEDS,
+  setAutoScrollActive,
+  setAutoScrollPopoverOpen,
+  setAutoScrollSpeed,
+  useAutoScrollState,
+} from "@/lib/auto-scroll-store";
 import { primaryNav, isNavItemActive } from "./nav-config";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +28,7 @@ const SETTLE_MS = 650;
  * component would reset every time it navigates itself away.
  */
 export function GlobalAutoScroll() {
-  const { active, speed } = useAutoScrollState();
+  const { active, speed, popoverOpen } = useAutoScrollState();
   const pathname = usePathname();
   const router = useRouter();
   const frameRef = useRef<number | null>(null);
@@ -81,8 +87,22 @@ export function GlobalAutoScroll() {
     return () => window.removeEventListener("keydown", onKey);
   }, [active]);
 
+  // Mobile has no Esc key — a double-tap anywhere is the equivalent panic
+  // button while the tour is actually running.
+  useEffect(() => {
+    if (!active) return;
+    let lastTap = 0;
+    function onTouchEnd() {
+      const now = Date.now();
+      if (now - lastTap < 350) setAutoScrollActive(false);
+      lastTap = now;
+    }
+    window.addEventListener("touchend", onTouchEnd);
+    return () => window.removeEventListener("touchend", onTouchEnd);
+  }, [active]);
+
   return (
-    <Popover>
+    <Popover open={popoverOpen} onOpenChange={setAutoScrollPopoverOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
