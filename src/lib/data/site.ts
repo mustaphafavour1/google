@@ -84,9 +84,8 @@ export const siteSettingsFallback: SiteSettings = {
           subtitle: "Rare depth in Fintech, Govtech, healthtech, non-profits etc.",
         },
         {
-          title: "Reliability & Resourcefulness",
-          subtitle:
-            "The one quality everybody and companies I've worked with always mention is my reliability.",
+          title: "Reliability",
+          subtitle: "The one quality everyone I've worked with always mentions.",
         },
       ],
     },
