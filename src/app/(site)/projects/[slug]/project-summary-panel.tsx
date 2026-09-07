@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bot, Orbit, Send, X } from "lucide-react";
+import { ArrowRight, Bot, Orbit, Send, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ChatMessageText } from "@/components/chat/chat-message-text";
 import type { Project } from "@/lib/types";
 
 type Message = { role: "bot" | "user"; text: string; hidden?: boolean };
@@ -96,9 +97,9 @@ export function ProjectSummaryPanel({ project, contactEmail }: { project: Projec
       <button
         type="button"
         onClick={openPanel}
-        className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-hairline px-3 py-1.5 text-[12px] font-medium text-ink-soft transition-colors hover:border-primary-300 hover:text-primary-500"
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary-500 px-3 py-1.5 text-[12px] font-medium text-primary-500 transition-colors hover:bg-primary-tint hover:text-primary-600"
       >
-        <Orbit size={13} />
+        <ArrowRight size={13} />
         Summarize this project
       </button>
 
@@ -148,7 +149,7 @@ export function ProjectSummaryPanel({ project, contactEmail }: { project: Projec
                       message.role === "bot" ? "bg-surface-muted text-ink-strong" : "bg-primary-500 text-white",
                     )}
                   >
-                    {message.text || "…"}
+                    {message.text ? <ChatMessageText text={message.text} /> : "…"}
                   </p>
                 </div>
               ))}

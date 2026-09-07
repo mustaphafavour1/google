@@ -73,7 +73,7 @@ export default async function ProfilePage() {
               </div>
             </div>
 
-            <div className="card flex flex-col justify-between p-6">
+            <div id="resume" className="card scroll-mt-24 flex flex-col justify-between p-6">
               <div>
                 <p className="type-eyebrow mb-2">Resume</p>
                 <p className="type-body text-ink-muted">

@@ -47,7 +47,7 @@ export function buildChatModes(
         {
           question: "Can I see a resume?",
           answer: contact.resumeUrl
-            ? `Sure — there's a Download résumé button in the closing section of the homepage, or grab it directly.`
+            ? `Sure — there's an Open Resume button on the [Profile](/profile#resume) page.`
             : `A resume link isn't set up yet — the fastest path is emailing ${contact.email} directly.`,
           keywords: ["resume", "cv"],
         },

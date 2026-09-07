@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Orbit as OrbitIcon, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ChatMessageText } from "./chat-message-text";
 import type { ChatMode, ChatModeConfig } from "@/lib/chatbot-content";
 
 type Message = { role: "bot" | "user"; text: string };
@@ -90,7 +91,7 @@ export function FaveAiMini({
                 : "ml-auto bg-primary-500 text-white",
             )}
           >
-            {message.text}
+            <ChatMessageText text={message.text} />
           </p>
         ))}
       </div>

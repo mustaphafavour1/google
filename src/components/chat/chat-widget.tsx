@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
 import { buildChatModes, type ChatMode } from "@/lib/chatbot-content";
+import { ChatMessageText } from "./chat-message-text";
 import type { Project, SiteSettings } from "@/lib/types";
 
 type Message = { role: "bot" | "user"; text: string };
@@ -34,6 +35,7 @@ export function ChatWidget({
   const [isStreaming, setIsStreaming] = useState(false);
   const soundEnabled = soundPreference.useValue();
   const listRef = useRef<HTMLDivElement>(null);
+  const hasUserMessage = messages.some((m) => m.role === "user");
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
@@ -168,20 +170,25 @@ export function ChatWidget({
                         : "bg-primary-500 text-white",
                     )}
                   >
-                    {message.text}
+                    <ChatMessageText text={message.text} />
                   </p>
                 </div>
               ))}
             </div>
 
-            <div className="flex shrink-0 flex-wrap gap-1.5 border-t border-hairline px-3 py-2">
+            <div
+              className={cn(
+                "shrink-0 gap-1.5 border-t border-hairline px-3 py-2",
+                hasUserMessage ? "flex flex-nowrap overflow-x-auto" : "flex flex-wrap",
+              )}
+            >
               {modesConfig[mode].quickQuestions.map((qq) => (
                 <button
                   key={qq.question}
                   type="button"
                   onClick={() => send(qq.question)}
                   disabled={isStreaming}
-                  className="rounded-full border border-hairline px-2.5 py-1 text-[11px] text-ink-soft transition-colors hover:border-primary-300 hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="shrink-0 whitespace-nowrap rounded-full border border-hairline px-2.5 py-1 text-[11px] text-ink-soft transition-colors hover:border-primary-300 hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {qq.question}
                 </button>
