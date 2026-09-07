@@ -58,7 +58,7 @@ export default async function PlaygroundPage() {
             <Sparkles size={16} className="text-primary-500" />
             <div>
               <h2 className="text-[15px] font-semibold text-ink-em">Fonts I&rsquo;m currently in love with</h2>
-              <p className="type-meta">Live previews, fetched straight from Google Fonts.</p>
+              <p className="type-meta">Here&rsquo;s what the fonts look like.</p>
             </div>
           </div>
           <LovedFontsGrid fonts={lovedFonts} />

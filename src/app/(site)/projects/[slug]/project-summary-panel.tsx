@@ -99,8 +99,8 @@ export function ProjectSummaryPanel({ project, contactEmail }: { project: Projec
         onClick={openPanel}
         className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary-500 px-3 py-1.5 text-[12px] font-medium text-primary-500 transition-colors hover:bg-primary-tint hover:text-primary-600"
       >
-        <ArrowRight size={13} />
         Summarize this project
+        <ArrowRight size={13} />
       </button>
 
       <AnimatePresence>
