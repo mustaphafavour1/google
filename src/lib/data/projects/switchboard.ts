@@ -9,7 +9,7 @@ export const switchboard: Project = {
     "A control plane for teams running multiple AI providers — compare, route, and govern spend from one console.",
   industry: "Enterprise / AI tooling",
   tags: ["AI tooling", "Enterprise", "Developer tools", "FinOps"],
-  projectType: "Dashboard",
+  projectType: ["Dashboard"],
   year: 2026,
   role: "Product design & front-end build",
   techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Space Grotesk", "Inter", "Nivo"],

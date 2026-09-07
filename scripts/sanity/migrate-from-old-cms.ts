@@ -144,7 +144,7 @@ function mapOldProjectToNew(old: any) {
     coverImageUrl: old.coverImageUrl as string | undefined,
     industry: "TODO — set the real industry in Studio",
     tags: Array.isArray(old.tags) ? old.tags.map((t: { label?: string }) => t.label).filter(Boolean) : [],
-    projectType: "Website",
+    projectType: ["Website"],
     year: yearFromCompletedAt(old.completedAt, old._createdAt),
     role: "TODO — set the real role in Studio",
     techStack: [],

@@ -81,15 +81,17 @@ export const project = defineType({
     defineField({
       name: "projectType",
       title: "Project type",
-      type: "string",
+      description: "Pick every type that applies — most projects are just one, but some span more.",
+      type: "array",
       group: "meta",
+      of: [{ type: "string" }],
       options: {
         list: ["Dashboard", "App", "Website", "Branding", "Campaign"].map((v) => ({
           title: v,
           value: v,
         })),
       },
-      validation: (r) => r.required(),
+      validation: (r) => r.required().min(1),
     }),
     defineField({ name: "year", type: "number", group: "meta", validation: (r) => r.required() }),
     defineField({ name: "role", type: "string", group: "meta", validation: (r) => r.required() }),

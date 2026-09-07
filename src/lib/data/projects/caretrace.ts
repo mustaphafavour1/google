@@ -9,7 +9,7 @@ export const caretrace: Project = {
     "Operations platform that keeps home-care agencies, caregivers, and patients in sync in real time.",
   industry: "Health-tech",
   tags: ["Health-tech", "Operations", "Scheduling", "Compliance"],
-  projectType: "Dashboard",
+  projectType: ["Dashboard"],
   year: 2025,
   role: "Product design & front-end build",
   techStack: ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "Nivo", "Alan Sans"],

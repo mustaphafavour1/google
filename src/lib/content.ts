@@ -59,6 +59,19 @@ const REVALIDATE_SECONDS = 60;
  */
 const DEFAULT_PROJECT_ACCENT = { primary: "#a55c4e", secondary: "#d19686" };
 
+/**
+ * `projectType` moved from a single string to a multi-select array — any
+ * project doc saved before that schema change still has the old scalar
+ * string sitting in Sanity until someone re-opens and re-saves it in
+ * Studio. Coerce here so the rest of the app can assume an array without
+ * every project needing a manual Studio visit first.
+ */
+function normalizeProjectType(value: unknown): Project["projectType"] {
+  if (Array.isArray(value)) return value as Project["projectType"];
+  if (typeof value === "string" && value) return [value] as Project["projectType"];
+  return [];
+}
+
 function withProjectDefaults(project: Project): Project {
   return {
     ...project,
@@ -67,6 +80,7 @@ function withProjectDefaults(project: Project): Project {
     scale: project.scale ?? [],
     showOnPortfolio: project.showOnPortfolio ?? true,
     industry: project.industry ?? "General",
+    projectType: normalizeProjectType(project.projectType),
   };
 }
 

@@ -176,7 +176,7 @@ export type Project = {
   coverImage?: string;
   coverGifUrl?: string;
   tags: string[];
-  projectType: "Dashboard" | "App" | "Website" | "Branding" | "Campaign";
+  projectType: ("Dashboard" | "App" | "Website" | "Branding" | "Campaign")[];
   year: number;
   role: string;
   techStack: string[];

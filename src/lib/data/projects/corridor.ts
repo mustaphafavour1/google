@@ -8,7 +8,7 @@ export const corridor: Project = {
   oneLiner: "Payout orchestration for cross-border money movement — one routing layer over many rails.",
   industry: "Fintech",
   tags: ["Fintech", "Payments", "Cross-border", "Compliance"],
-  projectType: "Dashboard",
+  projectType: ["Dashboard"],
   year: 2025,
   role: "Product design · design system",
   techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Apache ECharts", "shadcn/ui", "Parkinsans"],
