@@ -34,7 +34,7 @@ export default async function ProcessPage({
       <PageHeader
         title={
           <span className="flex items-center gap-2">
-            Process + Skills
+            My Design Process And Skills
             <DoodleStar className="h-3.5 w-3.5 -rotate-6 text-highlight-blue" />
           </span>
         }

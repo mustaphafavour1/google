@@ -15,15 +15,17 @@ export type NavItem = {
   label: string;
   href: string;
   icon: LucideIcon;
+  /** Extra search-only synonyms — not shown anywhere, just matched against. */
+  keywords?: string[];
 };
 
 export const primaryNav: NavItem[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
   { label: "Gallery", href: "/gallery", icon: Images },
-  { label: "Process + Skills", href: "/process", icon: Workflow },
+  { label: "Process & Skills", href: "/process", icon: Workflow },
   { label: "Blog", href: "/blog", icon: Newspaper },
-  { label: "DDD", href: "/ddd", icon: Lightbulb },
+  { label: "DDD", href: "/ddd", icon: Lightbulb, keywords: ["daily design dose", "daily", "dose", "design dose"] },
   { label: "Profile", href: "/profile", icon: User },
   { label: "For Fun", href: "/playground", icon: Rocket },
   { label: "Archive", href: "/archive", icon: Archive },
@@ -32,7 +34,7 @@ export const primaryNav: NavItem[] = [
 export const mobileTabs: NavItem[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
-  { label: "Process + Skills", href: "/process", icon: Workflow },
+  { label: "Process & Skills", href: "/process", icon: Workflow },
   { label: "Gallery", href: "/gallery", icon: Images },
   { label: "Profile", href: "/profile", icon: User },
 ];

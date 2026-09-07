@@ -117,6 +117,7 @@ export function CommandPalette({
               <CommandItem
                 key={item.href}
                 value={item.label}
+                keywords={item.keywords}
                 onSelect={() => go(item.href)}
                 className={itemClasses}
               >

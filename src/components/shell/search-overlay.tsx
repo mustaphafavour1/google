@@ -33,7 +33,11 @@ export function SearchOverlay({
   const trimmed = query.trim().toLowerCase();
 
   const navResults = trimmed
-    ? primaryNav.filter((item) => item.label.toLowerCase().includes(trimmed))
+    ? primaryNav.filter(
+        (item) =>
+          item.label.toLowerCase().includes(trimmed) ||
+          item.keywords?.some((k) => k.toLowerCase().includes(trimmed)),
+      )
     : [];
   const projectResults = trimmed
     ? projects.filter((project) =>
