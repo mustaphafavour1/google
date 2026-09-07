@@ -38,10 +38,6 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
     return () => observer.disconnect();
   }, []);
 
-  function scrollToComments() {
-    document.getElementById("drop-a-message")?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-
   return (
     <div ref={outerRef} className="relative overflow-hidden px-4 py-14 sm:px-8">
       <GridSquaresBackground />
@@ -74,7 +70,7 @@ export function FinalCtaSection({ initialClaps }: { initialClaps: number }) {
           </button>
           <button
             type="button"
-            onClick={scrollToComments}
+            onClick={openForm}
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
               "border-primary-500 text-primary-500 hover:bg-primary-tint hover:text-primary-600",
