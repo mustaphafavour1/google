@@ -222,6 +222,7 @@ export type DesignSuperpower = {
 export type LovedFont = {
   _id: string;
   name: string;
+  weightCount: number;
   order: number;
 };
 

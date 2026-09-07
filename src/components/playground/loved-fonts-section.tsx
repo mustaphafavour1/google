@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LovedFont } from "@/lib/types";
 
@@ -17,7 +16,7 @@ function useGoogleFontLoad(familyName: string): LoadState {
   const [state, setState] = useState<LoadState>("loading");
 
   useEffect(() => {
-    const href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(familyName).replace(/%20/g, "+")}:wght@400;600&display=swap`;
+    const href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(familyName).replace(/%20/g, "+")}:wght@400;700&display=swap`;
 
     let cancelled = false;
     const link = document.createElement("link");
@@ -40,15 +39,26 @@ function useGoogleFontLoad(familyName: string): LoadState {
   return state;
 }
 
-const SPECIMEN_LINES = ["ABCDEFGHIJKLM", "NOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz", "0123456789 !?&@#%"];
+// Upper/lowercase each split in two so the regular half and the bold half
+// sit side by side — a quick, legible taste of the family's weight range
+// without needing to render every actual weight it ships.
+const UPPER_REGULAR = "ABCDEFGHIJKLM";
+const UPPER_BOLD = "NOPQRSTUVWXYZ";
+const LOWER_REGULAR = "abcdefghijklmnopqrstuvwxyz";
+const LOWER_BOLD = " 0123456789";
 
-function FontSpecimenCard({ font }: { font: LovedFont }) {
+function FontSpecimenRow({ font }: { font: LovedFont }) {
   const state = useGoogleFontLoad(font.name);
 
   return (
-    <div className="stat-card">
-      <div className="mb-2.5 flex items-center justify-between gap-2">
-        <p className="text-[13px] font-semibold text-ink-em">{font.name}</p>
+    <div className="rounded-md border border-hairline px-3 py-2.5">
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <div className="flex items-baseline gap-1.5">
+          <p className="text-[13px] font-semibold text-ink-em">{font.name}</p>
+          <span className="type-meta">
+            {font.weightCount} weight{font.weightCount === 1 ? "" : "s"}
+          </span>
+        </div>
         <span className="type-meta shrink-0">
           {state === "loading" ? "Loading…" : state === "error" ? "Preview unavailable" : "Google Fonts"}
         </span>
@@ -56,49 +66,38 @@ function FontSpecimenCard({ font }: { font: LovedFont }) {
 
       {state === "loading" && (
         <div className="space-y-1.5" aria-hidden="true">
-          {SPECIMEN_LINES.map((line, i) => (
-            <div
-              key={line}
-              className="h-[18px] animate-pulse rounded bg-surface-muted"
-              style={{ width: `${90 - i * 12}%` }}
-            />
-          ))}
+          <div className="h-[19px] w-[85%] animate-pulse rounded bg-surface-muted" />
+          <div className="h-[19px] w-[70%] animate-pulse rounded bg-surface-muted" />
         </div>
       )}
 
       {state !== "loading" && (
         <div
-          className={cn("space-y-1", state === "error" && "opacity-60")}
+          className={cn("space-y-1 overflow-x-auto", state === "error" && "opacity-60")}
           style={state === "loaded" ? { fontFamily: `"${font.name}", sans-serif` } : undefined}
         >
-          {SPECIMEN_LINES.map((line) => (
-            <p key={line} className="break-words text-[14px] leading-snug text-ink-strong">
-              {line}
-            </p>
-          ))}
+          <p className="whitespace-nowrap text-[15px] leading-snug text-ink-strong">
+            <span className="font-normal">{UPPER_REGULAR}</span>
+            <span className="font-bold">{UPPER_BOLD}</span>
+          </p>
+          <p className="whitespace-nowrap text-[15px] leading-snug text-ink-strong">
+            <span className="font-normal">{LOWER_REGULAR}</span>
+            <span className="font-bold">{LOWER_BOLD}</span>
+          </p>
         </div>
       )}
     </div>
   );
 }
 
-export function LovedFontsSection({ fonts }: { fonts: LovedFont[] }) {
+export function LovedFontsGrid({ fonts }: { fonts: LovedFont[] }) {
   if (fonts.length === 0) return null;
 
   return (
-    <section className="card mt-6 p-6 sm:p-8">
-      <div className="mb-5 flex items-center gap-2">
-        <Sparkles size={16} className="text-primary-500" />
-        <div>
-          <h2 className="text-[15px] font-semibold text-ink-em">Fonts I&rsquo;m currently in love with</h2>
-          <p className="type-meta">Live previews, fetched straight from Google Fonts.</p>
-        </div>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {fonts.map((font) => (
-          <FontSpecimenCard key={font._id} font={font} />
-        ))}
-      </div>
-    </section>
+    <div className="flex flex-1 flex-col justify-center gap-3">
+      {fonts.map((font) => (
+        <FontSpecimenRow key={font._id} font={font} />
+      ))}
+    </div>
   );
 }

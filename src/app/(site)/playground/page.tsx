@@ -1,9 +1,9 @@
-import { Rocket, KeyRound, Puzzle, Type } from "lucide-react";
+import { Rocket, KeyRound, Puzzle, Type, Sparkles } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { WordPlayGame } from "@/components/playground/wordplay-game";
 import { CryptogramGame } from "@/components/playground/cryptogram-game";
 import { JigsawGame } from "@/components/playground/jigsaw-game";
-import { LovedFontsSection } from "@/components/playground/loved-fonts-section";
+import { LovedFontsGrid } from "@/components/playground/loved-fonts-section";
 import { getLovedFonts } from "@/lib/content";
 
 export default async function PlaygroundPage() {
@@ -16,7 +16,7 @@ export default async function PlaygroundPage() {
         <h1 className="type-display">For Fun</h1>
       </div>
       <p className="type-body mt-2 max-w-lg text-ink-muted">
-        Three small games — no prize at the end, just something to fidget with.
+        Three small games, plus a few fonts I can&rsquo;t stop using — no prize at the end, just something to fidget with.
       </p>
 
       <div className="mt-9 grid gap-6 lg:grid-cols-2">
@@ -42,7 +42,7 @@ export default async function PlaygroundPage() {
           <CryptogramGame />
         </section>
 
-        <section className="card p-6 sm:p-8">
+        <section className="card flex h-full flex-col p-6 sm:p-8">
           <div className="mb-5 flex items-center gap-2">
             <Puzzle size={16} className="text-primary-500" />
             <div>
@@ -52,9 +52,18 @@ export default async function PlaygroundPage() {
           </div>
           <JigsawGame />
         </section>
-      </div>
 
-      <LovedFontsSection fonts={lovedFonts} />
+        <section className="card flex h-full flex-col p-6 sm:p-8">
+          <div className="mb-5 flex items-center gap-2">
+            <Sparkles size={16} className="text-primary-500" />
+            <div>
+              <h2 className="text-[15px] font-semibold text-ink-em">Fonts I&rsquo;m currently in love with</h2>
+              <p className="type-meta">Live previews, fetched straight from Google Fonts.</p>
+            </div>
+          </div>
+          <LovedFontsGrid fonts={lovedFonts} />
+        </section>
+      </div>
     </PageContainer>
   );
 }

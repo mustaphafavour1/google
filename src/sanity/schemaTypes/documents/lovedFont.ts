@@ -14,6 +14,13 @@ export const lovedFont = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: "weightCount",
+      title: "Number of weights",
+      type: "number",
+      description: 'How many weights this family ships (e.g. 9 for a Thin-to-Black variable font). Shown next to the preview as "N weights".',
+      validation: (r) => r.required().min(1).integer(),
+    }),
+    defineField({
       name: "order",
       title: "Order",
       type: "number",
