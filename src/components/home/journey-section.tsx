@@ -142,6 +142,10 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
           // the chart. Anchor those to the inside edge instead of centering.
           const edgeAnchor = xPercent < 12 ? "left" : xPercent > 88 ? "right" : "center";
           const bubbleTranslateX = edgeAnchor === "left" ? "0%" : edgeAnchor === "right" ? "-100%" : "-50%";
+          // The last couple of points sit close together on the accelerating
+          // curve, so their right-anchored bubbles collide — nudge the very
+          // last one further right to clear the one before it.
+          const isLast = i === milestones.length - 1;
 
           return (
             <div key={`${milestone.year}-${i}`} className="absolute" style={{ left: `${xPercent}%`, top: `${yPercent}%` }}>
@@ -152,7 +156,7 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
                 className="absolute w-[6.5rem] max-w-[9rem] rounded-md border border-hairline bg-surface px-1.5 py-1 text-[9px] leading-snug text-ink-soft shadow-[0_4px_10px_rgb(35_25_15_/_0.08)] sm:w-28"
                 style={{
                   top: above ? "-4.75rem" : "0.75rem",
-                  x: bubbleTranslateX,
+                  x: isLast ? `calc(${bubbleTranslateX} + 3.5rem)` : bubbleTranslateX,
                   rotate: TILTS[i % TILTS.length],
                 }}
               >
