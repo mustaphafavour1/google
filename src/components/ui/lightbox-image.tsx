@@ -56,15 +56,13 @@ export function LightboxImage({ src, alt }: { src: string; alt: string }) {
     dragState.current = null;
   }
 
-  // Matches the Lightbox wrapper's own p-4/sm:p-10 padding — sized against
-  // the viewport directly rather than a percentage height, since the
-  // Lightbox's centering wrapper has no definite height for h-full/w-full
-  // to resolve against.
+  // No max-h/max-w or overflow-hidden here — the img below sizes itself
+  // directly off viewport units (not a percentage of this wrapper), and
+  // clipping this box would cap a zoomed (scale > 1) image at its pre-zoom
+  // size instead of letting it grow past it, which is the whole point of
+  // zooming.
   return (
-    <div
-      onWheel={handleWheel}
-      className="relative flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] items-center justify-center overflow-hidden sm:max-h-[calc(100dvh-5rem)] sm:max-w-[calc(100vw-5rem)]"
-    >
+    <div onWheel={handleWheel} className="relative flex items-center justify-center">
       {/* eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host */}
       <img
         src={src}
