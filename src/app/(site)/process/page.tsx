@@ -32,6 +32,7 @@ export default async function ProcessPage({
   return (
     <PageContainer>
       <PageHeader
+        align="center"
         title={
           <span className="flex items-center gap-2">
             My Design Process And Skills
