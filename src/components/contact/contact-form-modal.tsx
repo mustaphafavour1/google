@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { AlertCircle, Check, Send, X } from "lucide-react";
+import { AlertCircle, Calendar, Check, MessageSquare, Send, X } from "lucide-react";
 import { useContactForm } from "./contact-form-context";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { CalendlyInlineWidget } from "./calendly-inline-widget";
 
 const CATEGORIES = ["Enquiry", "Job hire", "Gig", "Collaboration", "Consultation", "Others"];
 
@@ -56,19 +58,19 @@ export function ContactFormModal() {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Contact form"
+      aria-label="Get in touch"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={close}
     >
       <div
-        className="w-full max-w-md rounded-2xl border border-hairline bg-surface p-6 shadow-xl"
+        className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-hairline bg-surface shadow-xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="flex shrink-0 items-start justify-between gap-3 p-6 pb-0">
           <div>
             <p className="text-[16px] font-semibold text-ink-strong">Get in touch</p>
             <p className="type-body mt-0.5 text-ink-muted">
-              Tell me a bit about what you need — I read every message.
+              Grab time on the calendar, or drop a message — whichever works best for you.
             </p>
           </div>
           <button
@@ -81,74 +83,95 @@ export function ContactFormModal() {
           </button>
         </div>
 
-        {submitted ? (
-          <div className="flex flex-col items-center gap-2 py-6 text-center">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-success/15 text-success">
-              <Check size={18} />
-            </span>
-            <p className="text-[14px] font-medium text-ink-strong">Thanks — that&rsquo;s been sent.</p>
-            <p className="type-body text-ink-muted">I&rsquo;ll get back to you soon.</p>
+        <Tabs defaultValue="meeting" className="flex min-h-0 flex-1 flex-col">
+          <div className="shrink-0 px-6 pt-4">
+            <TabsList>
+              <TabsTrigger value="meeting" className="inline-flex items-center gap-1.5">
+                <Calendar size={13} />
+                Book a meeting
+              </TabsTrigger>
+              <TabsTrigger value="message" className="inline-flex items-center gap-1.5">
+                <MessageSquare size={13} />
+                Drop a message
+              </TabsTrigger>
+            </TabsList>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-            <input
-              type="text"
-              value={form.name}
-              onChange={(event) => update("name", event.target.value)}
-              placeholder="Your name"
-              required
-              className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
-            />
-            <input
-              type="email"
-              value={form.email}
-              onChange={(event) => update("email", event.target.value)}
-              placeholder="Email address"
-              required
-              className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
-            />
-            <input
-              type="tel"
-              value={form.phone}
-              onChange={(event) => update("phone", event.target.value)}
-              placeholder="Phone number (optional)"
-              className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
-            />
-            <select
-              value={form.category}
-              onChange={(event) => update("category", event.target.value)}
-              className="h-10 rounded-md border border-border bg-surface px-3 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
-            >
-              {CATEGORIES.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-            <textarea
-              value={form.message}
-              onChange={(event) => update("message", event.target.value)}
-              placeholder="Your message"
-              required
-              rows={4}
-              className="resize-none rounded-md border border-border bg-transparent px-3 py-2 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
-            />
-            {error && (
-              <p className="flex items-center gap-1.5 text-[12px] text-danger">
-                <AlertCircle size={13} className="shrink-0" />
-                {error}
-              </p>
+
+          <TabsContent value="meeting" className="min-h-0 flex-1 overflow-y-auto px-2 pb-2 pt-2">
+            <CalendlyInlineWidget />
+          </TabsContent>
+
+          <TabsContent value="message" className="min-h-0 flex-1 overflow-y-auto px-6 pb-6 pt-4">
+            {submitted ? (
+              <div className="flex flex-col items-center gap-2 py-6 text-center">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-success/15 text-success">
+                  <Check size={18} />
+                </span>
+                <p className="text-[14px] font-medium text-ink-strong">Thanks — that&rsquo;s been sent.</p>
+                <p className="type-body text-ink-muted">I&rsquo;ll get back to you soon.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-3">
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(event) => update("name", event.target.value)}
+                  placeholder="Your name"
+                  required
+                  className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
+                />
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(event) => update("email", event.target.value)}
+                  placeholder="Email address"
+                  required
+                  className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
+                />
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(event) => update("phone", event.target.value)}
+                  placeholder="Phone number (optional)"
+                  className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
+                />
+                <select
+                  value={form.category}
+                  onChange={(event) => update("category", event.target.value)}
+                  className="h-10 rounded-md border border-border bg-surface px-3 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+                >
+                  {CATEGORIES.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+                <textarea
+                  value={form.message}
+                  onChange={(event) => update("message", event.target.value)}
+                  placeholder="Your message"
+                  required
+                  rows={4}
+                  className="resize-none rounded-md border border-border bg-transparent px-3 py-2 text-[13px] text-ink-strong placeholder:text-ink-muted outline-none focus:ring-2 focus:ring-primary-500/15"
+                />
+                {error && (
+                  <p className="flex items-center gap-1.5 text-[12px] text-danger">
+                    <AlertCircle size={13} className="shrink-0" />
+                    {error}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="mt-1 inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <Send size={13} />
+                  {submitting ? "Sending…" : "Send message"}
+                </button>
+              </form>
             )}
-            <button
-              type="submit"
-              disabled={submitting}
-              className="mt-1 inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-primary-500 text-[13px] font-medium text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <Send size={13} />
-              {submitting ? "Sending…" : "Send message"}
-            </button>
-          </form>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
