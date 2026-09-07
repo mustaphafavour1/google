@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
 import { DoodleStar } from "@/components/doodles/doodle-star";
@@ -6,6 +7,8 @@ import { getProcessTracks, getSkillGroups, getSkills, getDesignSuperpowers } fro
 import { ProcessTabs } from "@/components/process/process-tabs";
 import { SkillsFull } from "@/components/skills/skills-full";
 import { DesignSuperpowersFull } from "@/components/skills/design-superpowers-full";
+
+export const metadata: Metadata = { title: "Process & Skills" };
 
 const TAB_VALUES = ["process", "skills", "superpowers"] as const;
 type TabValue = (typeof TAB_VALUES)[number];

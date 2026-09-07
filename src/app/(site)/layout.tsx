@@ -44,10 +44,25 @@ const rancho = Rancho({
   display: "swap",
 });
 
+const SITE_DESCRIPTION = "Favour's Design Portfolio. Contact him to sort your design needs and achieve your goals.";
+
 export const metadata: Metadata = {
-  title: "Favour Mustapha — Product Designer",
-  description:
-    "Product designer working across fintech, health-tech, and B2B SaaS. Portfolio featuring Caretrace, Corridor, and Switchboard.",
+  title: {
+    default: "Favour's Design Portfolio",
+    template: "%s - Favour's Portfolio",
+  },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: "Favour's Design Portfolio",
+    description: SITE_DESCRIPTION,
+    images: ["/OG-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Favour's Design Portfolio",
+    description: SITE_DESCRIPTION,
+    images: ["/OG-image.png"],
+  },
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {

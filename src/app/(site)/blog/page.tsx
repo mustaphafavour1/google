@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import { Newspaper } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { BlogCard } from "@/components/cards/blog-card";
 import { getBlogPosts } from "@/lib/content";
+
+export const metadata: Metadata = { title: "Blog" };
 
 export default async function BlogPage() {
   const posts = await getBlogPosts();

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowUpRight, FileText, Globe, Mail, Package } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { initials } from "@/components/shell/logo";
@@ -9,6 +10,8 @@ import { getProducts, getSiteSettings } from "@/lib/content";
 import { AboutTabs } from "./about-tabs";
 import { ProfileMediaRail } from "./profile-media-rail";
 import { ContactTriggerButton } from "./contact-trigger-button";
+
+export const metadata: Metadata = { title: "Profile" };
 
 export default async function ProfilePage() {
   const [siteSettings, products] = await Promise.all([getSiteSettings(), getProducts()]);

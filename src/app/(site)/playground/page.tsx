@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Rocket, KeyRound, Puzzle, Type, Sparkles } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { WordPlayGame } from "@/components/playground/wordplay-game";
@@ -5,6 +6,8 @@ import { CryptogramGame } from "@/components/playground/cryptogram-game";
 import { JigsawGame } from "@/components/playground/jigsaw-game";
 import { LovedFontsGrid } from "@/components/playground/loved-fonts-section";
 import { getLovedFonts } from "@/lib/content";
+
+export const metadata: Metadata = { title: "For Fun" };
 
 export default async function PlaygroundPage() {
   const lovedFonts = await getLovedFonts();

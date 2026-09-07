@@ -16,7 +16,7 @@ export async function generateMetadata({
   const variant = await getJobApplicationVariant(slug);
   if (!variant) return {};
   return {
-    title: `For ${variant.companyName} — Favour Mustapha`,
+    title: `For ${variant.companyName}`,
     description: `A portfolio selection put together for ${variant.companyName}.`,
     robots: { index: false, follow: false },
   };

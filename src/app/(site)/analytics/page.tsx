@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
 import { getProjects, getSiteSettings } from "@/lib/content";
@@ -7,6 +8,8 @@ import {
   getTotalScaleMetricsLogged,
 } from "@/lib/data/analytics";
 import { AnalyticsCharts } from "./analytics-charts";
+
+export const metadata: Metadata = { title: "Analytics" };
 
 export default async function AnalyticsPage() {
   const [projects, siteSettings] = await Promise.all([getProjects(), getSiteSettings()]);

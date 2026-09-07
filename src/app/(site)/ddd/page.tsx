@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
 import { getDddEntries, getSiteSettings } from "@/lib/content";
 import { DddGrid } from "./ddd-grid";
+
+export const metadata: Metadata = { title: "DDD" };
 
 export default async function DddPage() {
   const [entries, siteSettings] = await Promise.all([getDddEntries(), getSiteSettings()]);

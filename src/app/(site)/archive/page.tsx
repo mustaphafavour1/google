@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import { ExternalLink } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { getPortfolioArchive } from "@/lib/content";
+
+export const metadata: Metadata = { title: "Archive" };
 
 const PLACEHOLDER_GRADIENTS = [
   ["#A55C4E", "#D19686"],

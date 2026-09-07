@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
 import { getProjects, getSiteSettings } from "@/lib/content";
 import { buildGalleryItems } from "@/lib/gallery";
 import { GalleryGrid } from "./gallery-grid";
+
+export const metadata: Metadata = { title: "Gallery" };
 
 export default async function GalleryPage() {
   const [projects, siteSettings] = await Promise.all([getProjects(), getSiteSettings()]);
