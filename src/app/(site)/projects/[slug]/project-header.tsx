@@ -16,10 +16,10 @@ export function ProjectHeader({ project, contactEmail }: { project: Project; con
       </div>
       <p className="mt-2 max-w-2xl text-[14px] text-ink-soft sm:text-[15px]">{project.oneLiner}</p>
 
-      <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-3">
-        <MetaItem label="Role" value={project.role} />
+      <div className="mt-10 flex flex-wrap items-center gap-x-14 gap-y-3">
         <MetaItem label="Year" value={String(project.year)} mono />
         <MetaItem label="Industry" value={project.industry} />
+        <MetaItem label="Role" value={project.role} />
         {project.techStack.length > 0 && (
           <>
             <div className="hidden h-8 w-px bg-hairline sm:block" />
@@ -38,7 +38,7 @@ export function ProjectHeader({ project, contactEmail }: { project: Project; con
       </div>
 
       {project.links.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-wrap gap-2">
           {project.links.map((link) => (
             <a
               key={link.url}
