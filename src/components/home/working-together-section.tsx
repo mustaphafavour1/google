@@ -18,8 +18,8 @@ const CYCLE_MS = 4000;
  */
 const DISCIPLINE_PROJECT_SLUG: Record<string, string> = {
   "UI/UX": "probity",
-  "Web Development": "didii-ai",
-  Branding: "the-bonito-spa",
+  "Web Development": "allowance-ai",
+  Branding: "blazebrain",
   "Campaigns & Marketing": "flutterbytes-conference-2025",
 };
 
