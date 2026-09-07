@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DddTile } from "./ddd-tile";
@@ -7,6 +8,8 @@ import { cn } from "@/lib/utils";
 import type { DddEntry } from "@/lib/types";
 
 const SWIPE_THRESHOLD_PX = 60;
+const WHEEL_THRESHOLD_PX = 40;
+const WHEEL_COOLDOWN_MS = 400;
 
 export function DddSlideView({
   pairs,
@@ -18,10 +21,30 @@ export function DddSlideView({
   onNavigate: (delta: 1 | -1) => void;
 }) {
   const pair = pairs[index] ?? [];
+  const wheelDeltaRef = useRef(0);
+  const wheelCooldownRef = useRef(false);
 
   function handleDragEnd(_event: PointerEvent, info: PanInfo) {
     if (info.offset.x <= -SWIPE_THRESHOLD_PX) onNavigate(1);
     else if (info.offset.x >= SWIPE_THRESHOLD_PX) onNavigate(-1);
+  }
+
+  // Trackpad two-finger swipes fire as wheel events with deltaX, not a
+  // pointer drag — the drag gesture above only catches touch/mouse-drag.
+  function handleWheel(event: React.WheelEvent) {
+    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+    if (wheelCooldownRef.current) return;
+    wheelDeltaRef.current += event.deltaX;
+    if (wheelDeltaRef.current >= WHEEL_THRESHOLD_PX) {
+      onNavigate(1);
+    } else if (wheelDeltaRef.current <= -WHEEL_THRESHOLD_PX) {
+      onNavigate(-1);
+    } else {
+      return;
+    }
+    wheelDeltaRef.current = 0;
+    wheelCooldownRef.current = true;
+    setTimeout(() => (wheelCooldownRef.current = false), WHEEL_COOLDOWN_MS);
   }
 
   return (
@@ -36,7 +59,7 @@ export function DddSlideView({
           <ChevronLeft size={16} />
         </button>
 
-        <div className="relative flex-1 overflow-hidden">
+        <div className="relative flex-1 overflow-hidden" onWheel={handleWheel}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={index}
@@ -48,6 +71,7 @@ export function DddSlideView({
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.15}
               onDragEnd={handleDragEnd}
+              style={{ touchAction: "pan-y" }}
               className="grid cursor-grab grid-cols-1 gap-4 active:cursor-grabbing sm:grid-cols-2"
             >
               {pair.map((entry) => (

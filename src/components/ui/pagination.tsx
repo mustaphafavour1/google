@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,12 +26,29 @@ export function Pagination({
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const to = Math.min(total, page * pageSize);
+  const [jumpValue, setJumpValue] = useState(String(page));
+  const [syncedPage, setSyncedPage] = useState(page);
+  if (page !== syncedPage) {
+    setSyncedPage(page);
+    setJumpValue(String(page));
+  }
 
   function stepPageSize(direction: 1 | -1) {
     if (!onPageSizeChange) return;
     const idx = pageSizeOptions.indexOf(pageSize);
     const nextIdx = Math.min(pageSizeOptions.length - 1, Math.max(0, idx + direction));
     onPageSizeChange(pageSizeOptions[nextIdx]);
+  }
+
+  function commitJump() {
+    const parsed = Number(jumpValue);
+    if (Number.isFinite(parsed)) {
+      const clamped = Math.min(totalPages, Math.max(1, Math.round(parsed)));
+      if (clamped !== page) onPageChange(clamped);
+      setJumpValue(String(clamped));
+    } else {
+      setJumpValue(String(page));
+    }
   }
 
   return (
@@ -77,7 +95,26 @@ export function Pagination({
           <ChevronLeft size={13} />
         </button>
 
-        <span className={cn("page-chip")}>{page}</span>
+        <label className="sr-only" htmlFor="pagination-jump">
+          Jump to page
+        </label>
+        <input
+          id="pagination-jump"
+          type="text"
+          inputMode="numeric"
+          value={jumpValue}
+          onChange={(event) => setJumpValue(event.target.value.replace(/[^0-9]/g, ""))}
+          onBlur={commitJump}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commitJump();
+              event.currentTarget.blur();
+            }
+          }}
+          disabled={totalPages <= 1}
+          className={cn("page-chip w-9 text-center", totalPages <= 1 && "opacity-60")}
+        />
         <span className="type-meta">of {totalPages}</span>
 
         <button

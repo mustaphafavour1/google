@@ -19,7 +19,8 @@ import { shuffle } from "@/lib/gallery";
 import { cn } from "@/lib/utils";
 import type { DddEntry } from "@/lib/types";
 
-const PAGE_SIZE = 40;
+const DEFAULT_PAGE_SIZE = 40;
+const PAGE_SIZE_OPTIONS = [40, 80, 120, 160];
 const SLIDE_DURATION_S = 4;
 
 type ViewMode = "all" | "weekly" | "monthly";
@@ -72,6 +73,7 @@ function buildBuckets(entries: DddEntry[], unit: "week" | "month"): Bucket[] {
 
 export function DddGrid({ entries }: { entries: DddEntry[] }) {
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [order, setOrder] = useState<"ordered" | "random">("ordered");
   const [view, setView] = useState<ViewMode>("all");
   const [layout, setLayout] = useState<LayoutMode>("grid");
@@ -87,13 +89,13 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
   );
 
   const totalPages =
-    view === "all" ? Math.max(1, Math.ceil(baseEntries.length / PAGE_SIZE)) : Math.max(1, (buckets ?? []).length);
+    view === "all" ? Math.max(1, Math.ceil(baseEntries.length / pageSize)) : Math.max(1, (buckets ?? []).length);
   const pageEntries = useMemo(
     () =>
       view === "all"
-        ? baseEntries.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE)
+        ? baseEntries.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize)
         : (buckets?.[page - 1]?.entries ?? []),
-    [view, baseEntries, page, buckets],
+    [view, baseEntries, page, pageSize, buckets],
   );
   const pageLabel = view !== "all" ? buckets?.[page - 1]?.label : null;
   const pairs = useMemo(() => chunk(pageEntries, 2), [pageEntries]);
@@ -131,6 +133,12 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
     setPage(next);
     setPairIndex(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function changePageSize(size: number) {
+    setPageSize(size);
+    setPage(1);
+    setPairIndex(0);
   }
 
   function advancePageForAutoScroll() {
@@ -276,10 +284,12 @@ export function DddGrid({ entries }: { entries: DddEntry[] }) {
       <div className="mt-8">
         <Pagination
           page={page}
-          pageSize={view === "all" ? PAGE_SIZE : 1}
+          pageSize={view === "all" ? pageSize : 1}
           total={view === "all" ? baseEntries.length : totalPages}
           noun={view === "all" ? "entries" : view === "weekly" ? "weeks" : "months"}
           onPageChange={changePage}
+          onPageSizeChange={view === "all" ? changePageSize : undefined}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
         />
       </div>
     </div>
