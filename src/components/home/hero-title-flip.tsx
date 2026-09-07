@@ -100,7 +100,14 @@ export function HeroTitleFlip({ text }: { text: string }) {
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {chars.map((ch, idx) => {
-          if (!isLetter(ch)) return <span key={idx}>{ch}</span>;
+          if (!isLetter(ch)) {
+            return (
+              <span key={idx}>
+                {ch}
+                {idx === splitAt && <br />}
+              </span>
+            );
+          }
 
           const showIcon = !revealed[idx] || activeIndex === idx;
           const isUpper = ch === ch.toUpperCase();
