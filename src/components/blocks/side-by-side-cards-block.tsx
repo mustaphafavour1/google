@@ -21,7 +21,7 @@ export function SideBySideCardsBlock({ block }: { block: SideBySideCardsBlockT }
             className={cn("card p-5", card.tone === "primary" && "bg-primary-tint")}
           >
             <h4 className="text-[13.5px] font-semibold text-ink-em">{card.title}</h4>
-            <p className="type-body mt-2 text-ink-muted">{card.body}</p>
+            <p className="type-body mt-2 whitespace-pre-line text-ink-muted">{card.body}</p>
           </div>
         ))}
       </div>
