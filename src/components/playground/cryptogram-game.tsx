@@ -2,59 +2,11 @@
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Anchor,
-  Box,
-  Code2,
-  Database,
-  Eye,
-  Frame,
-  Grid3x3,
-  Hexagon,
-  Image as ImageIcon,
-  Keyboard,
-  Layers,
-  Lightbulb,
-  Monitor,
-  Network,
-  Orbit,
-  Palette,
-  PartyPopper,
-  Ruler,
-  SkipForward,
-  Sparkles,
-  Terminal,
-  Upload,
-  Video,
-  Zap,
-} from "lucide-react";
+import { Lightbulb, PartyPopper, SkipForward } from "lucide-react";
 import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
-
-const LETTER_ICONS: Record<string, typeof Anchor> = {
-  A: Anchor,
-  B: Box,
-  C: Code2,
-  D: Database,
-  E: Eye,
-  F: Frame,
-  G: Grid3x3,
-  H: Hexagon,
-  I: ImageIcon,
-  K: Keyboard,
-  L: Layers,
-  M: Monitor,
-  N: Network,
-  O: Orbit,
-  P: Palette,
-  R: Ruler,
-  S: Sparkles,
-  T: Terminal,
-  U: Upload,
-  V: Video,
-  Y: Zap,
-};
+import { LETTER_ICONS } from "@/lib/letter-icons";
 
 const ALPHABET_RE = /^[A-Z]$/;
 const SEED_REVEAL_COUNT = 3;

@@ -6,6 +6,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
 import { startAutoScrollWithExplainer } from "@/lib/auto-scroll-store";
 import { HeroBlobs } from "./hero-blobs";
+import { HeroTitleFlip } from "./hero-title-flip";
 import type { JobApplicationVariant, SiteSettings } from "@/lib/types";
 
 export function Hero({
@@ -40,7 +41,11 @@ export function Hero({
         transition={{ delay: 0.05 }}
         className="max-w-3xl text-[clamp(2.1rem,4.6vw,3.5rem)] font-extrabold leading-[1.08] tracking-tight text-ink-em"
       >
-        {jdVariant ? <>Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.</> : hero.title}
+        {jdVariant ? (
+          <>Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.</>
+        ) : (
+          <HeroTitleFlip key={hero.title} text={hero.title} />
+        )}
       </motion.h1>
 
       {!jdVariant && hero.titleUnderText && (
