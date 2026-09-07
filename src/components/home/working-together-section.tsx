@@ -23,6 +23,9 @@ const DISCIPLINE_PROJECT_SLUG: Record<string, string> = {
   "Campaigns & Marketing": "flutterbytes-conference-2025",
 };
 
+/** Disciplines that should always show the static cover, even while active — never the GIF. */
+const DISCIPLINE_STATIC_ONLY = new Set(["Web Development"]);
+
 export function WorkingTogetherSection({
   items,
   projects,
@@ -115,7 +118,8 @@ export function WorkingTogetherSection({
         {items.map((item, i) => {
           const project = projects.find((p) => p.slug === DISCIPLINE_PROJECT_SLUG[item.discipline]);
           const isActive = i === activeIndex;
-          const coverSrc = project && (isActive ? project.coverGifUrl ?? project.coverImage : project.coverImage);
+          const useGif = isActive && !DISCIPLINE_STATIC_ONLY.has(item.discipline);
+          const coverSrc = project && (useGif ? project.coverGifUrl ?? project.coverImage : project.coverImage);
           return (
             <motion.div
               key={item.discipline}
