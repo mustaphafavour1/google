@@ -29,12 +29,8 @@ export function Sidebar({
         <Logo compact name={profile.name} title={profile.title} photoUrl={avatarPhoto} />
       </div>
 
-      <p className="mt-3 px-2 text-center text-[8.5px] font-medium leading-[1.15] tracking-tight text-ink-muted">
-        Cmd + K for quick moves
-      </p>
-
-      <nav aria-label="Primary" className="shrink-0 overflow-y-auto px-2 py-4">
-        <ul className="flex flex-col gap-1">
+      <nav aria-label="Primary" className="mt-3 shrink-0 overflow-y-auto px-2 py-4">
+        <ul className="flex flex-col">
           {primaryNav.map((item) => {
             const active = isNavItemActive(pathname, item.href);
             const Icon = item.icon;
