@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const ROTATE_MS = 4000;
 
@@ -26,6 +27,7 @@ export function CollapsedBrandMark({ phrases }: { phrases: string[] }) {
   }, [list.length]);
 
   const text = list[index % list.length];
+  const isLong = text.length > 20;
 
   return (
     <div className="flex flex-1 items-center justify-center overflow-hidden py-4">
@@ -36,7 +38,10 @@ export function CollapsedBrandMark({ phrases }: { phrases: string[] }) {
           initial="hidden"
           animate="visible"
           exit={{ opacity: 0, transition: { duration: 0.2 } }}
-          className="flex -rotate-90 items-center whitespace-nowrap font-brand text-[27px] leading-none text-primary-500"
+          className={cn(
+            "flex -rotate-90 items-center whitespace-nowrap font-brand leading-none text-primary-500",
+            isLong ? "text-[23px]" : "text-[27px]",
+          )}
         >
           {text.split("").map((char, i) => (
             <motion.span key={i} variants={letter} transition={{ duration: 0.25 }}>
