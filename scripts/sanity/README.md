@@ -102,3 +102,25 @@ phases; retyping a few paragraphs into the new Studio fields (`/studio` →
 Site settings → About, and → Process tracks) takes a few minutes and is more
 reliable than writing transform code for a shape we've never seen. Keep the
 old site open in one tab and Studio in another, and copy across.
+
+## 6. Seed Corridor's case-study content blocks
+
+`seed-corridor-content.ts` is a one-off: it appends 8 pre-written content
+blocks (What Birthed It, The Recontextualization, Target Audience, Use
+Case, Design Decisions, Changes Made, Built With AI, and a closing metrics
+row) to the end of the Corridor project's existing `blocks[]` — it never
+touches or reorders what's already there, so the new blocks can be
+rearranged in Studio afterward.
+
+```bash
+# 1. Dry run first — prints Corridor's current blocks and what would be appended.
+SANITY_WRITE_TOKEN=xxxx npm run sanity:seed-corridor
+
+# 2. Once it looks right, actually patch the document.
+SANITY_WRITE_TOKEN=xxxx npm run sanity:seed-corridor -- --write
+```
+
+Same token setup as DDD seeding above (Editor permission, passed inline —
+never in `.env.local`). Re-running is safe: any of the 8 headings already
+present on Corridor is skipped automatically — pass `--force` to append
+duplicates anyway.
