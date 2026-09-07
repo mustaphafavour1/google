@@ -83,7 +83,7 @@ export function ContactFormModal() {
           </button>
         </div>
 
-        <Tabs defaultValue="meeting" className="flex min-h-0 flex-1 flex-col">
+        <Tabs defaultValue="message" className="flex min-h-0 flex-1 flex-col">
           <div className="shrink-0 px-6 pt-4">
             <TabsList>
               <TabsTrigger value="meeting" className="inline-flex items-center gap-1.5">
@@ -97,11 +97,19 @@ export function ContactFormModal() {
             </TabsList>
           </div>
 
-          <TabsContent value="meeting" className="min-h-0 flex-1 overflow-y-auto px-2 pb-2 pt-2">
+          {/* Both panels share the same explicit height (capped for short
+              viewports) so switching tabs never resizes the modal — Calendly's
+              embed needs real vertical room, so the form tab is sized to
+              match it (centered in the extra space) rather than the other
+              way around. */}
+          <TabsContent value="meeting" className="relative h-[min(650px,70vh)] overflow-y-auto px-2 pb-2 pt-2">
             <CalendlyInlineWidget />
           </TabsContent>
 
-          <TabsContent value="message" className="min-h-0 flex-1 overflow-y-auto px-6 pb-6 pt-4">
+          <TabsContent
+            value="message"
+            className="flex h-[min(650px,70vh)] flex-col items-center justify-center overflow-y-auto px-6 pb-6 pt-4"
+          >
             {submitted ? (
               <div className="flex flex-col items-center gap-2 py-6 text-center">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-success/15 text-success">
@@ -111,7 +119,7 @@ export function ContactFormModal() {
                 <p className="type-body text-ink-muted">I&rsquo;ll get back to you soon.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-3">
+              <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col gap-3">
                 <input
                   type="text"
                   value={form.name}
