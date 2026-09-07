@@ -3,9 +3,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { ProjectBlocks } from "@/components/blocks/block-renderer";
-import { ProcessTabs } from "@/components/process/process-tabs";
 import { ProjectCard } from "@/components/cards/project-card";
-import { getProjectBySlug, getProjects, getProcessTracks, getSiteSettings } from "@/lib/content";
+import { getProjectBySlug, getProjects, getSiteSettings } from "@/lib/content";
 import { buildChatModes } from "@/lib/chatbot-content";
 import { CaseStudyToc } from "./case-study-toc";
 import { CaseStudyMiniMetrics } from "./case-study-mini-metrics";
@@ -53,10 +52,9 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [project, projects, processTracks, siteSettings] = await Promise.all([
+  const [project, projects, siteSettings] = await Promise.all([
     getProjectBySlug(slug),
     getProjects(),
-    getProcessTracks(),
     getSiteSettings(),
   ]);
   if (!project) notFound();
@@ -71,12 +69,6 @@ export default async function ProjectDetailPage({
   );
 
   const tocItems = buildTocItems(project.blocks);
-  const relevantTracks = processTracks.filter((track) =>
-    project.processDisciplines?.includes(track.discipline),
-  );
-  if (relevantTracks.length > 0) {
-    tocItems.push({ id: "case-study-process", label: "How I approached it" });
-  }
 
   return (
     <PageContainer>
@@ -93,13 +85,6 @@ export default async function ProjectDetailPage({
           <ProjectHeader project={project} contactEmail={siteSettings.contact.email} />
 
           <ProjectBlocks blocks={project.blocks} project={project} />
-
-          {relevantTracks.length > 0 && (
-            <section id="case-study-process" className="mt-10 scroll-mt-24 border-t border-hairline pt-10">
-              <h3 className="type-subheading mb-4">How I approached it</h3>
-              <ProcessTabs processTracks={relevantTracks} />
-            </section>
-          )}
 
           <CaseStudyFooter slug={project.slug} projectName={project.name} />
 
