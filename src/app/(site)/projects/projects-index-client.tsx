@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Briefcase } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
+import { Briefcase, ChevronDown } from "lucide-react";
 import { PageHeader } from "@/components/shell/page-header";
 import { ProjectCard } from "@/components/cards/project-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -21,6 +21,32 @@ const SPAN_CLASSES: Record<NonNullable<Project["cardSize"]>, string> = {
   tall: "sm:row-span-2",
   large: "sm:col-span-2 sm:row-span-2",
 };
+
+function FilterSelect({
+  value,
+  onChange,
+  children,
+}: {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <select
+        value={value}
+        onChange={onChange}
+        className="h-8 appearance-none rounded-md border border-border bg-surface pl-2 pr-8 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+      >
+        {children}
+      </select>
+      <ChevronDown
+        size={13}
+        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-soft"
+      />
+    </div>
+  );
+}
 
 export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
   const [industry, setIndustry] = useState(ALL);
@@ -67,39 +93,27 @@ export function ProjectsIndexClient({ projects }: { projects: Project[] }) {
       />
 
       <div className="mb-5 flex flex-wrap items-center gap-3">
-        <select
-          value={industry}
-          onChange={handleFilterChange(setIndustry)}
-          className="h-8 rounded-md border border-border bg-surface pl-2 pr-7 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
-        >
+        <FilterSelect value={industry} onChange={handleFilterChange(setIndustry)}>
           {industries.map((i) => (
             <option key={i} value={i}>
               {i === ALL ? "All industries" : i}
             </option>
           ))}
-        </select>
-        <select
-          value={tag}
-          onChange={handleFilterChange(setTag)}
-          className="h-8 rounded-md border border-border bg-surface pl-2 pr-7 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
-        >
+        </FilterSelect>
+        <FilterSelect value={tag} onChange={handleFilterChange(setTag)}>
           {tags.map((t) => (
             <option key={t} value={t}>
               {t === ALL ? "All tags" : t}
             </option>
           ))}
-        </select>
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as SortKey)}
-          className="h-8 rounded-md border border-border bg-surface pl-2 pr-7 text-[12px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
-        >
+        </FilterSelect>
+        <FilterSelect value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
           {Object.entries(SORTS).map(([key, { label }]) => (
             <option key={key} value={key}>
               {label}
             </option>
           ))}
-        </select>
+        </FilterSelect>
       </div>
 
       {filtered.length === 0 ? (
