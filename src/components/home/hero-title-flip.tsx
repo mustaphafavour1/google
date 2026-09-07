@@ -114,21 +114,33 @@ export function HeroTitleFlip({ text }: { text: string }) {
               type="button"
               tabIndex={-1}
               onClick={() => handleClick(idx)}
-              className="relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline [perspective:400px]"
+              className="relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline"
             >
-              <motion.span
-                className="relative inline-block [transform-style:preserve-3d]"
-                animate={{ rotateY: showIcon ? 180 : 0 }}
-                transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-              >
-                <span className="[backface-visibility:hidden]">{ch}</span>
-                <span
-                  className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]"
-                  style={{ transform: "rotateY(180deg)" }}
+              {/* Invisible, normal-flow sizer — the only thing that determines
+                  this button's box size, so it always matches the letter's
+                  natural glyph width regardless of the icon's own size. */}
+              <span className="invisible">{ch}</span>
+              <span className="absolute inset-0 [perspective:400px]">
+                <motion.span
+                  className="absolute inset-0 [transform-style:preserve-3d]"
+                  animate={{ rotateY: showIcon ? 180 : 0 }}
+                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                 >
-                  {Icon && <Icon style={{ height: iconSize, width: iconSize }} strokeWidth={ICON_STROKE} />}
-                </span>
-              </motion.span>
+                  {/* Both faces are stacked via identical absolute+inset-0
+                      positioning (not one in normal flow) — mixing the two
+                      made backface-visibility unreliable in some browsers,
+                      showing the letter bleeding through over the icon. */}
+                  <span className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]">
+                    {ch}
+                  </span>
+                  <span
+                    className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]"
+                    style={{ transform: "rotateY(180deg)" }}
+                  >
+                    {Icon && <Icon style={{ height: iconSize, width: iconSize }} strokeWidth={ICON_STROKE} />}
+                  </span>
+                </motion.span>
+              </span>
             </button>
           );
         })}
