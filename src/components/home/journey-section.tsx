@@ -137,6 +137,11 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
           const yPercent = (point.y / VB_HEIGHT) * 100;
           const above = i % 2 === 0;
           const label = YEARS_WITH_JAN.has(milestone.year) ? `Jan. ${milestone.year}` : milestone.year;
+          // Centering every bubble on its point works until the point itself
+          // sits near an edge — then half the (fixed-width) bubble overhangs
+          // the chart. Anchor those to the inside edge instead of centering.
+          const edgeAnchor = xPercent < 12 ? "left" : xPercent > 88 ? "right" : "center";
+          const bubbleTranslateX = edgeAnchor === "left" ? "0%" : edgeAnchor === "right" ? "-100%" : "-50%";
 
           return (
             <div key={`${milestone.year}-${i}`} className="absolute" style={{ left: `${xPercent}%`, top: `${yPercent}%` }}>
@@ -144,10 +149,11 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
               <motion.div
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: above ? 8 : -8 }}
                 transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
-                className="absolute w-[6.5rem] max-w-[9rem] -translate-x-1/2 rounded-md border border-hairline bg-surface px-1.5 py-1 text-[9px] leading-snug text-ink-soft shadow-[0_4px_10px_rgb(35_25_15_/_0.08)] sm:w-28"
+                className="absolute w-[6.5rem] max-w-[9rem] rounded-md border border-hairline bg-surface px-1.5 py-1 text-[9px] leading-snug text-ink-soft shadow-[0_4px_10px_rgb(35_25_15_/_0.08)] sm:w-28"
                 style={{
                   top: above ? "-4.75rem" : "0.75rem",
-                  transform: `translateX(-50%) rotate(${TILTS[i % TILTS.length]}deg)`,
+                  x: bubbleTranslateX,
+                  rotate: TILTS[i % TILTS.length],
                 }}
               >
                 <span className="data-mono block text-[9px] font-semibold text-primary-500">{label}</span>

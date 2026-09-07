@@ -121,7 +121,7 @@ export function CryptogramGame() {
 
       <div className="flex flex-wrap gap-x-1.5 gap-y-3">
         {quote.text.split(" ").map((word, wi) => (
-          <div key={wi} className="flex gap-1">
+          <div key={wi} className="flex flex-wrap gap-1">
             {word.split("").map((ch, ci) => {
               const Icon = LETTER_ICONS[ch];
               const revealed = guessed.has(ch);

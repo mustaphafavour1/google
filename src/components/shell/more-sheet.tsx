@@ -20,10 +20,10 @@ export function MoreSheet({ contact }: { contact: SiteSettings["contact"] }) {
         <button
           type="button"
           className="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-ink-soft"
-          aria-label="More"
+          aria-label="Others"
         >
           <Menu size={19} strokeWidth={2} />
-          <span className="text-[10.5px] font-medium">More</span>
+          <span className="text-[10.5px] font-medium">Others</span>
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -31,7 +31,7 @@ export function MoreSheet({ contact }: { contact: SiteSettings["contact"] }) {
         <Dialog.Content className="sheet-content fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border-t border-hairline bg-surface p-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] shadow-[0_-4px_24px_rgb(15_23_42_/_0.12)]">
           <div className="mx-auto mb-3 h-1 w-9 rounded-full bg-hairline" />
           <div className="mb-3 flex items-center justify-between">
-            <Dialog.Title className="type-subheading">More</Dialog.Title>
+            <Dialog.Title className="type-subheading">Others</Dialog.Title>
             <Dialog.Close asChild>
               <button
                 type="button"

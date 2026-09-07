@@ -47,7 +47,7 @@ export function DesignSystemSection({ projects }: { projects: Project[] }) {
       </motion.div>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 sm:items-stretch">
-        <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-hairline bg-surface-muted">
+        <div className="aspect-[4/3] w-full min-w-0 overflow-hidden rounded-2xl border border-hairline bg-surface-muted">
           {active && (
             <AnimatePresence mode="wait">
               <motion.div
@@ -69,7 +69,7 @@ export function DesignSystemSection({ projects }: { projects: Project[] }) {
           )}
         </div>
 
-        <div className="flex aspect-[4/3] w-full flex-col justify-center p-6 sm:p-7">
+        <div className="flex aspect-[4/3] w-full min-w-0 flex-col justify-center p-6 sm:p-7">
           <p className="type-body text-[17px] font-medium leading-relaxed text-ink-muted">
             There&rsquo;s this portfolio, a design system, and several outstanding websites &amp; apps
             to prove it.
