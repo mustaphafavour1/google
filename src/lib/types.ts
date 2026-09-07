@@ -340,7 +340,6 @@ export type BackgroundPatternPageKey =
   | "playground"
   | "archive"
   | "process"
-  | "skills"
   | "contact"
   | "analytics"
   | "blog"

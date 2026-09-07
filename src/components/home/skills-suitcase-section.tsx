@@ -46,7 +46,7 @@ export function SkillsSuitcaseSection({ groups }: { groups: SkillGroup[] }) {
         <Button
           variant="outline"
           size="lg"
-          href="/skills"
+          href="/process?tab=skills"
           className="border-2 border-primary-500 text-primary-500 hover:bg-primary-tint hover:text-primary-600"
         >
           Full SkillSet

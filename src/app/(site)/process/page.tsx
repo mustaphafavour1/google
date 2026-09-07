@@ -1,26 +1,65 @@
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
-import { getProcessTracks, getSkillGroups } from "@/lib/content";
+import { DoodleStar } from "@/components/doodles/doodle-star";
+import { Tabs, TabsContent, LineTabsList, LineTabsTrigger } from "@/components/ui/tabs";
+import { getProcessTracks, getSkillGroups, getSkills, getDesignSuperpowers } from "@/lib/content";
 import { ProcessTabs } from "@/components/process/process-tabs";
-import { ProcessSkillsPanel } from "./process-skills-panel";
+import { SkillsFull } from "@/components/skills/skills-full";
+import { DesignSuperpowersFull } from "@/components/skills/design-superpowers-full";
 
-export default async function ProcessPage() {
-  const [processTracks, skillGroups] = await Promise.all([getProcessTracks(), getSkillGroups()]);
+const TAB_VALUES = ["process", "skills", "superpowers"] as const;
+type TabValue = (typeof TAB_VALUES)[number];
+
+function isTabValue(value: string | undefined): value is TabValue {
+  return TAB_VALUES.includes(value as TabValue);
+}
+
+export default async function ProcessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const { tab } = await searchParams;
+  const initialTab: TabValue = isTabValue(tab) ? tab : "process";
+
+  const [processTracks, skillGroups, skills, superpowers] = await Promise.all([
+    getProcessTracks(),
+    getSkillGroups(),
+    getSkills(),
+    getDesignSuperpowers(),
+  ]);
 
   return (
     <PageContainer>
       <PageHeader
-        title="Process"
-        subtitle="How each discipline runs, from framing the problem to handover."
+        title={
+          <span className="flex items-center gap-2">
+            Process + Skills
+            <DoodleStar className="h-3.5 w-3.5 -rotate-6 text-highlight-blue" />
+          </span>
+        }
+        subtitle="How each discipline runs, what I bring to it, and the range behind it."
       />
-      <div className="flex gap-10">
-        <div className="min-w-0 flex-1">
+
+      <Tabs defaultValue={initialTab}>
+        <LineTabsList>
+          <LineTabsTrigger value="process">Process</LineTabsTrigger>
+          <LineTabsTrigger value="skills">Skills</LineTabsTrigger>
+          <LineTabsTrigger value="superpowers">Design Superpowers</LineTabsTrigger>
+        </LineTabsList>
+
+        <TabsContent value="process" className="mt-8">
           <ProcessTabs processTracks={processTracks} />
-        </div>
-        <aside className="sticky top-[calc(var(--header-h)+1.5rem)] hidden h-max max-h-[calc(100vh-var(--header-h)-3rem)] w-52 shrink-0 overflow-y-auto xl:block">
-          <ProcessSkillsPanel groups={skillGroups} />
-        </aside>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="skills" className="mt-8">
+          <SkillsFull skills={skills} skillGroups={skillGroups} />
+        </TabsContent>
+
+        <TabsContent value="superpowers" className="mt-8">
+          <DesignSuperpowersFull superpowers={superpowers} />
+        </TabsContent>
+      </Tabs>
     </PageContainer>
   );
 }
