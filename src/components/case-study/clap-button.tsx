@@ -2,7 +2,6 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
-import { PartyPopper } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const MAX_CLAPS_PER_VISITOR = 10;
@@ -61,9 +60,10 @@ export function ClapButton({ slug, initialClaps }: { slug: string; initialClaps:
         initial={myClaps > 0 ? { scale: 0.6, rotate: -20 } : false}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 12 }}
-        className="flex"
+        className="flex text-[15px] leading-none"
+        aria-hidden="true"
       >
-        <PartyPopper size={15} />
+        👏🏾
       </motion.span>
       {claps} {claps === 1 ? "clap" : "claps"}
       {myClaps > 0 && (
