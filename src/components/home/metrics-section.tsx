@@ -28,9 +28,16 @@ export function MetricsSection({
   const [hovered, setHovered] = useState<number | null>(null);
   const [filledCount, setFilledCount] = useState(0);
   const [fillPercent, setFillPercent] = useState(0);
+  const { ref: cardsRef, inView } = useScrollInView("-80px");
 
   useEffect(() => {
-    if (hovered !== null || filledCount >= metrics.length) return;
+    // Without gating on inView, this races to completion on its own timer
+    // regardless of whether anyone's watching — on a fresh page load the
+    // section is usually still below the fold, so by the time it's
+    // scrolled into view every metric has already finished filling
+    // off-screen, and it looks permanently "stuck" filled with no
+    // animation ever visible.
+    if (!inView || hovered !== null || filledCount >= metrics.length) return;
     const id = setInterval(() => {
       setFillPercent((prev) => {
         const next = prev + (TICK_MS / FILL_MS) * 100;
@@ -42,10 +49,9 @@ export function MetricsSection({
       });
     }, TICK_MS);
     return () => clearInterval(id);
-  }, [metrics.length, hovered, filledCount]);
+  }, [metrics.length, hovered, filledCount, inView]);
 
   const hasPlaceholder = metrics.some((m) => m.isPlaceholder);
-  const { ref: cardsRef, inView } = useScrollInView("-80px");
 
   return (
     <div className="relative overflow-hidden px-4 py-8 sm:px-8">
