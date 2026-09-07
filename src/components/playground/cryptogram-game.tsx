@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type KeyboardEvent } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Anchor,
@@ -14,18 +14,19 @@ import {
   Image as ImageIcon,
   Keyboard,
   Layers,
+  Lightbulb,
   Monitor,
   Network,
   Orbit,
   Palette,
+  PartyPopper,
   Ruler,
+  SkipForward,
   Sparkles,
   Terminal,
   Upload,
   Video,
   Zap,
-  RefreshCw,
-  PartyPopper,
 } from "lucide-react";
 import { soundPreference } from "@/lib/persistent-toggle";
 import { playTone } from "@/lib/ui-sound";
@@ -55,7 +56,9 @@ const LETTER_ICONS: Record<string, typeof Anchor> = {
   Y: Zap,
 };
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const ALPHABET_RE = /^[A-Z]$/;
+const SEED_REVEAL_COUNT = 3;
+const MAX_HINTS = 3;
 
 const QUOTES = [
   { text: "SIMPLICITY IS THE ULTIMATE SOPHISTICATION", source: "Leonardo da Vinci" },
@@ -64,111 +67,201 @@ const QUOTES = [
   { text: "MOVE FAST AND BREAK THINGS", source: "Facebook, early motto" },
 ];
 
-export function CryptogramGame() {
-  const [quoteIndex, setQuoteIndex] = useState(0);
-  const [guessed, setGuessed] = useState<Set<string>>(new Set());
-  const [wrong, setWrong] = useState<string | null>(null);
+type Origin = "seed" | "hint" | "typed" | null;
+
+function firstUnfilled(text: string, filled: boolean[], from: number): number {
+  for (let i = from; i < text.length; i++) {
+    if (text[i] !== " " && !filled[i]) return i;
+  }
+  return -1;
+}
+
+function lastTypedBefore(origins: Origin[], from: number): number {
+  for (let i = from; i >= 0; i--) {
+    if (origins[i] === "typed") return i;
+  }
+  return -1;
+}
+
+function seedState(text: string): { filled: boolean[]; origins: Origin[] } {
+  const filled = new Array(text.length).fill(false);
+  const origins: Origin[] = new Array(text.length).fill(null);
+  let seeded = 0;
+  for (let i = 0; i < text.length && seeded < SEED_REVEAL_COUNT; i++) {
+    if (text[i] !== " ") {
+      filled[i] = true;
+      origins[i] = "seed";
+      seeded++;
+    }
+  }
+  return { filled, origins };
+}
+
+function CryptogramPuzzle({
+  quote,
+  onNext,
+}: {
+  quote: { text: string; source: string };
+  onNext: () => void;
+}) {
+  const [filled, setFilled] = useState<boolean[]>(() => seedState(quote.text).filled);
+  const [origins, setOrigins] = useState<Origin[]>(() => seedState(quote.text).origins);
+  const [cursor, setCursor] = useState<number>(() => firstUnfilled(quote.text, seedState(quote.text).filled, 0));
+  const [hintsUsed, setHintsUsed] = useState(0);
+  const [wrongIndex, setWrongIndex] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const soundOn = soundPreference.useValue();
 
-  const quote = QUOTES[quoteIndex];
-  const uniqueLetters = new Set(quote.text.replace(/[^A-Z]/g, "").split(""));
-  const solved = [...uniqueLetters].every((l) => guessed.has(l));
+  const words = quote.text.split(" ");
+  const wordIndices: number[][] = [];
+  let flat = 0;
+  for (const word of words) {
+    const idxs: number[] = [];
+    for (let c = 0; c < word.length; c++, flat++) idxs.push(flat);
+    wordIndices.push(idxs);
+    flat += 1;
+  }
 
-  function guess(letter: string) {
-    if (solved || guessed.has(letter)) return;
-    if (uniqueLetters.has(letter)) {
-      const next = new Set(guessed).add(letter);
-      setGuessed(next);
+  const letterCount = quote.text.replace(/ /g, "").length;
+  const filledCount = filled.filter(Boolean).length;
+  const solved = letterCount > 0 && filledCount === letterCount;
+  const hintsLeft = MAX_HINTS - hintsUsed;
+
+  function focusInput() {
+    inputRef.current?.focus();
+  }
+
+  function handleKeyInput(rawValue: string) {
+    if (solved || cursor === -1) return;
+    const letter = rawValue.slice(-1).toUpperCase();
+    if (!ALPHABET_RE.test(letter)) return;
+
+    if (letter === quote.text[cursor]) {
+      const nextFilled = [...filled];
+      nextFilled[cursor] = true;
+      const nextOrigins = [...origins];
+      nextOrigins[cursor] = "typed";
+      const nextCursor = firstUnfilled(quote.text, nextFilled, cursor + 1);
+
+      setFilled(nextFilled);
+      setOrigins(nextOrigins);
+      setCursor(nextCursor);
+      setWrongIndex(null);
+
       if (soundOn) {
-        const justSolved = [...uniqueLetters].every((l) => next.has(l));
-        playTone(justSolved ? { frequency: 440, toFrequency: 880, duration: 0.35 } : { frequency: 480, duration: 0.1 });
+        if (nextCursor === -1) playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
+        else playTone({ frequency: 480, duration: 0.1 });
       }
     } else {
-      setWrong(letter);
+      setWrongIndex(cursor);
       if (soundOn) playTone({ frequency: 160, duration: 0.15 });
-      setTimeout(() => setWrong((w) => (w === letter ? null : w)), 400);
+      setTimeout(() => setWrongIndex((w) => (w === cursor ? null : w)), 400);
     }
   }
 
-  function next() {
-    const nextIndex = (quoteIndex + 1) % QUOTES.length;
-    setQuoteIndex(nextIndex);
-    setGuessed(new Set());
-    setWrong(null);
+  function handleBackspace() {
+    if (solved) return;
+    const searchFrom = cursor === -1 ? quote.text.length - 1 : cursor - 1;
+    const target = lastTypedBefore(origins, searchFrom);
+    if (target === -1) return;
+    setFilled((prev) => {
+      const next = [...prev];
+      next[target] = false;
+      return next;
+    });
+    setOrigins((prev) => {
+      const next = [...prev];
+      next[target] = null;
+      return next;
+    });
+    setCursor(target);
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    const letter = event.key.toUpperCase();
-    if (letter.length === 1 && ALPHABET.includes(letter)) guess(letter);
+  function useHint() {
+    if (solved || hintsLeft <= 0 || cursor === -1) return;
+    const target = cursor;
+    const nextFilled = [...filled];
+    nextFilled[target] = true;
+    const nextOrigins = [...origins];
+    nextOrigins[target] = "hint";
+    const nextCursor = firstUnfilled(quote.text, nextFilled, target + 1);
+
+    setHintsUsed((h) => h + 1);
+    setFilled(nextFilled);
+    setOrigins(nextOrigins);
+    setCursor(nextCursor);
+    focusInput();
   }
 
   return (
     <div>
-      <label className="sr-only" htmlFor="cryptogram-input">
-        Type a letter to guess
+      <label htmlFor="cryptogram-input" className="sr-only">
+        Type letters to solve the quote
       </label>
       <input
         id="cryptogram-input"
-        type="text"
-        inputMode="text"
-        autoComplete="off"
+        ref={inputRef}
         value=""
-        onChange={() => {}}
-        onKeyDown={handleKeyDown}
-        placeholder="Type a letter…"
-        className="mb-5 h-10 w-full max-w-[200px] rounded-md border border-hairline bg-transparent px-3 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+        onChange={(event) => {
+          handleKeyInput(event.target.value);
+          event.target.value = "";
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Backspace") handleBackspace();
+        }}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="characters"
+        spellCheck={false}
+        inputMode="text"
+        disabled={solved}
+        className="sr-only"
       />
 
-      <div className="flex flex-wrap gap-x-1.5 gap-y-3">
-        {quote.text.split(" ").map((word, wi) => (
+      <div className="mb-4 flex items-center justify-between">
+        <p className="type-meta">
+          {filledCount} / {letterCount} letters
+        </p>
+        <button
+          type="button"
+          onClick={useHint}
+          disabled={solved || hintsLeft <= 0}
+          className="flex items-center gap-1.5 text-[12px] font-medium text-ink-soft transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <Lightbulb size={13} />
+          Hint &minus;{hintsLeft}
+        </button>
+      </div>
+
+      <div onClick={focusInput} className="flex cursor-text flex-wrap gap-x-3 gap-y-3">
+        {words.map((word, wi) => (
           <div key={wi} className="flex flex-wrap gap-1">
             {word.split("").map((ch, ci) => {
+              const flatIndex = wordIndices[wi][ci];
               const Icon = LETTER_ICONS[ch];
-              const revealed = guessed.has(ch);
+              const isFilled = filled[flatIndex];
+              const isCursor = flatIndex === cursor;
+              const isWrong = wrongIndex === flatIndex;
               return (
                 <motion.div
                   key={ci}
-                  animate={wrong === ch ? { x: [0, -4, 4, -4, 0] } : {}}
+                  animate={isWrong ? { x: [0, -4, 4, -4, 0] } : {}}
                   transition={{ duration: 0.3 }}
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-md border text-[15px] font-semibold",
-                    revealed
+                    "flex h-9 w-9 items-center justify-center rounded-md border text-[15px] font-semibold transition-colors",
+                    isFilled
                       ? "border-primary-300 bg-primary-tint text-primary-tint-text"
-                      : "border-hairline bg-surface-muted text-ink-soft",
+                      : isCursor
+                        ? "border-primary-400 bg-surface text-ink-soft"
+                        : "border-hairline bg-surface-muted text-ink-soft",
                   )}
                 >
-                  {revealed ? ch : Icon ? <Icon size={15} /> : ch}
+                  {isFilled ? ch : Icon ? <Icon size={15} /> : ch}
                 </motion.div>
               );
             })}
           </div>
         ))}
-      </div>
-
-      <div className="mt-5 flex flex-wrap gap-1">
-        {ALPHABET.map((letter) => {
-          const inQuote = uniqueLetters.has(letter);
-          const done = guessed.has(letter);
-          return (
-            <button
-              key={letter}
-              type="button"
-              onClick={() => guess(letter)}
-              disabled={done || solved}
-              className={cn(
-                "data-mono flex h-7 w-7 items-center justify-center rounded-md border text-[11px] font-medium transition-colors",
-                done
-                  ? "border-primary-300 bg-primary-tint text-primary-tint-text"
-                  : wrong === letter
-                    ? "border-danger bg-danger-tint text-danger"
-                    : "border-hairline text-ink-soft hover:bg-surface-muted hover:text-ink-strong",
-                !inQuote && !done && "opacity-60",
-              )}
-            >
-              {letter}
-            </button>
-          );
-        })}
       </div>
 
       <div className="mt-5 flex items-center gap-3">
@@ -182,19 +275,27 @@ export function CryptogramGame() {
             Solved — {quote.source}
           </motion.p>
         ) : (
-          <p className="type-meta">
-            {guessed.size} / {uniqueLetters.size} letters
-          </p>
+          <p className="type-meta">Type on your keyboard to fill it in.</p>
         )}
         <button
           type="button"
-          onClick={next}
+          onClick={onNext}
           className="inline-flex items-center gap-1.5 rounded-md border border-hairline px-3 py-1.5 text-[12.5px] font-medium text-ink-strong transition-colors hover:bg-surface-muted"
         >
-          <RefreshCw size={12} />
+          <SkipForward size={12} />
           {solved ? "Next quote" : "Skip"}
         </button>
       </div>
     </div>
   );
+}
+
+export function CryptogramGame() {
+  const [quoteIndex, setQuoteIndex] = useState(0);
+
+  function next() {
+    setQuoteIndex((i) => (i + 1) % QUOTES.length);
+  }
+
+  return <CryptogramPuzzle key={quoteIndex} quote={QUOTES[quoteIndex]} onNext={next} />;
 }

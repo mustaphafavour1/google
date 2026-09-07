@@ -243,3 +243,11 @@ export const allPortfolioArchiveQuery = /* groq */ `
     description
   }
 `;
+
+export const allLovedFontsQuery = /* groq */ `
+  *[_type == "lovedFont"] | order(order asc, name asc) {
+    _id,
+    name,
+    order
+  }
+`;

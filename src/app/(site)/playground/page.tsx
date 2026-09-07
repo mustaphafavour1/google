@@ -1,10 +1,14 @@
-import { Rocket, KeyRound, Puzzle, Grid3x3 } from "lucide-react";
+import { Rocket, KeyRound, Puzzle, Type } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
+import { WordPlayGame } from "@/components/playground/wordplay-game";
 import { CryptogramGame } from "@/components/playground/cryptogram-game";
 import { JigsawGame } from "@/components/playground/jigsaw-game";
-import { SymmetryGame } from "@/components/playground/symmetry-game";
+import { LovedFontsSection } from "@/components/playground/loved-fonts-section";
+import { getLovedFonts } from "@/lib/content";
 
-export default function PlaygroundPage() {
+export default async function PlaygroundPage() {
+  const lovedFonts = await getLovedFonts();
+
   return (
     <PageContainer>
       <div className="flex items-center gap-2.5">
@@ -15,7 +19,18 @@ export default function PlaygroundPage() {
         Three small games — no prize at the end, just something to fidget with.
       </p>
 
-      <div className="mt-9 flex flex-col gap-6">
+      <div className="mt-9 grid gap-6 lg:grid-cols-2">
+        <section className="card p-6 sm:p-8">
+          <div className="mb-5 flex items-center gap-2">
+            <Type size={16} className="text-primary-500" />
+            <div>
+              <h2 className="text-[15px] font-semibold text-ink-em">WordPlay</h2>
+              <p className="type-meta">Add or subtract two words to land on the right answer.</p>
+            </div>
+          </div>
+          <WordPlayGame />
+        </section>
+
         <section className="card p-6 sm:p-8">
           <div className="mb-5 flex items-center gap-2">
             <KeyRound size={16} className="text-primary-500" />
@@ -37,18 +52,9 @@ export default function PlaygroundPage() {
           </div>
           <JigsawGame />
         </section>
-
-        <section className="card p-6 sm:p-8">
-          <div className="mb-5 flex items-center gap-2">
-            <Grid3x3 size={16} className="text-primary-500" />
-            <div>
-              <h2 className="text-[15px] font-semibold text-ink-em">Symmetry Blocks</h2>
-              <p className="type-meta">Drop Tetris-style blocks until the board mirrors itself perfectly.</p>
-            </div>
-          </div>
-          <SymmetryGame />
-        </section>
       </div>
+
+      <LovedFontsSection fonts={lovedFonts} />
     </PageContainer>
   );
 }

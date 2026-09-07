@@ -219,6 +219,12 @@ export type DesignSuperpower = {
   order: number;
 };
 
+export type LovedFont = {
+  _id: string;
+  name: string;
+  order: number;
+};
+
 export type ProcessDiscipline =
   | "Overall"
   | "AI-workflow"

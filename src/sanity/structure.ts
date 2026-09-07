@@ -39,4 +39,5 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("jobApplicationVariant").title("Job applications"),
       S.documentTypeListItem("portfolioArchive").title("Portfolio archive"),
       S.documentTypeListItem("backgroundPattern").title("Background patterns"),
+      S.documentTypeListItem("lovedFont").title("Loved fonts (For Fun page)"),
     ]);

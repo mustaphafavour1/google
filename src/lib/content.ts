@@ -12,6 +12,7 @@ import {
   allBackgroundPatternsQuery,
   allBlogPostsQuery,
   blogPostBySlugQuery,
+  allLovedFontsQuery,
   allDddWeeksQuery,
   allAiContextEntriesQuery,
   aiGuidelinesQuery,
@@ -29,6 +30,7 @@ import { siteSettingsFallback } from "@/lib/data/site";
 import { getJobApplicationBySlug as getJobApplicationBySlugFallback } from "@/lib/data/job-applications";
 import { portfolioArchiveFallback } from "@/lib/data/portfolio-archive";
 import { backgroundPatternsFallback } from "@/lib/data/background-patterns";
+import { lovedFontsFallback } from "@/lib/data/loved-fonts";
 import type {
   JobApplicationVariant,
   Project,
@@ -43,6 +45,7 @@ import type {
   BlogPost,
   DddEntry,
   AiContextEntry,
+  LovedFont,
 } from "@/lib/types";
 
 const REVALIDATE_SECONDS = 60;
@@ -266,4 +269,9 @@ export async function getPortfolioArchive(): Promise<PortfolioArchiveEntry[]> {
 export async function getBackgroundPatterns(): Promise<BackgroundPattern[]> {
   const result = await sanityFetch<BackgroundPattern[]>(allBackgroundPatternsQuery);
   return result ?? backgroundPatternsFallback;
+}
+
+export async function getLovedFonts(): Promise<LovedFont[]> {
+  const result = await sanityFetch<LovedFont[]>(allLovedFontsQuery);
+  return result && result.length > 0 ? result : lovedFontsFallback;
 }

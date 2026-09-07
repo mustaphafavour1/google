@@ -15,6 +15,7 @@ import { blogPost } from "./documents/blogPost";
 import { dddWeek } from "./documents/dddWeek";
 import { aiContextEntry } from "./documents/aiContextEntry";
 import { aiGuidelines } from "./documents/aiGuidelines";
+import { lovedFont } from "./documents/lovedFont";
 
 import { heroBlock } from "./objects/blocks/heroBlock";
 import { metricsRowBlock } from "./objects/blocks/metricsRowBlock";
@@ -53,6 +54,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   dddWeek,
   aiContextEntry,
   aiGuidelines,
+  lovedFont,
   // Page-builder blocks
   heroBlock,
   metricsRowBlock,
