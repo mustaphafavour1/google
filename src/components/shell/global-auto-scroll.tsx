@@ -23,6 +23,10 @@ const BASE_PX_PER_SECOND = 108;
 // before resuming the scroll tick, so it doesn't measure a stale page height.
 const SETTLE_MS = 650;
 const BASE_ITEM_PAUSE_MS = 350;
+// Most speech engines stay reasonably intelligible up to about 2.5x — past
+// that it starts turning into noise, so the fastest tour speeds (3x, 5x)
+// cap out here instead of climbing with them.
+const MAX_SPEECH_RATE = 2.5;
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -104,6 +108,10 @@ export function GlobalAutoScroll() {
     if (!narrated) return;
     let cancelled = false;
     const pauseMs = Math.max(120, BASE_ITEM_PAUSE_MS / speed);
+    // Reading speed tracks the tour's own scroll speed so narration never
+    // becomes the thing holding a fast tour back — at 1x it's the normal
+    // rate, faster tours speak proportionally faster (capped for clarity).
+    const speechRate = Math.min(MAX_SPEECH_RATE, speed);
 
     async function run() {
       await delay(SETTLE_MS);
@@ -116,7 +124,7 @@ export function GlobalAutoScroll() {
       for (const item of items) {
         if (cancelled) return;
         item.el.scrollIntoView({ behavior: "smooth", block: "center" });
-        await speakAsync(item.text);
+        await speakAsync(item.text, speechRate);
         if (cancelled) return;
         await delay(pauseMs);
       }
