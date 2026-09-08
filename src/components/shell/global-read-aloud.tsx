@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { readAloudPreference } from "@/lib/persistent-toggle";
+import { useAutoScrollState } from "@/lib/auto-scroll-store";
+import { speak, cancelSpeech } from "@/lib/speech";
 
 const HOVER_DELAY_MS = 350;
 const MAX_CHARS = 300;
@@ -33,64 +35,26 @@ function resolveSpeakableText(target: EventTarget | null): string | null {
   return null;
 }
 
-// Undefined = not resolved yet (voice list may still be loading — retried
-// on the next speak() call); null = resolved, no voice found to prefer.
-let cachedVoice: SpeechSynthesisVoice | null | undefined;
-
-// Common names for a browser/OS's female English voice, checked in order,
-// so every utterance uses the same one voice instead of whatever the
-// browser's own per-call default happens to resolve to.
-const FEMALE_VOICE_NAMES = [
-  "Samantha", // macOS / iOS Safari
-  "Google US English", // Chrome — female by default
-  "Google UK English Female",
-  "Microsoft Zira", // Windows
-  "Victoria",
-  "Karen",
-  "Moira",
-];
-
-function pickVoice(): SpeechSynthesisVoice | null {
-  if (cachedVoice !== undefined) return cachedVoice;
-  const voices = window.speechSynthesis.getVoices();
-  if (voices.length === 0) return null;
-
-  for (const name of FEMALE_VOICE_NAMES) {
-    const match = voices.find((v) => v.name.includes(name));
-    if (match) return (cachedVoice = match);
-  }
-  const femaleNamed = voices.find((v) => /female/i.test(v.name));
-  if (femaleNamed) return (cachedVoice = femaleNamed);
-
-  const english = voices.find((v) => v.lang.startsWith("en"));
-  return (cachedVoice = english ?? voices[0] ?? null);
-}
-
-function speak(text: string) {
-  try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voice = pickVoice();
-    if (voice) utterance.voice = voice;
-    window.speechSynthesis.speak(utterance);
-  } catch {
-    // Speech synthesis is a non-essential enhancement — never block on it.
-  }
-}
-
 /**
  * Headless, site-wide: reads hovered text (or an image's caption, via its
  * `alt`) aloud using the browser's own speech synthesis — no audio assets,
  * no external API. Mounted once in AppShell rather than inside
  * AccessibilityMenu, which renders twice (desktop + mobile headers).
+ *
+ * Sits out entirely while the narrated site tour owns speech (auto-scroll
+ * + read-aloud both on — see GlobalAutoScroll) so the two never talk over
+ * each other: a stray mouseover mid-tour would otherwise cancel whatever
+ * the tour was in the middle of saying.
  */
 export function GlobalReadAloud() {
   const enabled = readAloudPreference.useValue();
+  const { active: autoScrollActive } = useAutoScrollState();
+  const hoverModeEnabled = enabled && !autoScrollActive;
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSpokenRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!hoverModeEnabled) return;
 
     function stop() {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -124,9 +88,9 @@ export function GlobalReadAloud() {
       document.removeEventListener("mouseover", onOver);
       document.removeEventListener("mouseout", stop);
       document.removeEventListener("focusin", onFocus);
-      window.speechSynthesis?.cancel();
+      cancelSpeech();
     };
-  }, [enabled]);
+  }, [hoverModeEnabled]);
 
   return null;
 }

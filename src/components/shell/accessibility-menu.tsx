@@ -33,22 +33,27 @@ export function AccessibilityMenu({ className }: { className?: string }) {
       <PopoverContent aria-label="Accessibility settings">
         <p className="type-eyebrow mb-3">Accessibility</p>
         <div className="flex flex-col gap-4">
-          <label className="flex cursor-pointer items-center justify-between gap-3">
-            <span className="flex items-center gap-2.5">
-              <Volume2 size={16} className="shrink-0 text-ink-soft" />
-              <span>
-                <span className="block text-[13px] font-medium text-ink-strong">Read aloud</span>
-                <span className="block text-[11.5px] text-ink-muted">
-                  Reads hovered text and image captions aloud
+          <div className="flex flex-col gap-1.5">
+            <label className="flex cursor-pointer items-center justify-between gap-3">
+              <span className="flex items-center gap-2.5">
+                <Volume2 size={16} className="shrink-0 text-ink-soft" />
+                <span>
+                  <span className="block text-[13px] font-medium text-ink-strong">Read aloud</span>
+                  <span className="block text-[11.5px] text-ink-muted">
+                    Reads hovered text and image captions aloud
+                  </span>
                 </span>
               </span>
-            </span>
-            <Switch
-              checked={readAloudEnabled}
-              onCheckedChange={readAloudPreference.set}
-              aria-label="Toggle read aloud on hover"
-            />
-          </label>
+              <Switch
+                checked={readAloudEnabled}
+                onCheckedChange={readAloudPreference.set}
+                aria-label="Toggle read aloud on hover"
+              />
+            </label>
+            <p className="pl-[26px] text-[10px] leading-snug text-ink-faint">
+              Turn on auto-scroll and read aloud together to watch through the entire portfolio like a movie.
+            </p>
+          </div>
           <label className="flex cursor-pointer items-center justify-between gap-3">
             <span className="flex items-center gap-2.5">
               <Captions size={16} className="shrink-0 text-ink-soft" />

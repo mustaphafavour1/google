@@ -12,6 +12,9 @@ import {
   setAutoScrollSpeed,
   useAutoScrollState,
 } from "@/lib/auto-scroll-store";
+import { readAloudPreference } from "@/lib/persistent-toggle";
+import { collectNarratedItems } from "@/lib/narrated-tour";
+import { speakAsync, cancelSpeech } from "@/lib/speech";
 import { primaryNav, isNavItemActive } from "./nav-config";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +22,11 @@ const BASE_PX_PER_SECOND = 108;
 // Gives PageTransition's slide + the new route's data fetch time to settle
 // before resuming the scroll tick, so it doesn't measure a stale page height.
 const SETTLE_MS = 650;
+const BASE_ITEM_PAUSE_MS = 350;
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * A persistent, cross-page "site tour": scrolls the current page top to
@@ -26,9 +34,18 @@ const SETTLE_MS = 650;
  * (looping back to Home at the end) and resumes there. Lives in AppShell
  * so its state survives the route changes it triggers — a per-page
  * component would reset every time it navigates itself away.
+ *
+ * With read-aloud also on, this becomes a narrated tour: instead of a
+ * smooth continuous scroll, it walks the page's headings/paragraphs/images
+ * one at a time — scrolling each into view and speaking it (an image or
+ * video is announced as "Showing image/video of <caption>") — before
+ * moving to the next, so the visuals and narration play back in sync
+ * instead of racing each other.
  */
 export function GlobalAutoScroll() {
   const { active, speed, popoverOpen } = useAutoScrollState();
+  const readAloudOn = readAloudPreference.useValue();
+  const narrated = active && readAloudOn;
   const pathname = usePathname();
   const router = useRouter();
   const frameRef = useRef<number | null>(null);
@@ -46,8 +63,10 @@ export function GlobalAutoScroll() {
     return () => clearTimeout(id);
   }, [pathname, active]);
 
+  // Plain continuous scroll — only while read-aloud is off. With it on, the
+  // narrated walk below takes over so scrolling stays paced to speech.
   useEffect(() => {
-    if (!active) return;
+    if (!active || narrated) return;
 
     function tick(ts: number) {
       if (settlingRef.current) {
@@ -76,7 +95,45 @@ export function GlobalAutoScroll() {
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, [active, speed, pathname, router]);
+  }, [active, narrated, speed, pathname, router]);
+
+  // Narrated walk — speaks through the page's content, item by item,
+  // scrolling each into view as it's announced, then moves to the next
+  // page exactly like the plain scroll does once it runs out.
+  useEffect(() => {
+    if (!narrated) return;
+    let cancelled = false;
+    const pauseMs = Math.max(120, BASE_ITEM_PAUSE_MS / speed);
+
+    async function run() {
+      await delay(SETTLE_MS);
+      if (cancelled) return;
+
+      const main = document.querySelector("main");
+      if (!main) return;
+      const items = collectNarratedItems(main);
+
+      for (const item of items) {
+        if (cancelled) return;
+        item.el.scrollIntoView({ behavior: "smooth", block: "center" });
+        await speakAsync(item.text);
+        if (cancelled) return;
+        await delay(pauseMs);
+      }
+      if (cancelled) return;
+
+      const currentIndex = primaryNav.findIndex((navItem) => isNavItemActive(pathname, navItem.href));
+      const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % primaryNav.length;
+      settlingRef.current = true;
+      router.push(primaryNav[nextIndex].href);
+    }
+
+    run();
+    return () => {
+      cancelled = true;
+      cancelSpeech();
+    };
+  }, [narrated, pathname, speed, router]);
 
   useEffect(() => {
     if (!active) return;
@@ -160,7 +217,10 @@ export function GlobalAutoScroll() {
             ))}
           </div>
         </div>
-        <p className="mt-2.5 text-[10px] leading-snug text-ink-faint">Press Esc to stop anytime</p>
+        <p className="mt-2.5 text-[10px] leading-snug text-ink-faint">
+          Turn on auto-scroll and read aloud together to watch through the entire portfolio like a movie.
+        </p>
+        <p className="mt-1 text-[10px] leading-snug text-ink-faint">Press Esc to stop anytime</p>
       </PopoverContent>
     </Popover>
   );
