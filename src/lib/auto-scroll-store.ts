@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-export const AUTO_SCROLL_SPEEDS = [0.5, 1, 1.5, 2, 3] as const;
+export const AUTO_SCROLL_SPEEDS = [0.5, 1, 1.5, 2, 3, 5] as const;
 export type AutoScrollSpeed = (typeof AUTO_SCROLL_SPEEDS)[number];
 
 type AutoScrollState = { active: boolean; speed: AutoScrollSpeed; popoverOpen: boolean };
