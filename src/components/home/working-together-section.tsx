@@ -94,7 +94,7 @@ export function WorkingTogetherSection({
                   </h3>
                   <p
                     className={cn(
-                      "type-body mt-1.5 max-w-xl text-ink-muted transition-opacity duration-300",
+                      "type-body mt-1.5 max-w-xl text-ink-muted transition-opacity duration-300 max-sm:text-[12px]",
                       isActive ? "opacity-100" : "opacity-0",
                     )}
                   >

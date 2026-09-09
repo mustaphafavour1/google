@@ -1,11 +1,12 @@
 "use client";
 
-import { useId } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useId, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
 import { useScrollInView } from "@/lib/use-scroll-in-view";
+import { cn } from "@/lib/utils";
 import type { JourneyMilestone } from "@/lib/types";
 
 const VB_WIDTH = 1000;
@@ -15,6 +16,65 @@ const RIGHT_PADDING_PCT = 6;
 const BASELINE_PCT = 92;
 const YEARS_WITH_JAN = new Set(["2019", "2025"]);
 const TILTS = [-3, 2, -2, 3, -3, 2, -2, 3];
+const MOBILE_CYCLE_MS = 3500;
+
+function yearLabel(milestone: JourneyMilestone): string {
+  return YEARS_WITH_JAN.has(milestone.year) ? `Jan. ${milestone.year}` : milestone.year;
+}
+
+/**
+ * The full chart's dozen-odd tilted, absolutely-positioned bubbles have no
+ * room to breathe on a narrow phone screen — they overlap into a crowded
+ * mess. Below `sm`, swap it for one milestone at a time: a small row of
+ * year chips to jump directly to a year, auto-cycling through the rest.
+ * The interval restarts on every index change (manual or automatic) so a
+ * manual jump always gets the full dwell time before advancing again.
+ */
+function MobileJourneyCycle({ milestones }: { milestones: JourneyMilestone[] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (milestones.length < 2) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % milestones.length), MOBILE_CYCLE_MS);
+    return () => clearInterval(id);
+  }, [index, milestones.length]);
+
+  const milestone = milestones[index];
+
+  return (
+    <div className="sm:hidden">
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {milestones.map((m, i) => (
+          <button
+            key={`${m.year}-${i}`}
+            type="button"
+            onClick={() => setIndex(i)}
+            aria-pressed={i === index}
+            className={cn(
+              "data-mono rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors",
+              i === index ? "border-primary-500 bg-primary-500 text-white" : "border-hairline text-ink-soft",
+            )}
+          >
+            {yearLabel(m)}
+          </button>
+        ))}
+      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.3 }}
+          className="mx-auto mt-4 max-w-xs rounded-xl border border-hairline bg-surface px-4 py-4 text-center shadow-[0_4px_10px_rgb(35_25_15_/_0.08)]"
+        >
+          <span className="data-mono block text-[11px] font-semibold text-primary-500">{yearLabel(milestone)}</span>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{milestone.text}</p>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
 
 function impactPercent(index: number, count: number): number {
   const t = count > 1 ? index / (count - 1) : 1;
@@ -59,7 +119,7 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
 
   return (
     <div>
-      <div ref={chartRef} className="relative mx-auto aspect-[1000/430] w-full max-w-4xl">
+      <div ref={chartRef} className="relative mx-auto hidden aspect-[1000/430] w-full max-w-4xl sm:block">
         <div
           className="absolute left-0 whitespace-nowrap text-center text-[10px] font-semibold uppercase tracking-wide text-ink-faint"
           style={{ top: `${(topY / VB_HEIGHT) * 100}%`, transform: "translate(-10%, -140%)" }}
@@ -136,7 +196,7 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
           const xPercent = (point.x / VB_WIDTH) * 100;
           const yPercent = (point.y / VB_HEIGHT) * 100;
           const above = i % 2 === 0;
-          const label = YEARS_WITH_JAN.has(milestone.year) ? `Jan. ${milestone.year}` : milestone.year;
+          const label = yearLabel(milestone);
           // Centering every bubble on its point works until the point itself
           // sits near an edge — then half the (fixed-width) bubble overhangs
           // the chart. Anchor those to the inside edge instead of centering.
@@ -174,13 +234,15 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
               className="type-meta absolute -translate-x-1/2 whitespace-nowrap text-[9px]"
               style={{ left: `${(points[i].x / VB_WIDTH) * 100}%` }}
             >
-              {YEARS_WITH_JAN.has(milestone.year) ? `Jan. ${milestone.year}` : milestone.year}
+              {yearLabel(milestone)}
             </span>
           ))}
         </div>
       </div>
 
-      <div className="mt-16 flex justify-center">
+      <MobileJourneyCycle milestones={milestones} />
+
+      <div className="mt-10 flex justify-center sm:mt-16">
         <button type="button" onClick={openForm} className={buttonVariants({ size: "lg" })}>
           Let&rsquo;s discuss
           <ArrowRight size={15} />

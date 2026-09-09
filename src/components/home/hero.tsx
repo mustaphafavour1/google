@@ -21,7 +21,7 @@ export function Hero({
   const { openForm } = useContactForm();
 
   return (
-    <div className="relative flex min-h-[95vh] flex-col items-center justify-center px-4 py-6 text-center">
+    <div className="relative flex min-h-[95vh] max-sm:min-h-[100dvh] flex-col items-center justify-center px-4 py-6 text-center">
       <HeroBlobs />
 
       {jdVariant && (
@@ -39,7 +39,7 @@ export function Hero({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="max-w-3xl text-[clamp(2.1rem,4.6vw,3.5rem)] font-extrabold leading-[1.08] tracking-tight text-ink-em"
+        className="max-w-3xl text-[clamp(2.1rem,4.6vw,3.5rem)] max-sm:text-[clamp(1.6rem,7vw,2.4rem)] font-extrabold leading-[1.08] tracking-tight text-ink-em"
       >
         {jdVariant ? (
           <>Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.</>
@@ -53,7 +53,7 @@ export function Hero({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="mt-2 max-w-xl font-brand text-[40px] leading-[1.15] text-ink-em"
+          className="mt-2 max-w-xl font-brand text-[40px] max-sm:text-[28px] leading-[1.15] text-ink-em"
         >
           {hero.titleUnderText}
         </motion.p>

@@ -59,8 +59,8 @@ export function HeroBlobs() {
           className="absolute rounded-full opacity-40 blur-[120px] [background-color:var(--blob-color)] dark:[background-color:var(--blob-dark-color)]"
           style={
             {
-              width: blob.size,
-              height: blob.size,
+              width: `clamp(140px, 58vw, ${blob.size}px)`,
+              height: `clamp(140px, 58vw, ${blob.size}px)`,
               top: blob.top,
               left: blob.left,
               "--blob-color": blob.color,

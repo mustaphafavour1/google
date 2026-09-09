@@ -17,6 +17,8 @@ export type NavItem = {
   icon: LucideIcon;
   /** Extra search-only synonyms — not shown anywhere, just matched against. */
   keywords?: string[];
+  /** Shorter label for tight spaces (mobile bottom tab bar). Falls back to label. */
+  shortLabel?: string;
 };
 
 export const primaryNav: NavItem[] = [
@@ -34,7 +36,7 @@ export const primaryNav: NavItem[] = [
 export const mobileTabs: NavItem[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Projects", href: "/projects", icon: Briefcase },
-  { label: "Process & Skills", href: "/process", icon: Workflow },
+  { label: "Process & Skills", href: "/process", icon: Workflow, shortLabel: "Process" },
   { label: "Gallery", href: "/gallery", icon: Images },
   { label: "Profile", href: "/profile", icon: User },
 ];

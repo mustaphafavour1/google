@@ -58,8 +58,8 @@ export function WhyMeSection({ content }: { content: WhyMeContent }) {
                 style={{ maskImage: ICON_FADE_MASK, WebkitMaskImage: ICON_FADE_MASK }}
               />
               <div className="relative flex h-full flex-col justify-center">
-                <h3 className="text-[20px] font-bold text-white">{card.title}</h3>
-                <p className="type-body mt-1.5 text-white/80">{card.subtitle}</p>
+                <h3 className="text-[20px] max-sm:text-[14px] font-bold text-white">{card.title}</h3>
+                <p className="type-body mt-1.5 text-white/80 max-sm:text-[11px] max-sm:leading-snug">{card.subtitle}</p>
               </div>
             </motion.div>
           );

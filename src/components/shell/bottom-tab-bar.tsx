@@ -29,7 +29,7 @@ export function BottomTabBar({ contact }: { contact: SiteSettings["contact"] }) 
           >
             <Icon size={19} strokeWidth={2} />
             <span className={cn("text-[10.5px]", active ? "font-semibold" : "font-medium")}>
-              {item.label}
+              {item.shortLabel ?? item.label}
             </span>
           </Link>
         );
