@@ -6,6 +6,7 @@ import { Lightbulb, PartyPopper, SkipForward } from "lucide-react";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
 import { LETTER_ICONS } from "@/lib/letter-icons";
+import { ConfettiBurst } from "./confetti-burst";
 
 const ALPHABET_RE = /^[A-Z]$/;
 const SEED_REVEAL_COUNT = 3;
@@ -60,6 +61,7 @@ function CryptogramPuzzle({
   const [cursor, setCursor] = useState<number>(() => firstUnfilled(quote.text, seedState(quote.text).filled, 0));
   const [hintsUsed, setHintsUsed] = useState(0);
   const [wrongIndex, setWrongIndex] = useState<number | null>(null);
+  const [celebrateKey, setCelebrateKey] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const words = quote.text.split(" ");
@@ -98,8 +100,12 @@ function CryptogramPuzzle({
       setCursor(nextCursor);
       setWrongIndex(null);
 
-      if (nextCursor === -1) playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
-      else playTone({ frequency: 480, duration: 0.1 });
+      if (nextCursor === -1) {
+        setCelebrateKey((k) => k + 1);
+        playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
+      } else {
+        playTone({ frequency: 480, duration: 0.1 });
+      }
     } else {
       setWrongIndex(cursor);
       playTone({ frequency: 160, duration: 0.15 });
@@ -142,7 +148,8 @@ function CryptogramPuzzle({
   }
 
   return (
-    <div>
+    <div className="relative">
+      <ConfettiBurst fireKey={celebrateKey} />
       <label htmlFor="cryptogram-input" className="sr-only">
         Type letters to solve the quote
       </label>

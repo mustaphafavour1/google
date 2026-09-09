@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Check, Lightbulb, PartyPopper, RotateCcw, SkipForward } from "lucide-react";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
+import { ConfettiBurst } from "./confetti-burst";
 
 type Question = { a: string; op: "+" | "-"; b: string; answer: string };
 
@@ -36,6 +37,7 @@ export function WordPlayGame() {
   const [wrong, setWrong] = useState(false);
   const [solved, setSolved] = useState(false);
   const [solvedCount, setSolvedCount] = useState(0);
+  const [celebrateKey, setCelebrateKey] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const q = QUESTIONS[index];
@@ -60,6 +62,7 @@ export function WordPlayGame() {
     if (guess === q.answer) {
       setSolved(true);
       setSolvedCount((c) => c + 1);
+      setCelebrateKey((k) => k + 1);
       playTone({ frequency: 440, toFrequency: 880, duration: 0.35 });
     } else {
       setWrong(true);
@@ -94,7 +97,8 @@ export function WordPlayGame() {
   }
 
   return (
-    <div>
+    <div className="relative">
+      <ConfettiBurst fireKey={celebrateKey} />
       <div className="flex items-center justify-between">
         <p className="type-meta">
           {solvedCount} / {QUESTIONS.length} solved

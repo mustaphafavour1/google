@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Shuffle, PartyPopper } from "lucide-react";
 import { playTone } from "@/lib/ui-sound";
 import { cn } from "@/lib/utils";
+import { ConfettiBurst } from "./confetti-burst";
 
 const GRID_SIZE = 3;
 const TILE_COUNT = GRID_SIZE * GRID_SIZE;
@@ -36,6 +37,7 @@ export function JigsawGame() {
   const [ready, setReady] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
   const [moves, setMoves] = useState(0);
+  const [celebrateKey, setCelebrateKey] = useState(0);
 
   useEffect(() => {
     // Randomizing during render would run once on the server and again on
@@ -73,11 +75,13 @@ export function JigsawGame() {
     setMoves((m) => m + 1);
 
     const justSolved = next.every((piece, i) => piece === i);
+    if (justSolved) setCelebrateKey((k) => k + 1);
     playTone(justSolved ? { frequency: 440, toFrequency: 880, duration: 0.35 } : { frequency: 320, duration: 0.08 });
   }
 
   return (
-    <div>
+    <div className="relative">
+      <ConfettiBurst fireKey={celebrateKey} />
       <div className="mb-4 flex flex-wrap gap-1.5">
         {PUZZLES.map((p, i) => (
           <button
