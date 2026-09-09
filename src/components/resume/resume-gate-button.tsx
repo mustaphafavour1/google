@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
-import { X } from "lucide-react";
+import { Eye, EyeOff, X } from "lucide-react";
 
 type Variant = { label: string; url: string };
 type Stage = "closed" | "password" | "picking" | "viewing";
@@ -9,6 +9,7 @@ type Stage = "closed" | "password" | "picking" | "viewing";
 export function ResumeGateButton({ className, children }: { className?: string; children: ReactNode }) {
   const [stage, setStage] = useState<Stage>("closed");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [variants, setVariants] = useState<Variant[]>([]);
@@ -17,6 +18,7 @@ export function ResumeGateButton({ className, children }: { className?: string; 
   function close() {
     setStage("closed");
     setPassword("");
+    setShowPassword(false);
     setError(null);
     setVariants([]);
     setActiveVariant(null);
@@ -76,17 +78,27 @@ export function ResumeGateButton({ className, children }: { className?: string; 
               </button>
             </div>
             <form onSubmit={submit} className="flex flex-col gap-2">
-              <input
-                type="password"
-                autoFocus
-                value={password}
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                  setError(null);
-                }}
-                placeholder="Password"
-                className="h-10 rounded-md border border-border bg-transparent px-3 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  autoFocus
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    setError(null);
+                  }}
+                  placeholder="Password"
+                  className="h-10 w-full rounded-md border border-border bg-transparent px-3 pr-9 text-[13px] text-ink-strong outline-none focus:ring-2 focus:ring-primary-500/15"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((show) => !show)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-soft hover:text-ink-strong"
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
               {error && <p className="text-[12px] text-danger">{error}</p>}
               <button
                 type="submit"
