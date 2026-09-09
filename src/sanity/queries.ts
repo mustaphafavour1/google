@@ -3,7 +3,7 @@ export const projectFields = /* groq */ `
   name,
   "slug": slug.current,
   oneLiner,
-  "industry": industry->name,
+  "industry": coalesce(industry->name, industry),
   "coverImage": coverImage.asset->url + "?auto=format",
   "coverGifUrl": coverGif.asset->url,
   tags,
@@ -40,6 +40,10 @@ export const projectFields = /* groq */ `
         caption,
         span
       }
+    },
+    _type == "video" => {
+      "fileUrl": file.asset->url,
+      "fileMimeType": file.asset->mimeType
     }
   }
 `;
@@ -63,7 +67,7 @@ export const allProjectsAiContextQuery = /* groq */ `
     name,
     "slug": slug.current,
     oneLiner,
-    "industry": industry->name,
+    "industry": coalesce(industry->name, industry),
     year,
     tags,
     aiContext

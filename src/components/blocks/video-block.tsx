@@ -10,7 +10,13 @@ export function VideoBlock({ block, project }: { block: VideoBlockT; project: Pr
   return (
     <div>
       {block.heading && <h3 className="type-subheading mb-3">{block.heading}</h3>}
-      {block.embedUrl ? (
+      {block.fileUrl ? (
+        <div className="overflow-hidden rounded-xl border border-hairline">
+          <video controls preload="metadata" className="aspect-video w-full bg-black">
+            <source src={block.fileUrl} type={block.fileMimeType} />
+          </video>
+        </div>
+      ) : block.embedUrl ? (
         <div className="overflow-hidden rounded-xl border border-hairline">
           <iframe
             src={block.embedUrl}

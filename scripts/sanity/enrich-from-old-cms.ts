@@ -99,6 +99,26 @@ async function uploadImageFromUrl(url: string, filenameHint: string): Promise<st
   }
 }
 
+// Video files can be tens of MB (some of the old CMS's are hundreds), so
+// this is deliberately its own path rather than reusing uploadImageFromUrl
+// with a different asset type — worth calling out at the call site, not
+// hidden behind a generic name.
+async function uploadVideoFromUrl(url: string, filenameHint: string): Promise<string | null> {
+  if (assetCache.has(url)) return assetCache.get(url)!;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`fetch ${res.status}`);
+    const buffer = Buffer.from(await res.arrayBuffer());
+    const asset = await newClient.assets.upload("file", buffer, { filename: filenameHint });
+    assetCache.set(url, asset._id);
+    uploadCount += 1;
+    return asset._id;
+  } catch (err) {
+    console.error(`  ⚠ video upload failed (${filenameHint}):`, err);
+    return null;
+  }
+}
+
 // Runs async tasks with a concurrency cap so 180-odd image uploads don't
 // all fire at once.
 async function withConcurrency<T>(items: T[], limit: number, fn: (item: T, i: number) => Promise<void>) {
@@ -123,12 +143,15 @@ type OldSection = {
   url?: string;
   embedType?: string;
   desktopImageUrl?: string;
+  videoFileUrl?: string;
+  videoFileExt?: string;
 };
 
 type PreparedBlock =
   | { kind: "richText"; heading?: string; paragraphs: string[] }
   | { kind: "fullBleedImage"; caption?: string; sourceUrl: string; assetFilename: string }
   | { kind: "video"; heading?: string; embedUrl: string }
+  | { kind: "videoFile"; heading?: string; sourceUrl: string; assetFilename: string }
   | { kind: "pipLinkPreview"; title: string; description?: string; url: string; linkLabel: string };
 
 function prepareSectionBlocks(sections: OldSection[] | undefined, links: { label?: string; url?: string }[]): PreparedBlock[] {
@@ -139,6 +162,16 @@ function prepareSectionBlocks(sections: OldSection[] | undefined, links: { label
       if (paragraphs.length > 0) prepared.push({ kind: "richText", paragraphs });
     } else if (s._type === "imageSection" && s.desktopImageUrl) {
       prepared.push({ kind: "fullBleedImage", caption: s.caption, sourceUrl: s.desktopImageUrl, assetFilename: s._key });
+    } else if (s._type === "videoSection" && s.videoFileUrl) {
+      // The old CMS's own upload wins over an external url on the same
+      // section (e.g. FlutterBytes' first video section carries both — a
+      // Twitter status link alongside the real uploaded clip).
+      prepared.push({
+        kind: "videoFile",
+        heading: s.title,
+        sourceUrl: s.videoFileUrl,
+        assetFilename: `${s._key}.${s.videoFileExt || "mp4"}`,
+      });
     } else if (s._type === "videoSection" && s.url) {
       if (looksEmbeddable(s.url)) prepared.push({ kind: "video", heading: s.title, embedUrl: s.url });
       else prepared.push({ kind: "pipLinkPreview", title: s.title || "Video", url: s.url, linkLabel: "Watch" });
@@ -165,6 +198,16 @@ async function resolveBlocks(prepared: PreparedBlock[]): Promise<Record<string, 
       resolved[i] = { _type: "richText", _key: randomUUID(), format: "prose", paragraphs: block.paragraphs };
     } else if (block.kind === "video") {
       resolved[i] = { _type: "video", _key: randomUUID(), heading: block.heading, embedUrl: block.embedUrl };
+    } else if (block.kind === "videoFile") {
+      const assetId = write ? await uploadVideoFromUrl(block.sourceUrl, block.assetFilename) : "dry-run";
+      resolved[i] = {
+        _type: "video",
+        _key: randomUUID(),
+        heading: block.heading,
+        ...(assetId && assetId !== "dry-run"
+          ? { file: { _type: "file", asset: { _type: "reference", _ref: assetId } } }
+          : {}),
+      };
     } else if (block.kind === "pipLinkPreview") {
       resolved[i] = {
         _type: "pipLinkPreview",
@@ -191,11 +234,16 @@ async function resolveBlocks(prepared: PreparedBlock[]): Promise<Record<string, 
 }
 
 async function enrichProjects() {
-  console.log("\n=== 1. Project blocks[] (full sections + images) ===\n");
+  console.log("\n=== 1. Project blocks[] (full sections + images + videos) ===\n");
   const oldProjects = await oldClient.fetch<Record<string, unknown>[]>(`
     *[_type == "project"]{
       title, "slug": slug.current, isPassworded, links,
-      "sections": sections[]{ ..., "desktopImageUrl": desktopImage.asset->url }
+      "sections": sections[]{
+        ...,
+        "desktopImageUrl": desktopImage.asset->url,
+        "videoFileUrl": file.asset->url,
+        "videoFileExt": file.asset->extension
+      }
     }
   `);
 
@@ -207,8 +255,9 @@ async function enrichProjects() {
     const id = `project-${old.slug}`;
     const prepared = prepareSectionBlocks(old.sections, old.links ?? []);
     const imageCount = prepared.filter((b) => b.kind === "fullBleedImage").length;
+    const videoCount = prepared.filter((b) => b.kind === "video" || b.kind === "videoFile").length;
     console.log(
-      `${write ? "Patching" : "[dry run] Would patch"} ${old.title} (${id}): ${prepared.length} blocks (${imageCount} images)`,
+      `${write ? "Patching" : "[dry run] Would patch"} ${old.title} (${id}): ${prepared.length} blocks (${imageCount} images, ${videoCount} videos)`,
     );
 
     if (!write) continue;
@@ -334,13 +383,12 @@ async function enrichSiteSettings() {
 
 // ---- 4. industries, complexity/recency, cover GIFs -----------------------
 
-const INDUSTRIES = ["Fintech", "HealthTech", "Entertainment", "Engineering", "AI", "Events"];
-
-// Judgment calls made from each project's real title/description/tags — see
-// the six seeded industries above. A project not listed here doesn't fit
-// any of them well (a craft brand, a spa, a personal identity project) and
-// is left with no industry reference rather than forced into a wrong one;
-// assign it by hand in Studio, adding a new industry document if needed.
+// Judgment calls made from each project's real title/description/tags. A
+// project not listed here doesn't fit any of these well (a craft brand, a
+// spa, a personal identity project) and is left with no industry set —
+// assign it by hand in Studio. `industry` is a plain free-text field (not a
+// reference to a separate document type), so any string works here or in
+// Studio — nothing to pre-seed.
 const INDUSTRY_BY_SLUG: Record<string, string> = {
   "flutterbytes-conference-2025": "Events",
   "revolut-founder-mode": "Fintech",
@@ -357,19 +405,8 @@ const INDUSTRY_BY_SLUG: Record<string, string> = {
   moniematch: "Fintech",
 };
 
-function industryId(name: string): string {
-  return `industry-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-}
-
 async function enrichIndustriesAndScores() {
   console.log("\n=== 4. Industries, complexity/recency, cover GIFs ===\n");
-
-  for (const name of INDUSTRIES) {
-    console.log(`${write ? "Writing" : "[dry run] Would write"} industry "${name}" (${industryId(name)})`);
-    if (write) {
-      await newClient.createOrReplace({ _type: "industry", _id: industryId(name), name, slug: { _type: "slug", current: name.toLowerCase() } });
-    }
-  }
 
   const oldProjects = await oldClient.fetch<
     { title: string; slug: string; complexity: number | null; recency: number | null; coverGifUrl: string | null }[]
@@ -383,7 +420,7 @@ async function enrichIndustriesAndScores() {
     const patch: Record<string, unknown> = {};
     if (old.complexity !== null) patch.complexity = old.complexity;
     if (old.recency !== null) patch.recency = old.recency;
-    if (industryName) patch.industry = { _type: "reference", _ref: industryId(industryName) };
+    if (industryName) patch.industry = industryName;
 
     console.log(
       `${write ? "Patching" : "[dry run] Would patch"} ${old.title} (${id}): ` +

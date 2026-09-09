@@ -46,6 +46,8 @@ import type {
   DddEntry,
   AiContextEntry,
   LovedFont,
+  ProjectBlock,
+  RichContentValue,
 } from "@/lib/types";
 
 const REVALIDATE_SECONDS = 60;
@@ -75,6 +77,35 @@ function normalizeProjectType(value: unknown): Project["projectType"] {
   return [];
 }
 
+/**
+ * sideBySideCards' card.body moved from a plain string to portable text.
+ * Any project written before that change still has the old string shape in
+ * Sanity until it's re-saved in Studio — wrap it as a single paragraph
+ * block rather than handing PortableText a raw string it can't render.
+ */
+function normalizeCardBody(value: unknown): RichContentValue {
+  if (Array.isArray(value)) return value as RichContentValue;
+  if (typeof value === "string" && value) {
+    return [
+      {
+        _type: "block",
+        _key: "legacy-body",
+        style: "normal",
+        markDefs: [],
+        children: [{ _type: "span", _key: "legacy-body-span", text: value, marks: [] }],
+      },
+    ];
+  }
+  return [];
+}
+
+function normalizeBlocks(blocks: ProjectBlock[] | undefined): ProjectBlock[] {
+  return (blocks ?? []).map((block) => {
+    if (block._type !== "sideBySideCards") return block;
+    return { ...block, cards: block.cards.map((card) => ({ ...card, body: normalizeCardBody(card.body) })) };
+  });
+}
+
 function withProjectDefaults(project: Project): Project {
   return {
     ...project,
@@ -84,6 +115,7 @@ function withProjectDefaults(project: Project): Project {
     showOnPortfolio: project.showOnPortfolio ?? true,
     industry: project.industry ?? "General",
     projectType: normalizeProjectType(project.projectType),
+    blocks: normalizeBlocks(project.blocks),
   };
 }
 

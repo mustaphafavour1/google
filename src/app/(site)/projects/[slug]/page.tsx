@@ -1,6 +1,4 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { PageContainer } from "@/components/shell/page-container";
 import { ProjectBlocks } from "@/components/blocks/block-renderer";
 import { ProjectCard } from "@/components/cards/project-card";
@@ -74,14 +72,6 @@ export default async function ProjectDetailPage({
     <PageContainer>
       <div className="flex gap-10">
         <div className="min-w-0 flex-1">
-          <Link
-            href="/projects"
-            className="mb-6 inline-flex items-center gap-1.5 text-[12.5px] font-medium text-ink-soft transition-colors hover:text-ink-strong"
-          >
-            <ArrowLeft size={13} />
-            All projects
-          </Link>
-
           <ProjectHeader project={project} contactEmail={siteSettings.contact.email} />
 
           <ProjectBlocks blocks={project.blocks} project={project} />

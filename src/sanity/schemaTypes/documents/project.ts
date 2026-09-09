@@ -66,9 +66,9 @@ export const project = defineType({
     }),
     defineField({
       name: "industry",
-      type: "reference",
-      to: [{ type: "industry" }],
+      type: "string",
       group: "meta",
+      description: "Type any industry — free text, not limited to a fixed list.",
       validation: (r) => r.required(),
     }),
     defineField({
@@ -194,7 +194,7 @@ export const project = defineType({
     }),
   ],
   preview: {
-    select: { title: "name", industryName: "industry.name", media: "coverImage", hidden: "showOnPortfolio" },
+    select: { title: "name", industryName: "industry", media: "coverImage", hidden: "showOnPortfolio" },
     prepare: ({ title, industryName, media, hidden }) => ({
       title,
       subtitle: hidden === false ? `${industryName} — hidden` : industryName,

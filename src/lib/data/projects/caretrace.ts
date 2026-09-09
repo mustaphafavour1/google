@@ -67,15 +67,27 @@ export const caretrace: Project = {
       cards: [
         {
           title: "Scheduling that holds under change",
-          body: "A visit calendar built around same-day reassignment — caregiver call-outs and patient reschedules are the norm, not the exception, so the UI treats them as first-class actions instead of edge cases.",
+          body: [
+            paragraph(
+              "A visit calendar built around same-day reassignment — caregiver call-outs and patient reschedules are the norm, not the exception, so the UI treats them as first-class actions instead of edge cases.",
+            ),
+          ],
         },
         {
           title: "Verification without friction",
-          body: "Visit check-in/check-out folds into the caregiver's existing flow instead of living in a separate app, so compliance data is captured as a side effect of doing the job, not an extra chore.",
+          body: [
+            paragraph(
+              "Visit check-in/check-out folds into the caregiver's existing flow instead of living in a separate app, so compliance data is captured as a side effect of doing the job, not an extra chore.",
+            ),
+          ],
         },
         {
           title: "Billing schedulers can trust",
-          body: "Care plans, authorized hours, and logged visits reconcile automatically, so billing runs from data the scheduling team already believes — not a second, disconnected ledger.",
+          body: [
+            paragraph(
+              "Care plans, authorized hours, and logged visits reconcile automatically, so billing runs from data the scheduling team already believes — not a second, disconnected ledger.",
+            ),
+          ],
         },
       ],
     },

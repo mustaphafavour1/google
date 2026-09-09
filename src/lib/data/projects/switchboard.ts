@@ -1,5 +1,5 @@
 import type { Project } from "@/lib/types";
-import { bulletItem } from "@/lib/data/portable-text";
+import { bulletItem, paragraph } from "@/lib/data/portable-text";
 
 export const switchboard: Project = {
   _id: "project-switchboard",
@@ -54,15 +54,27 @@ export const switchboard: Project = {
       cards: [
         {
           title: "Comparison as the anchor screen",
-          body: "Provider Comparison sits at the center of the IA — cost, latency, and capability side-by-side — because that's the decision the console exists to support.",
+          body: [
+            paragraph(
+              "Provider Comparison sits at the center of the IA — cost, latency, and capability side-by-side — because that's the decision the console exists to support.",
+            ),
+          ],
         },
         {
           title: "Routing rules as configuration, not code",
-          body: "Fallback and routing logic is built as a visual rule builder, so a lead developer can change provider priority without a deploy.",
+          body: [
+            paragraph(
+              "Fallback and routing logic is built as a visual rule builder, so a lead developer can change provider priority without a deploy.",
+            ),
+          ],
         },
         {
           title: "Cost as a first-class surface",
-          body: "Usage and spend get their own analytics view rather than living as a buried tab, since runaway AI cost is the failure mode this console exists to prevent.",
+          body: [
+            paragraph(
+              "Usage and spend get their own analytics view rather than living as a buried tab, since runaway AI cost is the failure mode this console exists to prevent.",
+            ),
+          ],
         },
       ],
     },

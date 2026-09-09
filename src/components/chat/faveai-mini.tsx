@@ -82,7 +82,7 @@ export function FaveAiMini({
 
       <div ref={listRef} className="flex max-h-40 flex-col gap-2 overflow-y-auto px-3 py-2.5">
         {messages.map((message, i) => (
-          <p
+          <div
             key={i}
             className={cn(
               "max-w-[90%] rounded-lg px-2.5 py-1.5 text-[11px] leading-relaxed",
@@ -92,7 +92,7 @@ export function FaveAiMini({
             )}
           >
             <ChatMessageText text={message.text} />
-          </p>
+          </div>
         ))}
       </div>
 

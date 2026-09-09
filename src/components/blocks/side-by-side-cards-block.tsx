@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { RichContent } from "@/components/portable-text";
 import type { SideBySideCardsBlock as SideBySideCardsBlockT } from "@/lib/types";
 
 const gridColsClass: Record<number, string> = {
@@ -21,7 +22,9 @@ export function SideBySideCardsBlock({ block }: { block: SideBySideCardsBlockT }
             className={cn("card p-5", card.tone === "primary" && "bg-primary-tint")}
           >
             <h4 className="text-[13.5px] font-semibold text-ink-em">{card.title}</h4>
-            <p className="type-body mt-2 whitespace-pre-line text-ink-muted">{card.body}</p>
+            <div className="mt-2 text-[0.9375rem] [&_.type-body]:text-ink-muted">
+              <RichContent value={card.body} />
+            </div>
           </div>
         ))}
       </div>

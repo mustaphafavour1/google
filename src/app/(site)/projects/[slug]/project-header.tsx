@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ProjectCoverImage } from "@/components/blocks/project-cover-image";
 import { ProjectSummaryPanel } from "./project-summary-panel";
 import type { Project } from "@/lib/types";
 
@@ -54,17 +55,16 @@ export function ProjectHeader({ project, contactEmail }: { project: Project; con
         </div>
       )}
 
-      <div
-        className="relative mt-6 h-64 w-full overflow-hidden rounded-2xl sm:h-80"
-        style={{
-          background: `linear-gradient(135deg, ${project.accent.primary}, ${project.accent.secondary})`,
-        }}
-      >
-        {coverSrc && (
-          // eslint-disable-next-line @next/next/no-img-element -- CMS-hosted image, arbitrary remote host
-          <img src={coverSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        )}
-      </div>
+      {coverSrc ? (
+        <ProjectCoverImage src={coverSrc} alt={project.name} accent={project.accent} />
+      ) : (
+        <div
+          className="relative mt-6 h-64 w-full overflow-hidden rounded-2xl sm:h-80"
+          style={{
+            background: `linear-gradient(135deg, ${project.accent.primary}, ${project.accent.secondary})`,
+          }}
+        />
+      )}
     </div>
   );
 }

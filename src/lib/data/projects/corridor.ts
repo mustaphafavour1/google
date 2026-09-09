@@ -87,15 +87,27 @@ export const corridor: Project = {
       cards: [
         {
           title: "Routing shown as a path, not a table row",
-          body: "Each payout's rail path renders as a small visual route — origin, intermediary, destination — so a stuck payout is obvious at a glance instead of buried in status text.",
+          body: [
+            paragraph(
+              "Each payout's rail path renders as a small visual route — origin, intermediary, destination — so a stuck payout is obvious at a glance instead of buried in status text.",
+            ),
+          ],
         },
         {
           title: "FX and fees stated, never implied",
-          body: "Every amount shows source currency, destination currency, the rate applied, and the fee stack broken out — because in cross-border payments, the number that matters is never just the headline amount.",
+          body: [
+            paragraph(
+              "Every amount shows source currency, destination currency, the rate applied, and the fee stack broken out — because in cross-border payments, the number that matters is never just the headline amount.",
+            ),
+          ],
         },
         {
           title: "One dark-first surface",
-          body: "Built dark-first rather than adapting a light dashboard, since this console runs on an ops floor for long stretches — the dirty-green / rose-gold palette and Parkinsans type were chosen for that context specifically.",
+          body: [
+            paragraph(
+              "Built dark-first rather than adapting a light dashboard, since this console runs on an ops floor for long stretches — the dirty-green / rose-gold palette and Parkinsans type were chosen for that context specifically.",
+            ),
+          ],
         },
       ],
     },

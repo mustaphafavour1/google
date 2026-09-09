@@ -62,7 +62,7 @@ export type SideBySideCardsBlock = {
   _type: "sideBySideCards";
   _key: string;
   heading?: string;
-  cards: { title: string; body: string; tone?: "default" | "primary" }[];
+  cards: { title: string; body: RichContentValue; tone?: "default" | "primary" }[];
 };
 
 export type ImageGalleryBlock = {
@@ -121,6 +121,8 @@ export type VideoBlock = {
   _key: string;
   heading?: string;
   caption?: string;
+  fileUrl?: string;
+  fileMimeType?: string;
   embedUrl?: string;
   duration?: string;
 };

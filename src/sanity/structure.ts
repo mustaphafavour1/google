@@ -11,7 +11,6 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.documentTypeListItem("project").title("Projects"),
       S.documentTypeListItem("product").title("My Products"),
-      S.documentTypeListItem("industry").title("Industries"),
       S.documentTypeListItem("processTrack").title("Process tracks"),
       S.documentTypeListItem("skill").title("Skills"),
       S.documentTypeListItem("skillGroup").title("Skill groups (landing page)"),

@@ -160,7 +160,7 @@ export function ChatWidget({
                       <Bot size={12} />
                     </span>
                   )}
-                  <p
+                  <div
                     className={cn(
                       "max-w-[80%] rounded-xl px-3 py-2 text-[12.5px] leading-relaxed",
                       message.role === "bot"
@@ -169,7 +169,7 @@ export function ChatWidget({
                     )}
                   >
                     <ChatMessageText text={message.text} />
-                  </p>
+                  </div>
                 </div>
               ))}
             </div>

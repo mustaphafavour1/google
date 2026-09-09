@@ -15,7 +15,29 @@ export const sideBySideCardsBlock = defineType({
           name: "card",
           fields: [
             defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-            defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required() }),
+            defineField({
+              name: "body",
+              title: "Body",
+              type: "array",
+              of: [
+                defineArrayMember({
+                  type: "block",
+                  styles: [{ title: "Normal", value: "normal" }],
+                  lists: [
+                    { title: "Bullet", value: "bullet" },
+                    { title: "Numbered", value: "number" },
+                  ],
+                  marks: {
+                    decorators: [
+                      { title: "Bold", value: "strong" },
+                      { title: "Italic", value: "em" },
+                      { title: "Underline", value: "underline" },
+                    ],
+                  },
+                }),
+              ],
+              validation: (r) => r.required(),
+            }),
             defineField({
               name: "tone",
               type: "string",

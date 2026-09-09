@@ -211,7 +211,7 @@ export function WordPlayGame() {
           href={WORDPLAYZ_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-[12px] font-medium text-ink-soft transition-colors hover:text-primary-500"
+          className="inline-flex items-center gap-1 text-[12px] font-bold text-primary-500 underline underline-offset-2 transition-colors hover:text-primary-600"
         >
           Play the full WordPlay game
           <ArrowUpRight size={12} />
