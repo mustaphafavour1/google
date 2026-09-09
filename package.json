@@ -12,6 +12,7 @@
     "sanity:enrich": "tsx scripts/sanity/enrich-from-old-cms.ts",
     "sanity:seed-ddd": "tsx scripts/sanity/seed-ddd.ts",
     "sanity:seed-corridor": "tsx scripts/sanity/seed-corridor-content.ts",
+    "sanity:seed-ensemble": "tsx scripts/sanity/seed-ensemble.ts",
     "sanity:backfill-videos": "tsx scripts/sanity/backfill-video-blocks.ts",
     "sanity:migrate-industry": "tsx scripts/sanity/migrate-industry-to-string.ts",
     "sanity:fix-videos": "tsx scripts/sanity/fix-video-format-and-autoplay.ts"
