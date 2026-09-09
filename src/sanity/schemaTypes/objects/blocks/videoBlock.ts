@@ -20,6 +20,13 @@ export const videoBlock = defineType({
       type: "url",
       description: "A YouTube/Vimeo embed URL, used only when no video file is uploaded above. A styled placeholder renders until either one is set.",
     }),
+    defineField({
+      name: "autoplay",
+      title: "Autoplay",
+      type: "boolean",
+      initialValue: false,
+      description: "Only applies to an uploaded video file. Autoplaying video is always muted (browsers block unmuted autoplay) — visitors can unmute from the controls.",
+    }),
     defineField({ name: "duration", type: "string", description: "e.g. \"2:14\" — shown on the placeholder." }),
     defineField({ name: "caption", type: "string" }),
   ],

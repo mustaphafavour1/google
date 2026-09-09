@@ -124,6 +124,7 @@ export type VideoBlock = {
   fileUrl?: string;
   fileMimeType?: string;
   embedUrl?: string;
+  autoplay?: boolean;
   duration?: string;
 };
 

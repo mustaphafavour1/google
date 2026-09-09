@@ -12,7 +12,12 @@ export function VideoBlock({ block, project }: { block: VideoBlockT; project: Pr
       {block.heading && <h3 className="type-subheading mb-3">{block.heading}</h3>}
       {block.fileUrl ? (
         <div className="overflow-hidden rounded-xl border border-hairline">
-          <video controls preload="metadata" className="aspect-video w-full bg-black">
+          <video
+            controls
+            preload="metadata"
+            className="aspect-video w-full bg-black"
+            {...(block.autoplay ? { autoPlay: true, muted: true, playsInline: true } : {})}
+          >
             <source src={block.fileUrl} type={block.fileMimeType} />
           </video>
         </div>
