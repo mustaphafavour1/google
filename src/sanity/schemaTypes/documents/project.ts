@@ -195,10 +195,16 @@ export const project = defineType({
   ],
   preview: {
     select: { title: "name", industryName: "industry", media: "coverImage", hidden: "showOnPortfolio" },
-    prepare: ({ title, industryName, media, hidden }) => ({
-      title,
-      subtitle: hidden === false ? `${industryName} — hidden` : industryName,
-      media,
-    }),
+    prepare: ({ title, industryName, media, hidden }) => {
+      // industry used to be a reference; a project not yet re-saved since
+      // that change can still hand this a {_ref, _type} object, and Studio's
+      // preview throws if subtitle isn't a string/number/boolean/nullish.
+      const industry = typeof industryName === "string" ? industryName : undefined;
+      return {
+        title,
+        subtitle: hidden === false ? `${industry ?? "No industry"} — hidden` : industry,
+        media,
+      };
+    },
   },
 });
