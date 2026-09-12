@@ -15,6 +15,7 @@
     "sanity:seed-ensemble": "tsx scripts/sanity/seed-ensemble.ts",
     "sanity:seed-switchboard": "tsx scripts/sanity/seed-switchboard.ts",
     "sanity:seed-headfavour": "tsx scripts/sanity/seed-headfavour.ts",
+    "sanity:seed-trashpay": "tsx scripts/sanity/seed-trashpay.ts",
     "sanity:backfill-videos": "tsx scripts/sanity/backfill-video-blocks.ts",
     "sanity:migrate-industry": "tsx scripts/sanity/migrate-industry-to-string.ts",
     "sanity:fix-videos": "tsx scripts/sanity/fix-video-format-and-autoplay.ts"
