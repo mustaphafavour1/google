@@ -32,7 +32,7 @@ export function DesignSystemSection({ projects }: { projects: Project[] }) {
   const { ref, inView } = useScrollInView("-100px");
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl">
       <motion.div
         ref={ref}
         animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}

@@ -26,7 +26,7 @@ export function SelectedWorkShowcase({ projects }: { projects: Project[] }) {
   const coverSrc = active.coverGifUrl ?? active.coverImage;
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-stretch lg:gap-12">
+    <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-stretch lg:gap-12">
       <div className="flex h-full min-w-0 flex-col justify-between">
         {projects.map((project, i) => (
           <div

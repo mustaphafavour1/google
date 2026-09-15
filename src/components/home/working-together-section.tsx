@@ -49,7 +49,7 @@ export function WorkingTogetherSection({
   const lineBackground = `linear-gradient(to bottom, var(--color-hairline) 0%, var(--color-hairline) ${lo}%, var(--color-primary-500) ${activePercent}%, var(--color-hairline) ${hi}%, var(--color-hairline) 100%)`;
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch lg:gap-12">
+    <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch lg:gap-12">
       <div className="flex h-full flex-col">
         <div className="relative flex flex-1 flex-col justify-around">
           <div
