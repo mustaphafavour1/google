@@ -23,7 +23,7 @@ export default async function PlaygroundPage() {
       </p>
 
       <div className="mt-9 grid gap-6 lg:grid-cols-2">
-        <section className="card p-6 sm:p-8">
+        <section className="card min-w-0 p-6 sm:p-8">
           <div className="mb-5 flex items-center gap-2">
             <Type size={16} className="text-primary-500" />
             <div>
@@ -34,7 +34,7 @@ export default async function PlaygroundPage() {
           <WordPlayGame />
         </section>
 
-        <section className="card p-6 sm:p-8">
+        <section className="card min-w-0 p-6 sm:p-8">
           <div className="mb-5 flex items-center gap-2">
             <KeyRound size={16} className="text-primary-500" />
             <div>
@@ -45,7 +45,7 @@ export default async function PlaygroundPage() {
           <CryptogramGame />
         </section>
 
-        <section className="card flex h-full flex-col p-6 sm:p-8">
+        <section className="card flex h-full min-w-0 flex-col p-6 sm:p-8">
           <div className="mb-5 flex items-center gap-2">
             <Puzzle size={16} className="text-primary-500" />
             <div>
@@ -56,7 +56,7 @@ export default async function PlaygroundPage() {
           <JigsawGame />
         </section>
 
-        <section className="card flex h-full flex-col p-6 sm:p-8">
+        <section className="card flex h-full min-w-0 flex-col p-6 sm:p-8">
           <div className="mb-5 flex items-center gap-2">
             <Sparkles size={16} className="text-primary-500" />
             <div>

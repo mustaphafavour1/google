@@ -3,7 +3,7 @@ import type { RichContentValue } from "@/lib/types";
 
 const components: PortableTextComponents = {
   block: {
-    normal: ({ children }) => <p className="type-body max-w-3xl">{children}</p>,
+    normal: ({ children }) => <p className="type-body max-w-3xl break-words">{children}</p>,
   },
   list: {
     bullet: ({ children }) => <ul className="max-w-3xl space-y-2.5">{children}</ul>,
@@ -13,10 +13,10 @@ const components: PortableTextComponents = {
     bullet: ({ children }) => (
       <li className="flex gap-2.5">
         <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary-400" />
-        <span className="type-body">{children}</span>
+        <span className="type-body break-words">{children}</span>
       </li>
     ),
-    number: ({ children }) => <li className="type-body pl-1">{children}</li>,
+    number: ({ children }) => <li className="type-body break-words pl-1">{children}</li>,
   },
   marks: {
     strong: ({ children }) => <strong className="font-semibold text-ink-em">{children}</strong>,

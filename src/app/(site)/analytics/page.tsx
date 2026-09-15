@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageContainer } from "@/components/shell/page-container";
 import { PageHeader } from "@/components/shell/page-header";
 import { getProjects, getSiteSettings } from "@/lib/content";
+import { formatCompactCurrency, formatNumber } from "@/lib/utils";
 import {
   getCumulativeValueImpact,
   getScaleMetricsByProject,
@@ -23,8 +24,8 @@ export default async function AnalyticsPage() {
       />
       <AnalyticsCharts
         caseStudyCount={projects.length}
-        totalScaleMetricsLogged={getTotalScaleMetricsLogged(projects)}
-        cumulativeValueImpact={getCumulativeValueImpact(projects)}
+        totalScaleMetricsLoggedLabel={formatNumber(getTotalScaleMetricsLogged(projects))}
+        cumulativeValueImpactLabel={formatCompactCurrency(getCumulativeValueImpact(projects))}
         scaleMetricsByProject={getScaleMetricsByProject(projects)}
         projectsDelivered={projectsDelivered}
         analyticsAggregate={siteSettings.analyticsAggregate}

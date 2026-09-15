@@ -228,7 +228,8 @@ export function GlobalAutoScroll() {
         <p className="mt-2.5 text-[10px] leading-snug text-ink-faint">
           Turn on auto-scroll and read aloud together to watch through the entire portfolio like a movie.
         </p>
-        <p className="mt-1 text-[10px] leading-snug text-ink-faint">Press Esc to stop anytime</p>
+        <p className="mt-1 hidden text-[10px] leading-snug text-ink-faint sm:block">Press Esc to stop anytime</p>
+        <p className="mt-1 text-[10px] leading-snug text-ink-faint sm:hidden">Double tap anywhere to stop</p>
       </PopoverContent>
     </Popover>
   );

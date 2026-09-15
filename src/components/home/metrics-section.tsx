@@ -68,7 +68,7 @@ export function MetricsSection({
 
       <div
         ref={cardsRef}
-        className="relative mx-auto mt-6 flex flex-wrap justify-center"
+        className="relative mx-auto mt-6 flex flex-wrap justify-center max-sm:!gap-y-7"
         style={{ gap: CARD_GAP }}
       >
         {metrics.map((metric, i) => {

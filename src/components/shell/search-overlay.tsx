@@ -71,7 +71,7 @@ export function SearchOverlay({
           role="dialog"
           aria-modal="true"
           aria-label="Search results"
-          className="fixed inset-y-0 right-0 z-40 flex w-full max-w-sm flex-col border-l border-hairline bg-surface shadow-[-16px_0_48px_rgb(35_25_15_/_0.15)]"
+          className="fixed inset-0 z-40 flex w-full flex-col border-hairline bg-surface shadow-[-16px_0_48px_rgb(35_25_15_/_0.15)] sm:inset-y-0 sm:inset-x-auto sm:right-0 sm:max-w-sm sm:border-l"
         >
           <div className="flex shrink-0 items-center justify-between border-b border-hairline px-4 py-3">
             <div>

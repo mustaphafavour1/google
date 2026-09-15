@@ -5,7 +5,6 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
 import { StatCard } from "@/components/cards/stat-card";
 import { getNivoPalette, getNivoTheme } from "@/lib/nivo-theme";
-import { formatCompactCurrency, formatNumber } from "@/lib/utils";
 import type { SiteMetric, SiteSettings } from "@/lib/types";
 
 const PRIMARY = "#A55C4E";
@@ -13,8 +12,8 @@ const HIGHLIGHT = "#B35A04";
 
 type Props = {
   caseStudyCount: number;
-  totalScaleMetricsLogged: number;
-  cumulativeValueImpact: number;
+  totalScaleMetricsLoggedLabel: string;
+  cumulativeValueImpactLabel: string;
   scaleMetricsByProject: { project: string; metrics: number }[];
   projectsDelivered: SiteMetric | undefined;
   analyticsAggregate: SiteSettings["analyticsAggregate"];
@@ -22,8 +21,8 @@ type Props = {
 
 export function AnalyticsCharts({
   caseStudyCount,
-  totalScaleMetricsLogged,
-  cumulativeValueImpact,
+  totalScaleMetricsLoggedLabel,
+  cumulativeValueImpactLabel,
   scaleMetricsByProject,
   projectsDelivered,
   analyticsAggregate,
@@ -38,13 +37,13 @@ export function AnalyticsCharts({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard
           label="Scope metrics logged"
-          value={formatNumber(totalScaleMetricsLogged)}
+          value={totalScaleMetricsLoggedLabel}
           caption={`Across the ${caseStudyCount} case studies`}
         />
         <StatCard label="Case studies analyzed" value={String(caseStudyCount)} />
         <StatCard
           label="Value modeled"
-          value={formatCompactCurrency(cumulativeValueImpact)}
+          value={cumulativeValueImpactLabel}
           caption="Estimated, summed per case study"
         />
         <StatCard

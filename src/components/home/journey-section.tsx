@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
@@ -16,64 +16,10 @@ const RIGHT_PADDING_PCT = 6;
 const BASELINE_PCT = 92;
 const YEARS_WITH_JAN = new Set(["2019", "2025"]);
 const TILTS = [-3, 2, -2, 3, -3, 2, -2, 3];
-const MOBILE_CYCLE_MS = 3500;
+const MOBILE_AUTO_CYCLE_MS = 3500;
 
 function yearLabel(milestone: JourneyMilestone): string {
   return YEARS_WITH_JAN.has(milestone.year) ? `Jan. ${milestone.year}` : milestone.year;
-}
-
-/**
- * The full chart's dozen-odd tilted, absolutely-positioned bubbles have no
- * room to breathe on a narrow phone screen — they overlap into a crowded
- * mess. Below `sm`, swap it for one milestone at a time: a small row of
- * year chips to jump directly to a year, auto-cycling through the rest.
- * The interval restarts on every index change (manual or automatic) so a
- * manual jump always gets the full dwell time before advancing again.
- */
-function MobileJourneyCycle({ milestones }: { milestones: JourneyMilestone[] }) {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    if (milestones.length < 2) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % milestones.length), MOBILE_CYCLE_MS);
-    return () => clearInterval(id);
-  }, [index, milestones.length]);
-
-  const milestone = milestones[index];
-
-  return (
-    <div className="sm:hidden">
-      <div className="flex flex-wrap justify-center gap-1.5">
-        {milestones.map((m, i) => (
-          <button
-            key={`${m.year}-${i}`}
-            type="button"
-            onClick={() => setIndex(i)}
-            aria-pressed={i === index}
-            className={cn(
-              "data-mono rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors",
-              i === index ? "border-primary-500 bg-primary-500 text-white" : "border-hairline text-ink-soft",
-            )}
-          >
-            {yearLabel(m)}
-          </button>
-        ))}
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.3 }}
-          className="mx-auto mt-4 max-w-xs rounded-xl border border-hairline bg-surface px-4 py-4 text-center shadow-[0_4px_10px_rgb(35_25_15_/_0.08)]"
-        >
-          <span className="data-mono block text-[11px] font-semibold text-primary-500">{yearLabel(milestone)}</span>
-          <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{milestone.text}</p>
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
 }
 
 function impactPercent(index: number, count: number): number {
@@ -103,6 +49,15 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
   const arrowRightId = `journey-arrow-right-${useId()}`;
   const { openForm } = useContactForm();
   const { ref: chartRef, inView } = useScrollInView<HTMLDivElement>("-100px");
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (milestones.length < 2) return;
+    const id = setInterval(() => setActiveIndex((i) => (i + 1) % milestones.length), MOBILE_AUTO_CYCLE_MS);
+    return () => clearInterval(id);
+    // Restarts on every index change (manual click or auto-tick) so a
+    // manual jump always gets the full dwell time before advancing again.
+  }, [activeIndex, milestones.length]);
 
   if (milestones.length === 0) return null;
 
@@ -119,7 +74,7 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
 
   return (
     <div>
-      <div ref={chartRef} className="relative mx-auto hidden aspect-[1000/430] w-full max-w-4xl sm:block">
+      <div ref={chartRef} className="relative mx-auto aspect-[1000/430] w-full max-w-4xl">
         <div
           className="absolute left-0 whitespace-nowrap text-center text-[10px] font-semibold uppercase tracking-wide text-ink-faint"
           style={{ top: `${(topY / VB_HEIGHT) * 100}%`, transform: "translate(-10%, -140%)" }}
@@ -213,7 +168,10 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
               <motion.div
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: above ? 8 : -8 }}
                 transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
-                className="absolute w-[6.5rem] max-w-[9rem] rounded-md border border-hairline bg-surface px-1.5 py-1 text-[9px] leading-snug text-ink-soft shadow-[0_4px_10px_rgb(35_25_15_/_0.08)] sm:w-28"
+                className={cn(
+                  "absolute w-[6.5rem] max-w-[9rem] rounded-md border border-hairline bg-surface px-1.5 py-1 text-[9px] leading-snug text-ink-soft shadow-[0_4px_10px_rgb(35_25_15_/_0.08)] sm:w-28",
+                  i !== activeIndex && "max-sm:hidden",
+                )}
                 style={{
                   top: above ? "-4.75rem" : "0.75rem",
                   x: isLast ? `calc(${bubbleTranslateX} + 3.5rem)` : bubbleTranslateX,
@@ -240,7 +198,23 @@ export function JourneySection({ milestones }: { milestones: JourneyMilestone[] 
         </div>
       </div>
 
-      <MobileJourneyCycle milestones={milestones} />
+      <div className="mt-4 flex flex-wrap justify-center gap-1.5 sm:hidden">
+        {milestones.map((m, i) => (
+          <button
+            key={`chip-${m.year}-${i}`}
+            type="button"
+            onClick={() => setActiveIndex(i)}
+            aria-pressed={i === activeIndex}
+            aria-label={`Show ${yearLabel(m)}`}
+            className={cn(
+              "data-mono rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors",
+              i === activeIndex ? "border-primary-500 bg-primary-500 text-white" : "border-hairline text-ink-soft",
+            )}
+          >
+            {yearLabel(m)}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-10 flex justify-center sm:mt-16">
         <button type="button" onClick={openForm} className={buttonVariants({ size: "lg" })}>

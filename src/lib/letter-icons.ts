@@ -38,6 +38,7 @@ import {
   Scissors,
   Type,
   Globe,
+  Asterisk,
   Maximize2,
   Smartphone,
   Award,
@@ -127,6 +128,7 @@ export const DESIGN_LETTER_ICONS: Record<string, LucideIcon> = {
   X: XIcon,
   Y: Smartphone,
   Z: ZoomIn,
+  ";": Asterisk,
 };
 
 /** Business/growth-flavored icons — used for the hero title's "achieve your goals" half. */
@@ -157,4 +159,5 @@ export const BUSINESS_LETTER_ICONS: Record<string, LucideIcon> = {
   X: Banknote,
   Y: ThumbsUp,
   Z: Map,
+  ";": Asterisk,
 };

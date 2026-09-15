@@ -52,7 +52,12 @@ export function AppShell({
         />
         <FloatingUtilityBar projects={projects} siteSettings={siteSettings} searchIndex={searchIndex} />
         <div className="flex min-w-0 flex-1 flex-col">
-          <MobileHeader projects={projects} siteSettings={siteSettings} searchIndex={searchIndex} />
+          <MobileHeader
+            projects={projects}
+            siteSettings={siteSettings}
+            searchIndex={searchIndex}
+            profileMedia={siteSettings.profileMedia}
+          />
           <main className="flex-1 pb-24 lg:pb-0">
             <PageTransition>{children}</PageTransition>
           </main>

@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "./logo";
 import { AccessibilityMenu } from "./accessibility-menu";
 import { BackButton } from "./back-button";
+import { GlobalAutoScroll } from "./global-auto-scroll";
 import { SearchOverlay } from "./search-overlay";
 import type { Project, SiteSettings } from "@/lib/types";
 import type { SearchIndex } from "@/lib/search-index";
@@ -14,11 +15,14 @@ export function MobileHeader({
   projects,
   siteSettings,
   searchIndex,
+  profileMedia,
 }: {
   projects: Project[];
   siteSettings: SiteSettings;
   searchIndex: SearchIndex;
+  profileMedia: SiteSettings["profileMedia"];
 }) {
+  const avatarPhoto = profileMedia.find((item) => item.image)?.image;
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [submittedQuery, setSubmittedQuery] = useState("");
@@ -78,7 +82,7 @@ export function MobileHeader({
           <>
             <div className="flex items-center gap-2">
               <BackButton />
-              <Logo compact />
+              <Logo compact name={siteSettings.profile.name} title={siteSettings.profile.title} photoUrl={avatarPhoto} />
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -90,6 +94,7 @@ export function MobileHeader({
                 <Search size={16} />
               </button>
               <AccessibilityMenu />
+              <GlobalAutoScroll />
               <ThemeToggle />
             </div>
           </>

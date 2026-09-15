@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { DESIGN_LETTER_ICONS, BUSINESS_LETTER_ICONS } from "@/lib/letter-icons";
 
@@ -10,6 +10,13 @@ const ICON_STROKE = 1.5;
 
 function isLetter(ch: string): boolean {
   return /[a-zA-Z]/.test(ch);
+}
+
+/** Letters flip to their letter-icon; the semicolon flips too (to a shared
+ * placeholder icon) since it's the one punctuation mark doing real work in
+ * this title (splitting the two clauses) rather than just sitting inert. */
+function isFlippable(ch: string): boolean {
+  return isLetter(ch) || ch === ";";
 }
 
 function pickRandomExcluding(pool: number[], exclude: number | null): number {
@@ -30,7 +37,7 @@ function pickRandomExcluding(pool: number[], exclude: number | null): number {
 export function HeroTitleFlip({ text }: { text: string }) {
   const chars = useMemo(() => Array.from(text), [text]);
   const letterIdxs = useMemo(
-    () => chars.map((ch, i) => (isLetter(ch) ? i : -1)).filter((i) => i !== -1),
+    () => chars.map((ch, i) => (isFlippable(ch) ? i : -1)).filter((i) => i !== -1),
     [chars],
   );
   const splitAt = useMemo(() => {
@@ -100,7 +107,7 @@ export function HeroTitleFlip({ text }: { text: string }) {
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {chars.map((ch, idx) => {
-          if (!isLetter(ch)) {
+          if (!isFlippable(ch)) {
             return (
               <span key={idx}>
                 {ch}
@@ -116,39 +123,41 @@ export function HeroTitleFlip({ text }: { text: string }) {
           const iconSize = isUpper ? "0.62em" : "0.46em";
 
           return (
-            <button
-              key={idx}
-              type="button"
-              tabIndex={-1}
-              onClick={() => handleClick(idx)}
-              className="relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline"
-            >
-              {/* Invisible, normal-flow sizer — the only thing that determines
-                  this button's box size, so it always matches the letter's
-                  natural glyph width regardless of the icon's own size. */}
-              <span className="invisible">{ch}</span>
-              <span className="absolute inset-0 [perspective:400px]">
-                <motion.span
-                  className="absolute inset-0 [transform-style:preserve-3d]"
-                  animate={{ rotateY: showIcon ? 180 : 0 }}
-                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                >
-                  {/* Both faces are stacked via identical absolute+inset-0
-                      positioning (not one in normal flow) — mixing the two
-                      made backface-visibility unreliable in some browsers,
-                      showing the letter bleeding through over the icon. */}
-                  <span className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]">
-                    {ch}
-                  </span>
-                  <span
-                    className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]"
-                    style={{ transform: "rotateY(180deg)" }}
+            <Fragment key={idx}>
+              <button
+                type="button"
+                tabIndex={-1}
+                onClick={() => handleClick(idx)}
+                className="relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline"
+              >
+                {/* Invisible, normal-flow sizer — the only thing that determines
+                    this button's box size, so it always matches the letter's
+                    natural glyph width regardless of the icon's own size. */}
+                <span className="invisible">{ch}</span>
+                <span className="absolute inset-0 [perspective:400px]">
+                  <motion.span
+                    className="absolute inset-0 [transform-style:preserve-3d]"
+                    animate={{ rotateY: showIcon ? 180 : 0 }}
+                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                   >
-                    {Icon && <Icon style={{ height: iconSize, width: iconSize }} strokeWidth={ICON_STROKE} />}
-                  </span>
-                </motion.span>
-              </span>
-            </button>
+                    {/* Both faces are stacked via identical absolute+inset-0
+                        positioning (not one in normal flow) — mixing the two
+                        made backface-visibility unreliable in some browsers,
+                        showing the letter bleeding through over the icon. */}
+                    <span className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]">
+                      {ch}
+                    </span>
+                    <span
+                      className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]"
+                      style={{ transform: "rotateY(180deg)" }}
+                    >
+                      {Icon && <Icon style={{ height: iconSize, width: iconSize }} strokeWidth={ICON_STROKE} />}
+                    </span>
+                  </motion.span>
+                </span>
+              </button>
+              {idx === splitAt && <br />}
+            </Fragment>
           );
         })}
       </span>
