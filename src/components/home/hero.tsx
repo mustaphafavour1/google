@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, ArrowRight, MonitorPlay, Sparkles } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -19,6 +20,11 @@ export function Hero({
   jdVariant?: JobApplicationVariant;
 }) {
   const { openForm } = useContactForm();
+  // The flip title's per-letter reveal takes a couple of seconds for a long
+  // title — the jdVariant title is a plain quick fade instead, so it has
+  // nothing to wait for and this just stays true for that case.
+  const [titleRevealed, setTitleRevealed] = useState(Boolean(jdVariant));
+  const handleTitleRevealComplete = useCallback(() => setTitleRevealed(true), []);
 
   return (
     <div className="relative flex min-h-[95vh] max-sm:min-h-[100dvh] flex-col items-center justify-center px-4 py-6 text-center">
@@ -44,14 +50,18 @@ export function Hero({
         {jdVariant ? (
           <>Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.</>
         ) : (
-          <HeroTitleFlip key={hero.title} text={hero.title} />
+          <HeroTitleFlip
+            key={hero.title}
+            text={hero.title}
+            onRevealComplete={handleTitleRevealComplete}
+          />
         )}
       </motion.h1>
 
       {!jdVariant && hero.titleUnderText && (
         <motion.p
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={titleRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
           transition={{ delay: 0.08 }}
           className="mt-2 max-w-xl font-brand text-[40px] max-sm:text-[28px] leading-[1.15] text-ink-em"
         >
@@ -61,7 +71,7 @@ export function Hero({
 
       <motion.p
         initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={titleRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
         transition={{ delay: 0.1 }}
         className="type-body mt-5 max-w-xl text-[16px] font-bold leading-relaxed text-ink-muted dark:text-primary-300"
       >
@@ -70,7 +80,7 @@ export function Hero({
 
       <motion.div
         initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={titleRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
         transition={{ delay: 0.15 }}
         className="mt-7 flex flex-wrap justify-center gap-2.5"
       >

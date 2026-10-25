@@ -81,7 +81,9 @@ export default async function JobApplicationVariantPage({
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {selectedProjects.map((project) => (
-            <ProjectCard key={project._id} project={project} />
+            <div key={project._id} className="aspect-[4/3]">
+              <ProjectCard project={project} />
+            </div>
           ))}
         </div>
       </section>

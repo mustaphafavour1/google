@@ -34,7 +34,13 @@ function pickRandomExcluding(pool: number[], exclude: number | null): number {
  * back, and clicking any letter immediately makes it (or nothing, if it
  * was already the one showing) the active icon, resetting that 4s clock.
  */
-export function HeroTitleFlip({ text }: { text: string }) {
+export function HeroTitleFlip({
+  text,
+  onRevealComplete,
+}: {
+  text: string;
+  onRevealComplete?: () => void;
+}) {
   const chars = useMemo(() => Array.from(text), [text]);
   const letterIdxs = useMemo(
     () => chars.map((ch, i) => (isFlippable(ch) ? i : -1)).filter((i) => i !== -1),
@@ -46,12 +52,16 @@ export function HeroTitleFlip({ text }: { text: string }) {
   }, [text]);
 
   const [revealed, setRevealed] = useState<boolean[]>(() => chars.map(() => false));
-  const [revealDone, setRevealDone] = useState(false);
+  const [revealDone, setRevealDone] = useState(() => letterIdxs.length === 0);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const activeIndexRef = useRef<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (letterIdxs.length === 0) {
+      onRevealComplete?.();
+      return;
+    }
     let cancelled = false;
     const timeouts: ReturnType<typeof setTimeout>[] = [];
     letterIdxs.forEach((idx, order) => {
@@ -63,7 +73,10 @@ export function HeroTitleFlip({ text }: { text: string }) {
             next[idx] = true;
             return next;
           });
-          if (order === letterIdxs.length - 1) setRevealDone(true);
+          if (order === letterIdxs.length - 1) {
+            setRevealDone(true);
+            onRevealComplete?.();
+          }
         }, order * REVEAL_STAGGER_MS),
       );
     });
