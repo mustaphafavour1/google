@@ -20,11 +20,13 @@ export function Hero({
   jdVariant?: JobApplicationVariant;
 }) {
   const { openForm } = useContactForm();
-  // The flip title's per-letter reveal takes a couple of seconds for a long
-  // title — the jdVariant title is a plain quick fade instead, so it has
-  // nothing to wait for and this just stays true for that case.
-  const [titleRevealed, setTitleRevealed] = useState(Boolean(jdVariant));
+  // Both the default and job-application titles go through HeroTitleFlip's
+  // per-letter reveal, so the rest of the hero always waits for it to finish.
+  const [titleRevealed, setTitleRevealed] = useState(false);
   const handleTitleRevealComplete = useCallback(() => setTitleRevealed(true), []);
+  const titleText = jdVariant
+    ? `Hi ${jdVariant.companyName} team — I’m ${profile.firstName}.`
+    : hero.title;
 
   return (
     <div className="relative flex min-h-[95vh] max-sm:min-h-[100dvh] flex-col items-center justify-center px-4 py-6 text-center">
@@ -47,22 +49,18 @@ export function Hero({
         transition={{ delay: 0.05 }}
         className="max-w-3xl text-[clamp(2.1rem,4.6vw,3.5rem)] max-sm:text-[clamp(1.6rem,7vw,2.4rem)] font-extrabold leading-[1.08] tracking-tight text-ink-em"
       >
-        {jdVariant ? (
-          <>Hi {jdVariant.companyName} team — I&rsquo;m {profile.firstName}.</>
-        ) : (
-          <HeroTitleFlip
-            key={hero.title}
-            text={hero.title}
-            onRevealComplete={handleTitleRevealComplete}
-          />
-        )}
+        <HeroTitleFlip
+          key={jdVariant ? jdVariant.slug : hero.title}
+          text={titleText}
+          onRevealComplete={handleTitleRevealComplete}
+        />
       </motion.h1>
 
       {!jdVariant && hero.titleUnderText && (
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={titleRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-          transition={{ delay: 0.08 }}
+          transition={{ delay: 0.1, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="mt-2 max-w-xl font-brand text-[40px] max-sm:text-[28px] leading-[1.15] text-ink-em"
         >
           {hero.titleUnderText}
@@ -72,7 +70,7 @@ export function Hero({
       <motion.p
         initial={{ opacity: 0, y: 10 }}
         animate={titleRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        transition={{ delay: 0.1 }}
+        transition={{ delay: 0.2, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
         className="type-body mt-5 max-w-xl text-[16px] font-bold leading-relaxed text-ink-muted dark:text-primary-300"
       >
         {jdVariant?.introNote || hero.subtitle}
@@ -81,7 +79,7 @@ export function Hero({
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={titleRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        transition={{ delay: 0.15 }}
+        transition={{ delay: 0.3, duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
         className="mt-7 flex flex-wrap justify-center gap-2.5"
       >
         {jdVariant ? (

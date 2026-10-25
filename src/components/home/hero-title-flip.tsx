@@ -50,6 +50,29 @@ export function HeroTitleFlip({
     const semi = text.indexOf(";");
     return semi === -1 ? text.length : semi;
   }, [text]);
+  /** Each character is its own inline element (button or span), so the
+   * browser is free to break the line between any two of them — including
+   * mid-word, stranding a single trailing character (e.g. a closing period)
+   * on its own line. Grouping each run of non-space characters into one
+   * inline-block keeps real words atomic, same as normal text, while actual
+   * spaces stay outside the groups so the title can still wrap at them. */
+  const wordGroups = useMemo(() => {
+    const groups: number[][] = [];
+    let current: number[] = [];
+    chars.forEach((ch, idx) => {
+      if (ch === " ") {
+        if (current.length > 0) {
+          groups.push(current);
+          current = [];
+        }
+        groups.push([idx]);
+      } else {
+        current.push(idx);
+      }
+    });
+    if (current.length > 0) groups.push(current);
+    return groups;
+  }, [chars]);
 
   const [revealed, setRevealed] = useState<boolean[]>(() => chars.map(() => false));
   const [revealDone, setRevealDone] = useState(() => letterIdxs.length === 0);
@@ -115,61 +138,70 @@ export function HeroTitleFlip({
     if (revealDone) scheduleAutoFlip();
   }
 
+  function renderChar(idx: number) {
+    const ch = chars[idx];
+    if (!isFlippable(ch)) {
+      return <span key={idx}>{ch}</span>;
+    }
+
+    const showIcon = !revealed[idx] || activeIndex === idx;
+    const isUpper = ch === ch.toUpperCase();
+    const icons = idx < splitAt ? DESIGN_LETTER_ICONS : BUSINESS_LETTER_ICONS;
+    const Icon = icons[ch.toUpperCase()];
+    const iconSize = isUpper ? "0.62em" : "0.46em";
+
+    return (
+      <button
+        key={idx}
+        type="button"
+        tabIndex={-1}
+        onClick={() => handleClick(idx)}
+        className="relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline"
+      >
+        {/* Invisible, normal-flow sizer — the only thing that determines
+            this button's box size, so it always matches the letter's
+            natural glyph width regardless of the icon's own size. */}
+        <span className="invisible">{ch}</span>
+        <span className="absolute inset-0 [perspective:400px]">
+          <motion.span
+            className="absolute inset-0 [transform-style:preserve-3d]"
+            animate={{ rotateY: showIcon ? 180 : 0 }}
+            transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+          >
+            {/* Both faces are stacked via identical absolute+inset-0
+                positioning (not one in normal flow) — mixing the two
+                made backface-visibility unreliable in some browsers,
+                showing the letter bleeding through over the icon. */}
+            <span className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]">
+              {ch}
+            </span>
+            <span
+              className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]"
+              style={{ transform: "rotateY(180deg)" }}
+            >
+              {Icon && <Icon style={{ height: iconSize, width: iconSize }} strokeWidth={ICON_STROKE} />}
+            </span>
+          </motion.span>
+        </span>
+      </button>
+    );
+  }
+
   return (
     <span className="inline">
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
-        {chars.map((ch, idx) => {
-          if (!isFlippable(ch)) {
-            return (
-              <span key={idx}>
-                {ch}
-                {idx === splitAt && <br />}
-              </span>
-            );
-          }
-
-          const showIcon = !revealed[idx] || activeIndex === idx;
-          const isUpper = ch === ch.toUpperCase();
-          const icons = idx < splitAt ? DESIGN_LETTER_ICONS : BUSINESS_LETTER_ICONS;
-          const Icon = icons[ch.toUpperCase()];
-          const iconSize = isUpper ? "0.62em" : "0.46em";
-
+        {wordGroups.map((group) => {
+          const isSpace = chars[group[0]] === " ";
+          const breakAfter = group.includes(splitAt);
           return (
-            <Fragment key={idx}>
-              <button
-                type="button"
-                tabIndex={-1}
-                onClick={() => handleClick(idx)}
-                className="relative inline-block cursor-pointer border-0 bg-transparent p-0 align-baseline"
-              >
-                {/* Invisible, normal-flow sizer — the only thing that determines
-                    this button's box size, so it always matches the letter's
-                    natural glyph width regardless of the icon's own size. */}
-                <span className="invisible">{ch}</span>
-                <span className="absolute inset-0 [perspective:400px]">
-                  <motion.span
-                    className="absolute inset-0 [transform-style:preserve-3d]"
-                    animate={{ rotateY: showIcon ? 180 : 0 }}
-                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                  >
-                    {/* Both faces are stacked via identical absolute+inset-0
-                        positioning (not one in normal flow) — mixing the two
-                        made backface-visibility unreliable in some browsers,
-                        showing the letter bleeding through over the icon. */}
-                    <span className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]">
-                      {ch}
-                    </span>
-                    <span
-                      className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]"
-                      style={{ transform: "rotateY(180deg)" }}
-                    >
-                      {Icon && <Icon style={{ height: iconSize, width: iconSize }} strokeWidth={ICON_STROKE} />}
-                    </span>
-                  </motion.span>
-                </span>
-              </button>
-              {idx === splitAt && <br />}
+            <Fragment key={group[0]}>
+              {isSpace ? (
+                renderChar(group[0])
+              ) : (
+                <span className="inline-block">{group.map((idx) => renderChar(idx))}</span>
+              )}
+              {breakAfter && <br />}
             </Fragment>
           );
         })}
