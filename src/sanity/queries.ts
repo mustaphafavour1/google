@@ -52,8 +52,14 @@ export const allProjectsQuery = /* groq */ `
   *[_type == "project" && showOnPortfolio != false] | order(year desc) { ${projectFields} }
 `;
 
+/**
+ * Deliberately NOT filtered by showOnPortfolio — that flag only controls
+ * whether a project appears in listings (allProjectsQuery), not whether its
+ * own detail page is reachable. A hidden project still needs to be directly
+ * linkable (job-application variants and redesign previews depend on this).
+ */
 export const projectBySlugQuery = /* groq */ `
-  *[_type == "project" && slug.current == $slug && showOnPortfolio != false][0] { ${projectFields} }
+  *[_type == "project" && slug.current == $slug][0] { ${projectFields} }
 `;
 
 /**
@@ -160,7 +166,18 @@ export const jobApplicationVariantBySlugQuery = /* groq */ `
     "slug": slug.current,
     roleTitle,
     introNote,
-    selectedProjects[]->{ ${projectFields} }
+    selectedProjects[]->{ ${projectFields} },
+    defaultTheme,
+    "sections": sections[].sectionType,
+    heroStyle,
+    "heroBackgroundImageUrl": heroBackgroundImage.asset->url + "?auto=format",
+    "heroBackgroundVideoUrl": heroBackgroundVideo.asset->url,
+    heroCustomComponentKey,
+    redesignPreview{
+      enabled,
+      project->{ ${projectFields} },
+      teaserText
+    }
   }
 `;
 

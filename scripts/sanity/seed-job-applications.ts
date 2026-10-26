@@ -64,6 +64,10 @@ function ref(projectId: string) {
   return { _type: "reference" as const, _ref: projectId };
 }
 
+function sections(types: string[]) {
+  return types.map((sectionType, i) => ({ _type: "section" as const, _key: `s${i}`, sectionType }));
+}
+
 const variants = [
   {
     _id: "jobapp-vercel",
@@ -78,6 +82,10 @@ const variants = [
       ref("project-ensemble"),
       ref("project-corridor"),
     ],
+    defaultTheme: "dark",
+    // Leads with the work itself (strongest pitch for a technical audience),
+    // skips journey/why-me/design-system to keep it tight and on-topic.
+    sections: sections(["work", "skills", "process", "contact"]),
   },
   {
     _id: "jobapp-chowdeck",
@@ -92,6 +100,8 @@ const variants = [
       ref("project-corridor"),
       ref("project-probity"),
     ],
+    defaultTheme: "light",
+    sections: sections(["work", "why-me", "metrics", "contact"]),
   },
 ];
 
@@ -110,8 +120,9 @@ async function main() {
     }
 
     console.log(`${write ? "Will create" : "[dry run] Would create"} "${doc.companyName}" (${doc._id})`);
-    console.log(`  slug=/apply/${doc.slug.current}  role=${doc.roleTitle}`);
+    console.log(`  slug=/apply/${doc.slug.current}  role=${doc.roleTitle}  theme=${doc.defaultTheme}`);
     console.log(`  projects=${doc.selectedProjects.map((p) => p._ref).join(", ")}`);
+    console.log(`  sections=${doc.sections.map((s) => s.sectionType).join(" -> ")}`);
 
     if (!write) continue;
 

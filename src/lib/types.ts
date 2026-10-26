@@ -423,6 +423,36 @@ export type DddEntry = {
 
 // ---- Job application variant --------------------------------------------------
 
+/** Every selectable home-page section, in the order the general home page
+ * renders them by default. "redesign-preview" has no general-home-page
+ * equivalent — it only ever appears in a job-application variant's own
+ * section list. */
+export const SECTION_TYPES = [
+  "metrics",
+  "journey",
+  "redesign-preview",
+  "work",
+  "why-me",
+  "skills",
+  "process",
+  "design-system",
+  "contact",
+] as const;
+export type SectionType = (typeof SECTION_TYPES)[number];
+
+export const DEFAULT_SECTION_ORDER: SectionType[] = [
+  "metrics",
+  "journey",
+  "work",
+  "why-me",
+  "skills",
+  "process",
+  "design-system",
+  "contact",
+];
+
+export type HeroStyle = "default" | "image" | "video" | "custom";
+
 export type JobApplicationVariant = {
   _id: string;
   companyName: string;
@@ -430,4 +460,15 @@ export type JobApplicationVariant = {
   roleTitle?: string;
   introNote?: string;
   selectedProjects: Project[];
+  defaultTheme?: "light" | "dark";
+  sections?: SectionType[];
+  heroStyle?: HeroStyle;
+  heroBackgroundImageUrl?: string;
+  heroBackgroundVideoUrl?: string;
+  heroCustomComponentKey?: string;
+  redesignPreview?: {
+    enabled: boolean;
+    project?: Project;
+    teaserText?: string;
+  };
 };

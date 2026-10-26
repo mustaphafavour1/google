@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { FileText, Mail, Sparkles } from "lucide-react";
-import { PageContainer } from "@/components/shell/page-container";
-import { ProjectCard } from "@/components/cards/project-card";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ResumeGateButton } from "@/components/resume/resume-gate-button";
-import { getJobApplicationVariant, getSiteSettings } from "@/lib/content";
+import { Hero } from "@/components/home/hero";
+import { LandingSection } from "@/components/home/landing-section";
+import { renderSection } from "@/components/home/section-registry";
+import { getJobApplicationVariant, getProjects, getSiteSettings, getSkillGroups } from "@/lib/content";
+import { getClaps } from "@/lib/metrics-store";
+import { DEFAULT_SECTION_ORDER } from "@/lib/types";
 
 export async function generateMetadata({
   params,
@@ -17,7 +17,7 @@ export async function generateMetadata({
   if (!variant) return {};
   return {
     title: `For ${variant.companyName}`,
-    description: `A portfolio selection put together for ${variant.companyName}.`,
+    description: `A portfolio put together for ${variant.companyName}.`,
     robots: { index: false, follow: false },
   };
 }
@@ -28,85 +28,25 @@ export default async function JobApplicationVariantPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [variant, siteSettings] = await Promise.all([
+  const [jdVariant, projects, siteSettings, skillGroups] = await Promise.all([
     getJobApplicationVariant(slug),
+    getProjects(),
     getSiteSettings(),
+    getSkillGroups(),
   ]);
-  if (!variant) notFound();
+  if (!jdVariant) notFound();
 
-  const { companyName, roleTitle, introNote, selectedProjects } = variant;
-  const { contact } = siteSettings;
+  const { profile, landing } = siteSettings;
+  const landingClaps = getClaps("landing-page");
+  const sectionOrder = jdVariant.sections?.length ? jdVariant.sections : DEFAULT_SECTION_ORDER;
 
   return (
-    <PageContainer offset={false}>
-      <section className="pt-1">
-        <p className="type-eyebrow">Tailored for {companyName}</p>
-        <h1 className="type-display mt-2">How&rsquo;s {companyName} today?</h1>
-        <p className="type-body mt-3 max-w-xl">
-          {roleTitle
-            ? `I put together a few things worth seeing for the ${roleTitle} role.`
-            : "I put together a few things I think would be useful for your team."}
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2.5">
-          <Button href="/contact">
-            <Mail size={14} />
-            Get in touch
-          </Button>
-          {contact.resumeUrl && (
-            <ResumeGateButton className={buttonVariants({ variant: "outline" })}>
-              <FileText size={14} />
-              Open Resume
-            </ResumeGateButton>
-          )}
-        </div>
-      </section>
+    <div>
+      <LandingSection id="hero" className="pt-0 sm:pt-0">
+        <Hero profile={profile} hero={landing.hero} jdVariant={jdVariant} />
+      </LandingSection>
 
-      {introNote && (
-        <section className="mt-9">
-          <div className="card p-6 sm:p-8">
-            <div className="mb-3 flex items-center gap-2 text-primary-500">
-              <Sparkles size={16} />
-              <h2 className="text-[15px] font-semibold text-ink-em">
-                Unique contributions I can bring to {companyName}
-              </h2>
-            </div>
-            <p className="type-body max-w-2xl text-ink-strong">{introNote}</p>
-          </div>
-        </section>
-      )}
-
-      <section className="mt-9">
-        <h2 className="mb-4 text-[19px] font-semibold tracking-tight text-ink-em">
-          Projects most relevant to {companyName}
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {selectedProjects.map((project) => (
-            <div key={project._id} className="aspect-[4/3]">
-              <ProjectCard project={project} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-10">
-        <div className="card flex flex-col items-start justify-between gap-5 p-6 sm:flex-row sm:items-center">
-          <div>
-            <h3 className="type-subheading">Let&rsquo;s talk</h3>
-            <p className="type-body mt-1 text-ink-muted">
-              Happy to walk {companyName} through any of this in more detail.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-wrap gap-2.5">
-            <Button variant="outline" asChild>
-              <a href={`mailto:${contact.email}`}>
-                <Mail size={14} />
-                {contact.email}
-              </a>
-            </Button>
-            <Button href="/projects">Full portfolio</Button>
-          </div>
-        </div>
-      </section>
-    </PageContainer>
+      {sectionOrder.map((type) => renderSection(type, { siteSettings, projects, skillGroups, jdVariant, landingClaps }))}
+    </div>
   );
 }

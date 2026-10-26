@@ -289,9 +289,14 @@ export async function getJobApplicationVariant(
   const result = await sanityFetch<JobApplicationVariant | null>(jobApplicationVariantBySlugQuery, {
     slug,
   });
-  return result
-    ? { ...result, selectedProjects: result.selectedProjects.map(withProjectDefaults) }
-    : getJobApplicationBySlugFallback(slug);
+  if (!result) return getJobApplicationBySlugFallback(slug);
+  return {
+    ...result,
+    selectedProjects: (result.selectedProjects ?? []).map(withProjectDefaults),
+    redesignPreview: result.redesignPreview?.project
+      ? { ...result.redesignPreview, project: withProjectDefaults(result.redesignPreview.project) }
+      : result.redesignPreview,
+  };
 }
 
 export async function getPortfolioArchive(): Promise<PortfolioArchiveEntry[]> {

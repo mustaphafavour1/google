@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Parkinsans, JetBrains_Mono, Caveat, Rancho } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +14,7 @@ import {
   getDesignSuperpowers,
   getBlogPosts,
   getProducts,
+  getJobApplicationVariant,
 } from "@/lib/content";
 import { buildSkillEntries, buildSuperpowerEntries, buildBlogEntries, buildProductEntries } from "@/lib/search-index";
 import type { ReactNode } from "react";
@@ -66,7 +68,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const [siteSettings, projects, backgroundPatterns, skills, skillGroups, superpowers, blogPosts, products] =
+  const headersList = await headers();
+  const jdSlug = headersList.get("x-jd-slug");
+
+  const [siteSettings, projects, backgroundPatterns, skills, skillGroups, superpowers, blogPosts, products, jdVariant] =
     await Promise.all([
       getSiteSettings(),
       getProjects(),
@@ -76,7 +81,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       getDesignSuperpowers(),
       getBlogPosts(),
       getProducts(),
+      jdSlug ? getJobApplicationVariant(jdSlug) : Promise.resolve(undefined),
     ]);
+  const defaultTheme = jdVariant?.defaultTheme ?? "light";
 
   const searchIndex = {
     skills: buildSkillEntries(skills, skillGroups),
@@ -93,7 +100,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     >
       <body className="min-h-full">
         <AnalyticsScripts />
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme={defaultTheme} enableSystem={false}>
           <TooltipProvider delayDuration={200}>
             <AppShell
               siteSettings={siteSettings}

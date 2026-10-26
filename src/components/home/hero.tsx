@@ -6,8 +6,9 @@ import { ArrowDown, ArrowRight, MonitorPlay, Sparkles } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useContactForm } from "@/components/contact/contact-form-context";
 import { startAutoScrollWithExplainer } from "@/lib/auto-scroll-store";
-import { HeroBlobs } from "./hero-blobs";
+import { HeroBackground } from "./hero-background";
 import { HeroTitleFlip } from "./hero-title-flip";
+import { CUSTOM_HEROES } from "./custom-heroes";
 import type { JobApplicationVariant, SiteSettings } from "@/lib/types";
 
 export function Hero({
@@ -28,9 +29,18 @@ export function Hero({
     ? `Hi ${jdVariant.companyName} team — I’m ${profile.firstName}.`
     : hero.title;
 
+  // A fully bespoke, hand-coded hero for this one application — takes over
+  // completely instead of just swapping the background. An unregistered
+  // key (never built, or a typo) silently falls through to the default
+  // hero below instead of breaking the page.
+  if (jdVariant?.heroStyle === "custom" && jdVariant.heroCustomComponentKey) {
+    const CustomHero = CUSTOM_HEROES[jdVariant.heroCustomComponentKey];
+    if (CustomHero) return <CustomHero jdVariant={jdVariant} profile={profile} />;
+  }
+
   return (
     <div className="relative flex min-h-[95vh] max-sm:min-h-[100dvh] flex-col items-center justify-center px-4 py-6 text-center">
-      <HeroBlobs />
+      <HeroBackground jdVariant={jdVariant} />
 
       {jdVariant && (
         <motion.div
@@ -83,7 +93,7 @@ export function Hero({
         className="mt-7 flex flex-wrap justify-center gap-2.5"
       >
         {jdVariant ? (
-          <Button size="lg" href={`/apply/${jdVariant.slug}`}>
+          <Button size="lg" href="#work">
             See what I picked for {jdVariant.companyName}
           </Button>
         ) : (
